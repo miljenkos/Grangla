@@ -1,0 +1,39 @@
+<!-- <?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context="com.example.miljac.myapplication.GamePlayActivity">
+
+</RelativeLayout>
+-->
+
+
+<android.support.v4.widget.SlidingPaneLayout xmlns:android="http://schemas.android.com/apk/res/android"
+android:id="@+id/sp"
+android:layout_width="match_parent"
+android:layout_height="match_parent"
+android:background="@drawable/naslov"
+    >
+
+<fragment
+    android:id="@+id/Menu"
+    android:name="com.example.miljac.myapplication.MenuFragment"
+    android:layout_width="200dp"
+    android:layout_height="match_parent"
+    android:layout_gravity="left"
+    />
+
+<fragment
+    android:id="@+id/Table"
+    android:name="com.example.miljac.myapplication.TableFragment"
+    android:layout_width="600dp"
+    android:layout_height="match_parent"
+    android:layout_gravity="right"
+    android:layout_weight="1" />
+
+</android.support.v4.widget.SlidingPaneLayout>
