@@ -49,8 +49,8 @@ public class TableView extends ViewGroup  {
         //Log.d("Pin", "Dispose pins. ["+width+"x" +height+  "]");
         this.dotSize = dotSize;
 
-        numRow = height / dotSize + 1;
-        numCol =  width / dotSize + 1;
+        numRow = TableConfig.TABLE_SIZE;// height / dotSize + 1;
+        numCol =  TableConfig.TABLE_SIZE;//width / dotSize + 1;
 
         //Log.d("Pin", "Col x Row ["+numCol+"]x["+numRow+"]");
 

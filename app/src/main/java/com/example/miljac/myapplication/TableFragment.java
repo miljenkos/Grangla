@@ -60,7 +60,9 @@ public class TableFragment extends Fragment {
         // We start defining the table grid
         Display d = getActivity().getWindowManager().getDefaultDisplay();
 
-        int pinSize = (int) (TableConfig.convertDpToPixel(TableConfig.DEFAULT_PIN_SIZE, getActivity()));
+        //int pinSize = (int) (TableConfig.convertDpToPixel(TableConfig.DEFAULT_PIN_SIZE, getActivity()));
+        int pinSize = d.getWidth() / TableConfig.TABLE_SIZE;
+        pinSize = ((d.getHeight() / TableConfig.TABLE_SIZE) < pinSize) ? (d.getHeight() / TableConfig.TABLE_SIZE) : pinSize;
 
         int[] vals = table.disposePins(d.getWidth(), d.getHeight(), pinSize);
 

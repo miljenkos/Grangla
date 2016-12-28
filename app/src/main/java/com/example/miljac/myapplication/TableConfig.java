@@ -11,6 +11,7 @@ import android.view.animation.AnimationUtils;
 
 public class TableConfig {
     public static int DEFAULT_PIN_SIZE = 30;
+    public static int TABLE_SIZE = 9;
     private static MediaPlayer player ;
 
     public static float convertDpToPixel(float dp, Context context){

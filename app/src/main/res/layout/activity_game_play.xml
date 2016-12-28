@@ -17,7 +17,8 @@
 android:id="@+id/sp"
 android:layout_width="match_parent"
 android:layout_height="match_parent"
-android:background="@drawable/naslov"
+android:background="@drawable/suma"
+android:scaleType="centerCrop"
     >
 
 <fragment
