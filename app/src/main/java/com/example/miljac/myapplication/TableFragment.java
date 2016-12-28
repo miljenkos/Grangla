@@ -29,7 +29,7 @@ import android.view.ViewGroup;
  * Use the {link TableFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class TableFragment extends Fragment {
+public class TableFragment extends Fragment implements OnTouchListener {
 
 
     private TableView table;
@@ -43,7 +43,7 @@ public class TableFragment extends Fragment {
 
         View v = inflater.inflate(R.layout.fragment_table, container, true);
         table = (TableView) v.findViewById(R.id.Table);
-        //table.setOnTouchListener(this);
+        table.setOnTouchListener(this);
         createBoard();
 
         table.setCurrentColor(currentFieldDraw);
@@ -52,6 +52,27 @@ public class TableFragment extends Fragment {
         return v;
     }
 
+
+
+
+    @Override
+    public boolean onTouch(View v, MotionEvent event) {
+
+        int x = (int) event.getX() ;
+        int y = (int) event.getY() ;
+
+        if (event.getAction() == MotionEvent.ACTION_DOWN) {
+            table.changePinColor(x, y, R.drawable.pin41);
+            return true;
+        }
+        else if (event.getAction() == MotionEvent.ACTION_MOVE) {
+            table.changePinColor(x, y, R.drawable.pin41);
+            return true;
+        }
+
+        return false;
+
+    }
 
 
 
