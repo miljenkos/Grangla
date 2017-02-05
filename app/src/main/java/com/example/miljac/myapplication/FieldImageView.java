@@ -4,6 +4,8 @@ package com.example.miljac.myapplication;
 //import com.survivingwithandroid.pegboard.TableConfig;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -16,6 +18,7 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.widget.ImageView;
 
+import java.util.Random;
 
 
 public class FieldImageView extends ImageView  {
@@ -81,7 +84,28 @@ public class FieldImageView extends ImageView  {
 
         this.currentPinId = resId;
         final Drawable d = getResources().getDrawable(resId);
-        if (resId != R.drawable.pin40) {
+
+
+
+        /*Random r = new Random();
+        int i1 = r.nextInt(4);
+        Log.i("AAA", Integer.toString(i1));
+
+        Bitmap bmpOriginal = BitmapFactory.decodeResource(this.getResources(), R.drawable.pin39);
+        Bitmap bmResult = Bitmap.createBitmap(bmpOriginal.getWidth(), bmpOriginal.getHeight(), Bitmap.Config.ARGB_8888);
+        Canvas tempCanvas = new Canvas(bmResult);
+        tempCanvas.rotate(90*i1, bmpOriginal.getWidth()/2, bmpOriginal.getHeight()/2);
+        tempCanvas.drawBitmap(bmpOriginal, 0, 0, null);
+
+        //mImageView.setImageBitmap(bmResult);
+        d.draw(tempCanvas);*/
+        
+        Log.d("PROBA", "PROBA");
+
+
+
+
+        if (resId != R.drawable.pin39) {
             Animation scaleInAnim = TableConfig.getFadeScaleInAnim(ctx);
             AnimView av = new AnimView(scaleInAnim, d);
             setImageDrawable(d);
@@ -93,6 +117,8 @@ public class FieldImageView extends ImageView  {
             AnimView av = new AnimView(fadeOutAnim, d);
             this.post(av);
         }
+
+        //this.invalidate();
 
     }
 

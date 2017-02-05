@@ -3,6 +3,7 @@ package com.example.miljac.myapplication;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -32,21 +33,48 @@ import android.view.ViewGroup;
 public class TableFragment extends Fragment implements OnTouchListener {
 
 
-    private TableView table;
-    private int currentFieldDraw = R.drawable.pin40;
+    private TableView tableView;
+    private int currentFieldDraw = R.drawable.pin41;
+
+    private int pinSize;
+
+
+    private Table table;
+
+    private OtherPlayer otherPlayer;
+
+    private class OtherPlayer implements Runnable {
+        public void run() {
+            Log.d("AAAAAAAAAAAAAAAAAAAAA", "BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB");
+            System.out.println("aaaaaaaaaaaaaaaaaaaaaaaaaaa");
+            /*while(true){
+                try {
+                    Thread.sleep(5000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                Coordinates c = table.putAutomatic(State.cross);
+                tableView.changePinColor(c.x*pinSize +1, c.y*pinSize +1, R.drawable.pin40);
+                tableView.invalidate();
+                //postDelayed(tableView, DELAY_TIME_MILLIS);
+            }*/
+
+        }
+    }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-
+        table = new Table(1);
 
         View v = inflater.inflate(R.layout.fragment_table, container, true);
-        table = (TableView) v.findViewById(R.id.Table);
-        table.setOnTouchListener(this);
+        tableView = (TableView) v.findViewById(R.id.Table);
+        tableView.setOnTouchListener(this);
         createBoard();
 
-        table.setCurrentColor(currentFieldDraw);
+        tableView.setCurrentColor(currentFieldDraw);
         Log.println(Log.DEBUG, "tag", "string");
         this.setRetainInstance(true);
         return v;
@@ -62,13 +90,33 @@ public class TableFragment extends Fragment implements OnTouchListener {
         int y = (int) event.getY() ;
 
         if (event.getAction() == MotionEvent.ACTION_DOWN) {
-            table.changePinColor(x, y, R.drawable.pin41);
+            tableView.changePinColor(x, y, R.drawable.pin39);
+            Log.d("koordinate:",  "x:" + x + "  y:" + y + "\n");
+            table.put(State.circle, tableView.getColumn(x), tableView.getRow(y));
+            tableView.invalidate();
+
+
+            /*try{
+                Thread.sleep(1000);
+            }
+            catch (InterruptedException e) {
+                Log.d("nesto", "nest");
+            }*/
+
+            Thread opThread = new Thread(otherPlayer);
+            opThread.start();
+            System.out.println(opThread.getState().toString());
+            //opThread.notify();
+            System.out.println(opThread.getStackTrace());
+            System.out.println("A SAD ?!?!?!?");
             return true;
         }
-        else if (event.getAction() == MotionEvent.ACTION_MOVE) {
-            table.changePinColor(x, y, R.drawable.pin41);
+        /*else if (event.getAction() == MotionEvent.ACTION_UP) {
+            Coordinates c = table.putAutomatic(State.cross);
+            tableView.changePinColor(c.x*pinSize +1, c.y*pinSize +1, R.drawable.pin40);
+            tableView.invalidate();
             return true;
-        }
+        }*/
 
         return false;
 
@@ -82,10 +130,15 @@ public class TableFragment extends Fragment implements OnTouchListener {
         Display d = getActivity().getWindowManager().getDefaultDisplay();
 
         //int pinSize = (int) (TableConfig.convertDpToPixel(TableConfig.DEFAULT_PIN_SIZE, getActivity()));
-        int pinSize = d.getWidth() / TableConfig.TABLE_SIZE;
+        pinSize = d.getWidth() / TableConfig.TABLE_SIZE;
         pinSize = ((d.getHeight() / TableConfig.TABLE_SIZE) < pinSize) ? (d.getHeight() / TableConfig.TABLE_SIZE) : pinSize;
 
-        int[] vals = table.disposePins(d.getWidth(), d.getHeight(), pinSize);
+        int[] vals = tableView.disposePins(d.getWidth(), d.getHeight(), pinSize);
+
+        tableView.setTable(table);
+        tableView.setPinSize(pinSize);
+
+
 
     }
 

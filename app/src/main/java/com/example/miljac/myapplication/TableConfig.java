@@ -36,7 +36,7 @@ public class TableConfig {
     };
 
 
-    public static int pinBackground = R.drawable.pin40;
+    public static int pinBackground = R.drawable.pin41;
 
 
 
