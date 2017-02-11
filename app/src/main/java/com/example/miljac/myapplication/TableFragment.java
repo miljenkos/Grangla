@@ -31,22 +31,39 @@ import android.view.ViewGroup;
  * create an instance of this fragment.
  */
 public class TableFragment extends Fragment implements OnTouchListener {
+    OnFieldSelectedListener fieldSelectedListener;
 
-
-    private TableView tableView;
+    public TableView tableView;
     private int currentFieldDraw = R.drawable.pin41;
-
     private int pinSize;
-
-
     private Table table;
-
     private OtherPlayer otherPlayer;
+
+    public interface OnFieldSelectedListener {
+        public void onFieldSelected(int x, int y);
+    }
+
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+
+
+        try {
+            fieldSelectedListener = (OnFieldSelectedListener) context;
+            System.out.println("\n\nmislim da sam se ataciral\n\n");
+        } catch (ClassCastException e) {
+            throw new ClassCastException(context.toString() + " must implement OnFieldSelectedListener");
+        }
+
+        fieldSelectedListener.onFieldSelected(4,5);
+    }
+
 
     private class OtherPlayer implements Runnable {
         public void run() {
             Log.d("AAAAAAAAAAAAAAAAAAAAA", "BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB");
-            System.out.println("aaaaaaaaaaaaaaaaaaaaaaaaaaa");
+            System.out.println("aaaaacccaaaaaaaaaaaaaaaaaaaaaa");
             /*while(true){
                 try {
                     Thread.sleep(5000);
@@ -96,20 +113,11 @@ public class TableFragment extends Fragment implements OnTouchListener {
             tableView.invalidate();
 
 
-            /*try{
-                Thread.sleep(1000);
-            }
-            catch (InterruptedException e) {
-                Log.d("nesto", "nest");
-            }*/
 
-            Thread opThread = new Thread(otherPlayer);
-            opThread.start();
-            System.out.println(opThread.getState().toString());
-            //opThread.notify();
-            System.out.println(opThread.getStackTrace());
-            System.out.println("A SAD ?!?!?!?");
-            return true;
+
+
+
+
         }
         /*else if (event.getAction() == MotionEvent.ACTION_UP) {
             Coordinates c = table.putAutomatic(State.cross);
