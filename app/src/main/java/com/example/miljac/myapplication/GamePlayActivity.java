@@ -10,14 +10,22 @@ public class GamePlayActivity extends AppCompatActivity implements TableFragment
 
     private TableView tableView;
     private OtherPlayer otherPlayer = new OtherPlayer();
+    private Table table;
+    private TableFragment tableFragment;
+
+    private Coordinates c;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game_play);
 
+        table = new Table(1);
 
-        TableFragment tableFragment = (TableFragment)
+
+
+        tableFragment = (TableFragment)
                 getSupportFragmentManager().findFragmentById(R.id.Table);
         tableView = (TableView) tableFragment.tableView;
 
@@ -34,19 +42,31 @@ public class GamePlayActivity extends AppCompatActivity implements TableFragment
             System.out.println("aaaaaaaaaaaaaaaaaaaaaaaaaaa");
             while(true){
                 try {
-                    Thread.sleep(500);
+                    Thread.sleep(3000);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
+
 
                 Log.d("AAjajajajjajajajajA", "BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB");
                 System.out.println("aaaaaaaaaaaaaaaaaaaaaaaaaaa");
 
 
-                //Coordinates c = table.putAutomatic(State.cross);
+                c = table.putAutomatic(State.cross);
 
-                /*changePinColor(c.x*pinSize +1, c.y*pinSize +1, R.drawable.pin40);
-                invalidate();*/
+                System.out.println(c.x);
+                System.out.println(c.y);
+
+
+                class OtherPlayerDraws implements Runnable {
+                    public void run() {
+                        tableView.changePinColor(c.x*tableFragment.pinSize +1, c.y*tableFragment.pinSize +1, R.drawable.pin40);
+                        tableView.invalidate();
+                    }
+                }
+                OtherPlayerDraws otherPlayerDraws = new OtherPlayerDraws();
+                runOnUiThread(otherPlayerDraws);
+
                 //postDelayed(tableView, DELAY_TIME_MILLIS);
             }
 
@@ -55,5 +75,11 @@ public class GamePlayActivity extends AppCompatActivity implements TableFragment
 
     public void onFieldSelected(int x,int y) {
         System.out.println("\njeldaaa\n");
+
+        tableView.changePinColor(x*tableFragment.pinSize +1, y*tableFragment.pinSize +1, R.drawable.pin39);
+        table.put(State.circle, x, y);
+
+
+
     }
 }

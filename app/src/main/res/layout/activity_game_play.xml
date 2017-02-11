@@ -20,7 +20,7 @@ android:layout_height="match_parent"
 android:background="@drawable/suma"
 android:scaleType="centerCrop"
     >
-
+<!--
 <fragment
     android:id="@+id/Menu"
     android:name="com.example.miljac.myapplication.MenuFragment"
@@ -28,7 +28,7 @@ android:scaleType="centerCrop"
     android:layout_height="match_parent"
     android:layout_gravity="left"
     />
-
+-->
 <fragment
     android:id="@+id/Table"
     android:name="com.example.miljac.myapplication.TableFragment"

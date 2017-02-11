@@ -24,30 +24,11 @@ public class TableView extends ViewGroup  {
     private int numRow;
     private int numCol;
     private int pinSize;
-    private Table table;
+    //private Table table;
 
     private Context context;
 
 
-    private class OtherPlayer implements Runnable {
-        public void run() {
-            Log.d("AAAAAAAAAAAAAAAAAAAAA", "BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB");
-            System.out.println("aaaaaaaaaaaaaaaaaaaaaaaaaaa");
-            while(true){
-                try {
-                    Thread.sleep(5000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                Coordinates c = table.putAutomatic(State.cross);
-
-                /*changePinColor(c.x*pinSize +1, c.y*pinSize +1, R.drawable.pin40);
-                invalidate();*/
-                //postDelayed(tableView, DELAY_TIME_MILLIS);
-            }
-
-        }
-    }
 
     public TableView(Context context) {
         super(context);
@@ -68,9 +49,6 @@ public class TableView extends ViewGroup  {
     }
 
 
-    public void setTable(Table t){
-        table = t;
-    }
 
     public void setPinSize(int s){
         pinSize = s;
@@ -94,11 +72,6 @@ public class TableView extends ViewGroup  {
                 this.addView(pinImg);
             }
         }
-
-        Log.d("DISPOSE PINSSS", "DISP");
-        OtherPlayer otherPlayer = new OtherPlayer();
-        Thread opThread = new Thread(otherPlayer);
-        opThread.start();
 
         return new int[]{numRow, numCol};
     }
