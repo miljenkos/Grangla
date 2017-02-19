@@ -126,6 +126,25 @@ public class Table // igraca tabla
         return false;
     }
 
+
+    public boolean publicEmpty(int i, int j)  // stavlja stanje givenState na polje koordinata (i,j)
+    {
+        if(this.get(i,j) != State.empty) {
+            w.lock();
+            try {
+                this.put(State.empty, i, j);
+            }
+            finally {
+                w.unlock();
+            }
+            lastMove = new Coordinates(i, j);
+            System.out.println("JESAM");
+            return true;
+        }
+        System.out.println("NISAM");
+        return false;
+    }
+
     /**
      * Finds out which mark is on the specific field on the board.
      * @param i x-coordinate of a field (space)
@@ -347,14 +366,12 @@ public class Table // igraca tabla
 
 
 
-
-
     /**
      * Checks if someone has won.
      * @return A winner or empty.
      */
 
-    public State end()
+    public EndStruct end()
     {
         r.lock();
         try {
@@ -362,42 +379,78 @@ public class Table // igraca tabla
                 for (int j=0; j<TABLE_SIZE-3; j++)
                 {
                     if ( (this.get(i,j)== State.cross) && (this.get(i+1,j+1)==State.cross) && (this.get( i+2, j+2 )==State.cross) && (this.get( i+3, j+3 )==State.cross) )
-                        return State.cross;
+                        return new EndStruct(State.cross,
+                                new Coordinates(i,j),
+                                new Coordinates(i+1,j+1),
+                                new Coordinates(i+2,j+2),
+                                new Coordinates(i+3,j+3));
                     if ( (this.get(i,j)== State.circle) && (this.get(i+1,j+1)==State.circle) && (this.get( i+2, j+2 )==State.circle) && (this.get( i+3, j+3 )==State.circle) )
-                        return State.circle;
+                        return new EndStruct(State.circle,
+                                new Coordinates(i,j),
+                                new Coordinates(i+1,j+1),
+                                new Coordinates(i+2,j+2),
+                                new Coordinates(i+3,j+3));
                 }
 
             for (int i=3; i<TABLE_SIZE; i++)    //koso prema dolje desno
                 for (int j=0; j<TABLE_SIZE-3; j++)
                 {
                     if ( (this.get(i,j)== State.cross) && (this.get(i-1,j+1)==State.cross) && (this.get( i-2, j+2 )==State.cross) && (this.get( i-3, j+3 )==State.cross) )
-                        return State.cross;
+                        return new EndStruct(State.cross,
+                                new Coordinates(i,j),
+                                new Coordinates(i-1,j+1),
+                                new Coordinates(i-2,j+2),
+                                new Coordinates(i-3,j+3));
                     if ( (this.get(i,j)== State.circle) && (this.get(i-1,j+1)==State.circle) && (this.get( i-2, j+2 )==State.circle) && (this.get( i-3, j+3 )==State.circle) )
-                        return State.circle;
+                        return new EndStruct(State.circle,
+                                new Coordinates(i,j),
+                                new Coordinates(i-1,j+1),
+                                new Coordinates(i-2,j+2),
+                                new Coordinates(i-3,j+3));
                 }
 
             for (int i=0; i<TABLE_SIZE-3; i++)  //vodoravno
                 for (int j=0; j<TABLE_SIZE; j++)
                 {
                     if ( (this.get(i,j)== State.cross) && (this.get(i+1,j)==State.cross) && (this.get( i+2, j )==State.cross) && (this.get( i+3, j)==State.cross) )
-                        return State.cross;
+                        return new EndStruct(State.cross,
+                                new Coordinates(i,j),
+                                new Coordinates(i+1,j),
+                                new Coordinates(i+2,j),
+                                new Coordinates(i+3,j));
                     if ( (this.get(i,j)== State.circle) && (this.get(i+1,j)==State.circle) && (this.get( i+2, j )==State.circle) && (this.get( i+3, j )==State.circle) )
-                        return State.circle;
+                        return new EndStruct(State.circle,
+                                new Coordinates(i,j),
+                                new Coordinates(i+1,j),
+                                new Coordinates(i+2,j),
+                                new Coordinates(i+3,j));
                 }
 
             for (int i=0; i<TABLE_SIZE; i++)  //okomito
                 for (int j=0; j<TABLE_SIZE-3; j++)
                 {
                     if ( (this.get(i,j)== State.cross) && (this.get(i,j+1)==State.cross) && (this.get( i, j+2 )==State.cross) && (this.get( i, j+3)==State.cross) )
-                        return State.cross;
+                        return new EndStruct(State.cross,
+                                new Coordinates(i,j),
+                                new Coordinates(i,j+1),
+                                new Coordinates(i,j+2),
+                                new Coordinates(i,j+3));
                     if ( (this.get(i,j)== State.circle) && (this.get(i,j+1)==State.circle) && (this.get( i, j+2 )==State.circle) && (this.get( i, j+3 )==State.circle) )
-                        return State.circle;
+                        return new EndStruct(State.circle,
+                                new Coordinates(i,j),
+                                new Coordinates(i,j+1),
+                                new Coordinates(i,j+2),
+                                new Coordinates(i,j+3));
                 }
         }
 
         finally { r.unlock(); }
 
-        return State.empty;
+        return new EndStruct(State.empty,
+                new Coordinates(0,0),
+                new Coordinates(0,0),
+                new Coordinates(0,0),
+                new Coordinates(0,0));
     }
 
     public void setLevel(int l){

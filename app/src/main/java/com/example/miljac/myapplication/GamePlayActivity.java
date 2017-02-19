@@ -15,9 +15,35 @@ public class GamePlayActivity extends AppCompatActivity implements TableFragment
     private Boolean gameDone = false;
 
     private Coordinates c;
+    private EndStruct endStruct;
 
     Thread opThread;
 
+
+    class OtherPlayerCollects implements Runnable {
+        public void run() {
+
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
+            tableView.changePinColor(endStruct.first.x*tableFragment.pinSize +1, endStruct.first.y*tableFragment.pinSize +1, R.drawable.pin41);
+            tableView.changePinColor(endStruct.second.x*tableFragment.pinSize +1, endStruct.second.y*tableFragment.pinSize +1, R.drawable.pin41);
+            tableView.changePinColor(endStruct.third.x*tableFragment.pinSize +1, endStruct.third.y*tableFragment.pinSize +1, R.drawable.pin41);
+            tableView.changePinColor(endStruct.fourth.x*tableFragment.pinSize +1, endStruct.fourth.y*tableFragment.pinSize +1, R.drawable.pin41);
+            tableView.invalidate();
+        }
+    }
+
+
+    class OtherPlayerDraws implements Runnable {
+        public void run() {
+            tableView.changePinColor(c.x*tableFragment.pinSize +1, c.y*tableFragment.pinSize +1, R.drawable.pin40);
+            tableView.invalidate();
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,14 +89,19 @@ public class GamePlayActivity extends AppCompatActivity implements TableFragment
 
                 c = table.putAutomatic(State.cross);
 
-                class OtherPlayerDraws implements Runnable {
-                    public void run() {
-                        tableView.changePinColor(c.x*tableFragment.pinSize +1, c.y*tableFragment.pinSize +1, R.drawable.pin40);
-                        tableView.invalidate();
-                    }
-                }
                 OtherPlayerDraws otherPlayerDraws = new OtherPlayerDraws();
                 runOnUiThread(otherPlayerDraws);
+
+
+                endStruct = table.end();
+                if (endStruct.winner != State.empty){
+                    OtherPlayerCollects otherPlayerCollects = new OtherPlayerCollects();
+                    runOnUiThread(otherPlayerCollects);
+                    table.publicEmpty(endStruct.first.x, endStruct.first.y);
+                    table.publicEmpty(endStruct.second.x, endStruct.second.y);
+                    table.publicEmpty(endStruct.third.x, endStruct.third.y);
+                    table.publicEmpty(endStruct.fourth.x, endStruct.fourth.y);
+                }
 
                 //postDelayed(tableView, DELAY_TIME_MILLIS);
             }
