@@ -5,8 +5,9 @@ package com.example.miljac.myapplication;
  */
 
 //import java.util.List;
-import java.util.ArrayList;
 import java.util.Random;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
+import java.util.concurrent.locks.Lock;
 /**
  * This is where the actual game happens.
  * @author miljac
@@ -14,10 +15,10 @@ import java.util.Random;
  */
 public class Table // igraca tabla
 {
-    private final int TABLE_SIZE=10;
-    private final ArrayList<ArrayList<Space>> table;
-    private final double weights[][] = new double[TABLE_SIZE+1][TABLE_SIZE+1];
+    public static int TABLE_SIZE = 10;
+    private final Space[][] table = new Space[10][10];
 
+    private final int[] no=           {0,0,0,1,0,0,0};
     private final int[] win=          {1,1,1,1};
 
     private final int[] probablyMust= {0,1,1,1,0};
@@ -38,9 +39,13 @@ public class Table // igraca tabla
     private final int[] shittierTwo5= {0,0,1,1};
     private final int[] shittierTwo6= {1,0,0,1};
 
-    private final int RECURSION_DEPTH=2;
-
     private int level;
+
+    private final ReentrantReadWriteLock rwl = new ReentrantReadWriteLock();
+    private final Lock r = rwl.readLock();
+    private final Lock w = rwl.writeLock();
+
+    private Coordinates lastMove = new Coordinates(5,5);
 
     Random rn = new Random();
 
@@ -51,18 +56,18 @@ public class Table // igraca tabla
 
     public Table(int l)
     {
-        this.table = new ArrayList<ArrayList<Space>>();
+        //this.table = new ArrayList<ArrayList<Space>>();
         this.level = l;
-        for (int i=1; i<=TABLE_SIZE+1; i++)
+        for (int i=0; i<TABLE_SIZE; i++)
         {
-            ArrayList<Space> temporaryVector= new ArrayList<Space>(); //ova varijabla je novi redak table
-            for (int j=1; j<=TABLE_SIZE+1; j++)
-            {
-                Space temporarySpace =new Space();  //ovo je novo polje u tabli
-                temporaryVector.add( temporarySpace );
+            for (int j=0; j<TABLE_SIZE; j++){
+                (this.table[i][j]) = new Space();
+                /*System.out.println("TTTTT");
+                System.out.println((this.table[i][j]).getState().toString());*/
+                //System.out.println(this.get(i,j).toString());
+                //System.out.println();
+
             }
-            //temporaryVector.trimToSize();
-            this.table.add( temporaryVector );
         }
     }
 
@@ -96,9 +101,29 @@ public class Table // igraca tabla
      * @param j y-coordinate of a field (space)
      */
 
-    public void put(State givenState, int i, int j)  // stavlja stanje givenState na polje koordinata (i,j)
+    private void put(State givenState, int i, int j)  // stavlja stanje givenState na polje koordinata (i,j)
     {
-        this.table.get( i ).get( j ).setState( givenState );
+        i = (i + TABLE_SIZE) % TABLE_SIZE;
+        j = (j + TABLE_SIZE) % TABLE_SIZE;
+        (this.table[i][j]).setState(givenState);
+    }
+
+    public boolean publicPut(State givenState, int i, int j)  // stavlja stanje givenState na polje koordinata (i,j)
+    {
+        if(this.get(i,j) == State.empty) {
+            w.lock();
+            try {
+                this.put(givenState, i, j);
+            }
+            finally {
+                w.unlock();
+            }
+            lastMove = new Coordinates(i, j);
+            System.out.println("JESAM");
+            return true;
+        }
+        System.out.println("NISAM");
+        return false;
     }
 
     /**
@@ -107,11 +132,23 @@ public class Table // igraca tabla
      * @param j y-coordinate of a field (space)
      * @return a mark on the field with given coordinates
      */
-    public State get(int i,int j)
+    private State get(int i,int j)
     {
-        if ((i<1)||(i>TABLE_SIZE)||(j<1)||(j>TABLE_SIZE))
+        /*System.out.println(i);
+        System.out.println(j);*/
+        int i2 = (i + TABLE_SIZE*2) % TABLE_SIZE;
+        int j2 = (j + TABLE_SIZE*2) % TABLE_SIZE;
+        try {
+            return (this.table[i2][j2]).getState();
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            System.out.println(i);
+            System.out.println(i2);
+            System.out.println(j);
+            System.out.println(j2);
             return null;
-        return this.table.get( i ).get( j ).getState();
+        }
     }
 
 
@@ -121,29 +158,29 @@ public class Table // igraca tabla
      * @param me
      */
 
-    private void markWeights(State me)
+    /*private void markWeights(State me)
     {
         for (int i=1; i<=TABLE_SIZE;i++)
             for (int j=1;j<=TABLE_SIZE;j++)
                 weights[i][j]+=this.evaluateSpaceWeight( i, j, me ,RECURSION_DEPTH);
         printOut();
-    }
+    }*/
 
     /**
      * zprinta tablu
      */
-    private void printOut(){
+    /*private void printOut(){
         System.out.println("\n\n\n");
-        for (int i=1; i<=TABLE_SIZE;i++)
+        for (int i=0; i<TABLE_SIZE;i++)
         {
-            for (int j=1;j<=TABLE_SIZE;j++)
+            for (int j=0;j<TABLE_SIZE;j++)
             {
                 System.out.format((double)((int)(weights[j][i]*100))/100 +"\t");
             }
             System.out.println("\n");
         }
         System.out.println("Nivo je: " + this.level);
-    }
+    }*/
 
     /**
      * Used when a computer is playing to make it make a move.
@@ -151,49 +188,58 @@ public class Table // igraca tabla
      */
     public Coordinates putAutomatic(State me)
     {
+        Double weight = 0.0;
+        //String s;
         State enemy;
-        if (me==State.cross)
-            enemy= State.circle;
-        else
-            enemy= State.cross;
-
-        for (int i=1; i<=TABLE_SIZE;i++)
-            for (int j=1;j<=TABLE_SIZE;j++)
-                this.weights[i][j]=0;
-
         double biggestWeight=-1;
         int bWICoor=1,bWJCoor=1;
 
-        this.markWeights( me );
-
-        for (int i=1; i<=TABLE_SIZE;i++)
-            for (int j=1;j<=TABLE_SIZE;j++)
-            {
-                this.weights[i][j]*=3;
-                this.weights[i][j]+= rn.nextDouble()/10000;
-                if (this.weights[i][j]>=0)
-                    this.weights[i][j]+= rn.nextDouble()*1200*(5-level);
-            }
+        w.lock();
+        try {
+            if (me==State.cross)
+                enemy= State.circle;
+            else
+                enemy= State.cross;
 
 
-
-        this.markWeights( enemy );
-
-
-
-        for (int i=1; i<=TABLE_SIZE;i++)
-            for (int j=1;j<=TABLE_SIZE;j++)
-            {
-                if (this.weights[i][j]>biggestWeight)
-                {
-                    bWICoor=i;
-                    bWJCoor=j;
-                    biggestWeight=this.weights[i][j];
+            for (int i = (lastMove.x-3); i < (lastMove.x+4); i++) {//for (int i = 0; i < TABLE_SIZE; i++) {
+                //s = "";
+                for (int j = (lastMove.y-3); j < (lastMove.y+4); j++) {//for (int j = 0; j < TABLE_SIZE; j++) {
+                    weight = this.evaluateSpaceWeight(i, j, me);
+                    //s += String.format("%6s", weight);
+                    if (weight > biggestWeight) {
+                        bWICoor = i;
+                        bWJCoor = j;
+                        biggestWeight = weight;
+                    }
                 }
-
+                //System.out.println(i + " " + s);
             }
 
-        this.put(me,bWICoor,bWJCoor);
+
+            for (int i = (lastMove.x-3); i < (lastMove.x+4); i++) {//for (int i = 0; i < TABLE_SIZE; i++) {
+                //s = "";
+                for (int j = (lastMove.y-3); j < (lastMove.y+4); j++) {//for (int j = 0; j < TABLE_SIZE; j++) {
+                    weight = 1.2 * this.evaluateSpaceWeight(i, j, enemy);
+                    //s += String.format("%6s", weight);
+                    if (weight > biggestWeight) {
+                        bWICoor = i;
+                        bWJCoor = j;
+                        biggestWeight = weight;
+                    }
+                }
+                //System.out.println("a" + i + " " + s);
+            }
+
+            this.put(me,bWICoor,bWJCoor);
+            lastMove = new Coordinates(bWICoor,bWJCoor);
+
+        }
+        finally { w.unlock(); }
+
+
+
+
         return (new Coordinates(bWICoor, bWJCoor));
 
     }
@@ -210,34 +256,40 @@ public class Table // igraca tabla
      * @return
      */
 
-    private int detectSequence(int i, int j, State me, int[] sequence)
+    private int detectSequence(int i, int j, State me, int[] sequence, int direction)
     {
         if (this.get( i, j )!=State.empty) return 0;
         int result=0;
         this.put( me, i, j );
+        //System.out.println("DIRECTION " + direction);
 
         for (int begin=0; begin<sequence.length; begin++)
         {
             int count[]={0,0,0,0};
             for (int x=0; x<sequence.length; x++)
             {
-                if (  ((this.get( i-(sequence.length-1)+begin+x, j )==me) && (sequence[x]==1)) ||
-                        (this.get( i-(sequence.length-1)+begin+x, j )==State.empty) && (sequence[x]==0))    //vodoravno
-                    count[0]++;
-
-                if (  ((this.get(  i, j-(sequence.length-1)+begin+x )==me) && (sequence[x]==1)) ||
-                        (this.get( i, j-(sequence.length-1)+begin+x )==State.empty) && (sequence[x]==0)) //okomito
-                    count[1]++;
-
-                if (  ((this.get( i-(sequence.length-1)+begin+x, j-(sequence.length-1)+begin+x )==me) && (sequence[x]==1)) ||
-                        (this.get( i-(sequence.length-1)+begin+x, j-(sequence.length-1)+begin+x )==State.empty) && (sequence[x]==0))
-                    count[2]++;
-
-                if (  ((this.get( i-(sequence.length-1)+begin+x, j+(sequence.length-1)-begin-x )==me) && (sequence[x]==1)) ||
-                        (this.get( i-(sequence.length-1)+begin+x, j+(sequence.length-1)-begin-x )==State.empty) && (sequence[x]==0))
-                    count[3]++;
-
-
+                switch(direction) {
+                    case 0:
+                        if (((this.get(i - (sequence.length - 1) + begin + x, j) == me) && (sequence[x] == 1)) ||
+                                (this.get(i - (sequence.length - 1) + begin + x, j) == State.empty) && (sequence[x] == 0))    //vodoravno
+                            count[0]++;
+                        break;
+                    case 1:
+                        if (((this.get(i, j - (sequence.length - 1) + begin + x) == me) && (sequence[x] == 1)) ||
+                                (this.get(i, j - (sequence.length - 1) + begin + x) == State.empty) && (sequence[x] == 0)) //okomito
+                            count[1]++;
+                        break;
+                    case 2:
+                        if (((this.get(i - (sequence.length - 1) + begin + x, j - (sequence.length - 1) + begin + x) == me) && (sequence[x] == 1)) ||
+                                (this.get(i - (sequence.length - 1) + begin + x, j - (sequence.length - 1) + begin + x) == State.empty) && (sequence[x] == 0))
+                            count[2]++;
+                        break;
+                    case 3:
+                        if (((this.get(i - (sequence.length - 1) + begin + x, j + (sequence.length - 1) - begin - x) == me) && (sequence[x] == 1)) ||
+                                (this.get(i - (sequence.length - 1) + begin + x, j + (sequence.length - 1) - begin - x) == State.empty) && (sequence[x] == 0))
+                            count[3]++;
+                        break;
+                }
             }
 
             for (int x=0; x<4; x++)
@@ -255,61 +307,40 @@ public class Table // igraca tabla
      * Evaluates a weight of a single field.
      * @param i x-coordinate of a field (space)
      * @param j y-coordinate of a field (space)
-     * @param me a player about who's move it is been thinked.
-     * @param depth recursion depth
+     * @param me a player about who's move it is been thought.
      * @return Weight
      */
 
-    private double evaluateSpaceWeight(int i, int j, State me, int depth)
+    private double evaluateSpaceWeight(int i, int j, State me)
     {
-
-        if (this.get( i, j )!=State.empty) return -1;
         double result=0;
 
-        if ((this.detectSequence( i, j, me, win )) != 0)
-            return 10000;
-        else
-        {
-            result += 800*this.detectSequence( i, j, me, probablyMust );
+        if (this.get( i, j )!=State.empty) return -1;
 
-            result += 80*this.detectSequence( i, j, me, three1 );
-            result += 80*this.detectSequence( i, j, me, three2 );
-            result += 80*this.detectSequence( i, j, me, three3 );
-            result += 80*this.detectSequence( i, j, me, three4 );
 
-            result += 10*this.detectSequence( i, j, me, two1 );
-            result += 10*this.detectSequence( i, j, me, two2 );
-            result += 10*this.detectSequence( i, j, me, two3 );
-
-            if (this.level>2){
-                result += this.detectSequence( i, j, me, shittierTwo1 );
-                result += this.detectSequence( i, j, me, shittierTwo2 );
-                result += this.detectSequence( i, j, me, shittierTwo3 );
-                result += this.detectSequence( i, j, me, shittierTwo4 );
-                result += this.detectSequence( i, j, me, shittierTwo5 );
-                result += this.detectSequence( i, j, me, shittierTwo6 );
-            }
+        for (int x = 0; x<4; x++) {
+            if ((this.detectSequence(i, j, me, no, x)) != 0) ;
+            else if ((this.detectSequence(i, j, me, win, x)) != 0)
+                result += 10000;
+            else if ((this.detectSequence(i, j, me, probablyMust, x)) != 0)
+                result += 1000;
+            else if ((this.detectSequence(i, j, me, three1, x) != 0) ||
+                    (this.detectSequence(i, j, me, three2, x) != 0) ||
+                    (this.detectSequence(i, j, me, three3, x) != 0) ||
+                    (this.detectSequence(i, j, me, three4, x) != 0))
+                result += 100;
+            else if ((this.detectSequence(i, j, me, two1, x) != 0) ||
+                    (this.detectSequence(i, j, me, two2, x) != 0) ||
+                    (this.detectSequence(i, j, me, two3, x) != 0))
+                result += 10;
+            else if ((this.detectSequence(i, j, me, shittierTwo1, x) != 0) ||
+                    (this.detectSequence(i, j, me, shittierTwo2, x) != 0) ||
+                    (this.detectSequence(i, j, me, shittierTwo3, x) != 0) ||
+                    (this.detectSequence(i, j, me, shittierTwo4, x) != 0) ||
+                    (this.detectSequence(i, j, me, shittierTwo5, x) != 0) ||
+                    (this.detectSequence(i, j, me, shittierTwo6, x) != 0))
+                result += 1;
         }
-
-        if (depth>0){
-            this.put( me, i, j );
-            double maxWeight1=0;
-            double maxWeight2=0;
-
-            for (int x=0; x<5;x++)//od okolnih polja uzima dva s najvecom tezinom i dodaje desetinu njihovog prosjeka
-                for (int y=0; y<5;y++)
-                    if (!this.distant( i-2+x, j-2+y ))
-                    {
-                        double value=this.evaluateSpaceWeight( i-2+x, j-2+y, me, depth-1 );
-                        if (value>maxWeight1)
-                            maxWeight1=value;
-                        else
-                        if (value>maxWeight2)
-                            maxWeight2=value;
-                    }
-            result+=(maxWeight1+maxWeight2)/20;
-        }
-        this.put( State.empty, i, j );
         return result;
 
     }
@@ -325,41 +356,46 @@ public class Table // igraca tabla
 
     public State end()
     {
-        for (int i=1; i<=TABLE_SIZE-3; i++)    //koso prema dolje lijevo
-            for (int j=1; j<=TABLE_SIZE-3; j++)
-            {
-                if ( (this.get(i,j)== State.cross) && (this.get(i+1,j+1)==State.cross) && (this.get( i+2, j+2 )==State.cross) && (this.get( i+3, j+3 )==State.cross) )
-                    return State.cross;
-                if ( (this.get(i,j)== State.circle) && (this.get(i+1,j+1)==State.circle) && (this.get( i+2, j+2 )==State.circle) && (this.get( i+3, j+3 )==State.circle) )
-                    return State.circle;
-            }
+        r.lock();
+        try {
+            for (int i=0; i<TABLE_SIZE-3; i++)    //koso prema dolje lijevo
+                for (int j=0; j<TABLE_SIZE-3; j++)
+                {
+                    if ( (this.get(i,j)== State.cross) && (this.get(i+1,j+1)==State.cross) && (this.get( i+2, j+2 )==State.cross) && (this.get( i+3, j+3 )==State.cross) )
+                        return State.cross;
+                    if ( (this.get(i,j)== State.circle) && (this.get(i+1,j+1)==State.circle) && (this.get( i+2, j+2 )==State.circle) && (this.get( i+3, j+3 )==State.circle) )
+                        return State.circle;
+                }
 
-        for (int i=4; i<=TABLE_SIZE; i++)    //koso prema dolje desno
-            for (int j=1; j<=TABLE_SIZE-3; j++)
-            {
-                if ( (this.get(i,j)== State.cross) && (this.get(i-1,j+1)==State.cross) && (this.get( i-2, j+2 )==State.cross) && (this.get( i-3, j+3 )==State.cross) )
-                    return State.cross;
-                if ( (this.get(i,j)== State.circle) && (this.get(i-1,j+1)==State.circle) && (this.get( i-2, j+2 )==State.circle) && (this.get( i-3, j+3 )==State.circle) )
-                    return State.circle;
-            }
+            for (int i=3; i<TABLE_SIZE; i++)    //koso prema dolje desno
+                for (int j=0; j<TABLE_SIZE-3; j++)
+                {
+                    if ( (this.get(i,j)== State.cross) && (this.get(i-1,j+1)==State.cross) && (this.get( i-2, j+2 )==State.cross) && (this.get( i-3, j+3 )==State.cross) )
+                        return State.cross;
+                    if ( (this.get(i,j)== State.circle) && (this.get(i-1,j+1)==State.circle) && (this.get( i-2, j+2 )==State.circle) && (this.get( i-3, j+3 )==State.circle) )
+                        return State.circle;
+                }
 
-        for (int i=1; i<=TABLE_SIZE-3; i++)  //vodoravno
-            for (int j=1; j<=TABLE_SIZE; j++)
-            {
-                if ( (this.get(i,j)== State.cross) && (this.get(i+1,j)==State.cross) && (this.get( i+2, j )==State.cross) && (this.get( i+3, j)==State.cross) )
-                    return State.cross;
-                if ( (this.get(i,j)== State.circle) && (this.get(i+1,j)==State.circle) && (this.get( i+2, j )==State.circle) && (this.get( i+3, j )==State.circle) )
-                    return State.circle;
-            }
+            for (int i=0; i<TABLE_SIZE-3; i++)  //vodoravno
+                for (int j=0; j<TABLE_SIZE; j++)
+                {
+                    if ( (this.get(i,j)== State.cross) && (this.get(i+1,j)==State.cross) && (this.get( i+2, j )==State.cross) && (this.get( i+3, j)==State.cross) )
+                        return State.cross;
+                    if ( (this.get(i,j)== State.circle) && (this.get(i+1,j)==State.circle) && (this.get( i+2, j )==State.circle) && (this.get( i+3, j )==State.circle) )
+                        return State.circle;
+                }
 
-        for (int i=1; i<=TABLE_SIZE; i++)  //okomito
-            for (int j=1; j<=TABLE_SIZE-3; j++)
-            {
-                if ( (this.get(i,j)== State.cross) && (this.get(i,j+1)==State.cross) && (this.get( i, j+2 )==State.cross) && (this.get( i, j+3)==State.cross) )
-                    return State.cross;
-                if ( (this.get(i,j)== State.circle) && (this.get(i,j+1)==State.circle) && (this.get( i, j+2 )==State.circle) && (this.get( i, j+3 )==State.circle) )
-                    return State.circle;
-            }
+            for (int i=0; i<TABLE_SIZE; i++)  //okomito
+                for (int j=0; j<TABLE_SIZE-3; j++)
+                {
+                    if ( (this.get(i,j)== State.cross) && (this.get(i,j+1)==State.cross) && (this.get( i, j+2 )==State.cross) && (this.get( i, j+3)==State.cross) )
+                        return State.cross;
+                    if ( (this.get(i,j)== State.circle) && (this.get(i,j+1)==State.circle) && (this.get( i, j+2 )==State.circle) && (this.get( i, j+3 )==State.circle) )
+                        return State.circle;
+                }
+        }
+
+        finally { r.unlock(); }
 
         return State.empty;
     }

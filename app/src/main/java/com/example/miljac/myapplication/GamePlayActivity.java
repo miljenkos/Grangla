@@ -10,10 +10,13 @@ public class GamePlayActivity extends AppCompatActivity implements TableFragment
 
     private TableView tableView;
     private OtherPlayer otherPlayer = new OtherPlayer();
-    private Table table;
+    private Table table = new Table(3);
     private TableFragment tableFragment;
+    private Boolean gameDone = false;
 
     private Coordinates c;
+
+    Thread opThread;
 
 
     @Override
@@ -21,7 +24,7 @@ public class GamePlayActivity extends AppCompatActivity implements TableFragment
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game_play);
 
-        table = new Table(1);
+        this.table = new Table(3);
 
 
 
@@ -29,34 +32,36 @@ public class GamePlayActivity extends AppCompatActivity implements TableFragment
                 getSupportFragmentManager().findFragmentById(R.id.Table);
         tableView = (TableView) tableFragment.tableView;
 
-        Thread opThread = new Thread(otherPlayer);
+        opThread = new Thread(otherPlayer);
         //runOnUiThread(otherPlayer);
         opThread.start();
 
     }
 
+    @Override
+    protected void onDestroy(){
+        super.onDestroy();
+        gameDone = true;
+        /*try {
+            opThread.join();
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }*/
+    }
+
 
     private class OtherPlayer implements Runnable {
         public void run() {
-            Log.d("AAjajajajjajajajajA", "BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB");
-            System.out.println("aaaaaaaaaaaaaaaaaaaaaaaaaaa");
-            while(true){
+
+            while(!gameDone){
                 try {
-                    Thread.sleep(3000);
+                    Thread.sleep(1500);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
 
-
-                Log.d("AAjajajajjajajajajA", "BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB");
-                System.out.println("aaaaaaaaaaaaaaaaaaaaaaaaaaa");
-
-
                 c = table.putAutomatic(State.cross);
-
-                System.out.println(c.x);
-                System.out.println(c.y);
-
 
                 class OtherPlayerDraws implements Runnable {
                     public void run() {
@@ -74,12 +79,8 @@ public class GamePlayActivity extends AppCompatActivity implements TableFragment
     }
 
     public void onFieldSelected(int x,int y) {
-        System.out.println("\njeldaaa\n");
 
-        tableView.changePinColor(x*tableFragment.pinSize +1, y*tableFragment.pinSize +1, R.drawable.pin39);
-        table.put(State.circle, x, y);
-
-
-
+        if (this.table.publicPut(State.circle, x, y))
+            tableView.changePinColor(x*tableFragment.pinSize +1, y*tableFragment.pinSize +1, R.drawable.pin39);
     }
 }
