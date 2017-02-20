@@ -106,15 +106,15 @@ public class FieldImageView extends ImageView  {
 
 
         if (resId != R.drawable.pin39) {
-            Animation scaleInAnim = TableConfig.getFadeScaleInAnim(ctx);
-            AnimView av = new AnimView(scaleInAnim, d);
-            setImageDrawable(d);
-            this.setVisibility(View.GONE);
+            Animation fadeInAnim = TableConfig.getFadeInAnim(ctx);
+            AnimView av = new AnimView(fadeInAnim, d);
+            //setImageDrawable(d); KAD JE OVO ZAKOMENTIRANO TITRA KOD MICANJA ZNAKOVA S PLOCE
+            //this.setVisibility(View.GONE);
             this.post(av);
         }
         else {
-            Animation fadeOutAnim = TableConfig.getFadeScaleOutAnim(ctx);
-            AnimView av = new AnimView(fadeOutAnim, d);
+            Animation fadeInAnim = TableConfig.getFadeInAnim(ctx);
+            AnimView av = new AnimView(fadeInAnim, d);
             this.post(av);
         }
 

@@ -15,7 +15,7 @@ import java.util.concurrent.locks.Lock;
  */
 public class Table // igraca tabla
 {
-    public static int TABLE_SIZE = 10;
+    public static int TABLE_SIZE = 9;
     private final Space[][] table = new Space[10][10];
 
     private final int[] no=           {0,0,0,1,0,0,0};
@@ -103,8 +103,8 @@ public class Table // igraca tabla
 
     private void put(State givenState, int i, int j)  // stavlja stanje givenState na polje koordinata (i,j)
     {
-        i = (i + TABLE_SIZE) % TABLE_SIZE;
-        j = (j + TABLE_SIZE) % TABLE_SIZE;
+        i = (i + TABLE_SIZE*2) % TABLE_SIZE;
+        j = (j + TABLE_SIZE*2) % TABLE_SIZE;
         (this.table[i][j]).setState(givenState);
     }
 
@@ -221,7 +221,8 @@ public class Table // igraca tabla
                 enemy= State.cross;
 
 
-            for (int i = (lastMove.x-3); i < (lastMove.x+4); i++) {//for (int i = 0; i < TABLE_SIZE; i++) {
+            //for (int i = (lastMove.x-3); i < (lastMove.x+4); i++) {
+            for (int i = 0; i < TABLE_SIZE; i++) {
                 //s = "";
                 for (int j = (lastMove.y-3); j < (lastMove.y+4); j++) {//for (int j = 0; j < TABLE_SIZE; j++) {
                     weight = this.evaluateSpaceWeight(i, j, me);
@@ -236,10 +237,11 @@ public class Table // igraca tabla
             }
 
 
-            for (int i = (lastMove.x-3); i < (lastMove.x+4); i++) {//for (int i = 0; i < TABLE_SIZE; i++) {
+            //for (int i = (lastMove.x-3); i < (lastMove.x+4); i++) {
+            for (int i = 0; i < TABLE_SIZE; i++) {
                 //s = "";
                 for (int j = (lastMove.y-3); j < (lastMove.y+4); j++) {//for (int j = 0; j < TABLE_SIZE; j++) {
-                    weight = 1.2 * this.evaluateSpaceWeight(i, j, enemy);
+                    weight = 0.8 * this.evaluateSpaceWeight(i, j, enemy);
                     //s += String.format("%6s", weight);
                     if (weight > biggestWeight) {
                         bWICoor = i;
@@ -375,8 +377,8 @@ public class Table // igraca tabla
     {
         r.lock();
         try {
-            for (int i=0; i<TABLE_SIZE-3; i++)    //koso prema dolje lijevo
-                for (int j=0; j<TABLE_SIZE-3; j++)
+            for (int i=-4; i<TABLE_SIZE; i++)    //koso prema dolje lijevo
+                for (int j=-4; j<TABLE_SIZE; j++)
                 {
                     if ( (this.get(i,j)== State.cross) && (this.get(i+1,j+1)==State.cross) && (this.get( i+2, j+2 )==State.cross) && (this.get( i+3, j+3 )==State.cross) )
                         return new EndStruct(State.cross,
@@ -392,8 +394,8 @@ public class Table // igraca tabla
                                 new Coordinates(i+3,j+3));
                 }
 
-            for (int i=3; i<TABLE_SIZE; i++)    //koso prema dolje desno
-                for (int j=0; j<TABLE_SIZE-3; j++)
+            for (int i=-4; i<TABLE_SIZE; i++)    //koso prema dolje desno
+                for (int j=-4; j<TABLE_SIZE; j++)
                 {
                     if ( (this.get(i,j)== State.cross) && (this.get(i-1,j+1)==State.cross) && (this.get( i-2, j+2 )==State.cross) && (this.get( i-3, j+3 )==State.cross) )
                         return new EndStruct(State.cross,
@@ -409,8 +411,8 @@ public class Table // igraca tabla
                                 new Coordinates(i-3,j+3));
                 }
 
-            for (int i=0; i<TABLE_SIZE-3; i++)  //vodoravno
-                for (int j=0; j<TABLE_SIZE; j++)
+            for (int i=-4; i<TABLE_SIZE; i++)  //vodoravno
+                for (int j=-4; j<TABLE_SIZE; j++)
                 {
                     if ( (this.get(i,j)== State.cross) && (this.get(i+1,j)==State.cross) && (this.get( i+2, j )==State.cross) && (this.get( i+3, j)==State.cross) )
                         return new EndStruct(State.cross,
@@ -426,8 +428,8 @@ public class Table // igraca tabla
                                 new Coordinates(i+3,j));
                 }
 
-            for (int i=0; i<TABLE_SIZE; i++)  //okomito
-                for (int j=0; j<TABLE_SIZE-3; j++)
+            for (int i=-4; i<TABLE_SIZE; i++)  //okomito
+                for (int j=-4; j<TABLE_SIZE; j++)
                 {
                     if ( (this.get(i,j)== State.cross) && (this.get(i,j+1)==State.cross) && (this.get( i, j+2 )==State.cross) && (this.get( i, j+3)==State.cross) )
                         return new EndStruct(State.cross,
@@ -459,6 +461,8 @@ public class Table // igraca tabla
     }
 
 }
+
+
 
 
 

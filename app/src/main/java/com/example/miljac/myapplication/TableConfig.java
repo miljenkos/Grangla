@@ -53,6 +53,12 @@ public class TableConfig {
 
     }
 
+    public static Animation getFadeInAnim(Context ctx) {
+
+        return  AnimationUtils.loadAnimation(ctx.getApplicationContext(), R.anim.fadein);
+
+    }
+
     public static Animation getRotateAnim(Context ctx) {
 
         return  AnimationUtils.loadAnimation(ctx.getApplicationContext(), R.anim.rotate);

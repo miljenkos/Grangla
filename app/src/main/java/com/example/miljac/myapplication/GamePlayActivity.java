@@ -6,6 +6,9 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
+
 public class GamePlayActivity extends AppCompatActivity implements TableFragment.OnFieldSelectedListener {
 
     private TableView tableView;
@@ -17,23 +20,33 @@ public class GamePlayActivity extends AppCompatActivity implements TableFragment
     private Coordinates c;
     private EndStruct endStruct;
 
+    private final ReentrantReadWriteLock rwl = new ReentrantReadWriteLock();
+    private final Lock r = rwl.readLock();
+    private final Lock w = rwl.writeLock();
+
     Thread opThread;
 
 
     class OtherPlayerCollects implements Runnable {
-        public void run() {
+        private EndStruct es;
 
-            try {
+        public OtherPlayerCollects(EndStruct e){
+            this.es = e;
+        }
+
+        public void run() {
+            /*try {
                 Thread.sleep(100);
             } catch (InterruptedException e) {
                 e.printStackTrace();
-            }
+            }*/
 
-            tableView.changePinColor(endStruct.first.x*tableFragment.pinSize +1, endStruct.first.y*tableFragment.pinSize +1, R.drawable.pin41);
-            tableView.changePinColor(endStruct.second.x*tableFragment.pinSize +1, endStruct.second.y*tableFragment.pinSize +1, R.drawable.pin41);
-            tableView.changePinColor(endStruct.third.x*tableFragment.pinSize +1, endStruct.third.y*tableFragment.pinSize +1, R.drawable.pin41);
-            tableView.changePinColor(endStruct.fourth.x*tableFragment.pinSize +1, endStruct.fourth.y*tableFragment.pinSize +1, R.drawable.pin41);
+            tableView.changePinColor(this.es.first.x*tableFragment.pinSize +1, this.es.first.y*tableFragment.pinSize +1, R.drawable.pin41);
+            tableView.changePinColor(this.es.second.x*tableFragment.pinSize +1, this.es.second.y*tableFragment.pinSize +1, R.drawable.pin41);
+            tableView.changePinColor(this.es.third.x*tableFragment.pinSize +1, this.es.third.y*tableFragment.pinSize +1, R.drawable.pin41);
+            tableView.changePinColor(this.es.fourth.x*tableFragment.pinSize +1, this.es.fourth.y*tableFragment.pinSize +1, R.drawable.pin41);
             tableView.invalidate();
+            //w.unlock();
         }
     }
 
@@ -92,15 +105,21 @@ public class GamePlayActivity extends AppCompatActivity implements TableFragment
                 OtherPlayerDraws otherPlayerDraws = new OtherPlayerDraws();
                 runOnUiThread(otherPlayerDraws);
 
-
+                //w.lock();
                 endStruct = table.end();
                 if (endStruct.winner != State.empty){
-                    OtherPlayerCollects otherPlayerCollects = new OtherPlayerCollects();
-                    runOnUiThread(otherPlayerCollects);
                     table.publicEmpty(endStruct.first.x, endStruct.first.y);
                     table.publicEmpty(endStruct.second.x, endStruct.second.y);
                     table.publicEmpty(endStruct.third.x, endStruct.third.y);
                     table.publicEmpty(endStruct.fourth.x, endStruct.fourth.y);
+
+                    OtherPlayerCollects otherPlayerCollects = new OtherPlayerCollects(endStruct);
+                    runOnUiThread(otherPlayerCollects);
+
+
+                }
+                else {
+                    //w.unlock();
                 }
 
                 //postDelayed(tableView, DELAY_TIME_MILLIS);
@@ -111,7 +130,21 @@ public class GamePlayActivity extends AppCompatActivity implements TableFragment
 
     public void onFieldSelected(int x,int y) {
 
-        if (this.table.publicPut(State.circle, x, y))
-            tableView.changePinColor(x*tableFragment.pinSize +1, y*tableFragment.pinSize +1, R.drawable.pin39);
+        if (this.table.publicPut(State.circle, x, y)) {
+            tableView.changePinColor(x * tableFragment.pinSize + 1, y * tableFragment.pinSize + 1, R.drawable.pin39);
+            //w.lock();
+            endStruct = table.end();
+            if (endStruct.winner != State.empty){
+                table.publicEmpty(endStruct.first.x, endStruct.first.y);
+                table.publicEmpty(endStruct.second.x, endStruct.second.y);
+                table.publicEmpty(endStruct.third.x, endStruct.third.y);
+                table.publicEmpty(endStruct.fourth.x, endStruct.fourth.y);
+                OtherPlayerCollects otherPlayerCollects = new OtherPlayerCollects(endStruct);
+                runOnUiThread(otherPlayerCollects);
+
+            } else {
+                //w.unlock();
+            }
+        }
     }
 }
