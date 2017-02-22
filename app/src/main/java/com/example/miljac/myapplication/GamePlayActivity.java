@@ -22,7 +22,7 @@ public class GamePlayActivity extends AppCompatActivity implements TableFragment
 
     private final ReentrantReadWriteLock rwl = new ReentrantReadWriteLock();
     private final Lock r = rwl.readLock();
-    private final Lock w = rwl.writeLock();
+    //private final Lock ww = rwl.writeLock();
 
     Thread opThread;
 
@@ -46,7 +46,7 @@ public class GamePlayActivity extends AppCompatActivity implements TableFragment
             tableView.changePinColor(this.es.third.x*tableFragment.pinSize +1, this.es.third.y*tableFragment.pinSize +1, R.drawable.pin41);
             tableView.changePinColor(this.es.fourth.x*tableFragment.pinSize +1, this.es.fourth.y*tableFragment.pinSize +1, R.drawable.pin41);
             tableView.invalidate();
-            //w.unlock();
+            //ww.unlock();
         }
     }
 
@@ -100,27 +100,33 @@ public class GamePlayActivity extends AppCompatActivity implements TableFragment
                     e.printStackTrace();
                 }
 
-                c = table.putAutomatic(State.cross);
 
-                OtherPlayerDraws otherPlayerDraws = new OtherPlayerDraws();
-                runOnUiThread(otherPlayerDraws);
+                //ww.lock();
+                synchronized (table) {
 
-                //w.lock();
-                endStruct = table.end();
-                if (endStruct.winner != State.empty){
-                    table.publicEmpty(endStruct.first.x, endStruct.first.y);
-                    table.publicEmpty(endStruct.second.x, endStruct.second.y);
-                    table.publicEmpty(endStruct.third.x, endStruct.third.y);
-                    table.publicEmpty(endStruct.fourth.x, endStruct.fourth.y);
+                    c = table.putAutomatic(State.cross);
 
-                    OtherPlayerCollects otherPlayerCollects = new OtherPlayerCollects(endStruct);
-                    runOnUiThread(otherPlayerCollects);
+                    OtherPlayerDraws otherPlayerDraws = new OtherPlayerDraws();
+                    runOnUiThread(otherPlayerDraws);
+
+                    //otherPlayerDraws.wait();
+
+                    endStruct = table.end();
+                    if (endStruct.winner != State.empty) {
+                        table.publicEmpty(endStruct.first.x, endStruct.first.y);
+                        table.publicEmpty(endStruct.second.x, endStruct.second.y);
+                        table.publicEmpty(endStruct.third.x, endStruct.third.y);
+                        table.publicEmpty(endStruct.fourth.x, endStruct.fourth.y);
+
+                        OtherPlayerCollects otherPlayerCollects = new OtherPlayerCollects(endStruct);
+                        runOnUiThread(otherPlayerCollects);
 
 
+                    }
                 }
-                else {
-                    //w.unlock();
-                }
+                /*else {
+                    ww.unlock();
+                }*/
 
                 //postDelayed(tableView, DELAY_TIME_MILLIS);
             }
@@ -130,21 +136,28 @@ public class GamePlayActivity extends AppCompatActivity implements TableFragment
 
     public void onFieldSelected(int x,int y) {
 
-        if (this.table.publicPut(State.circle, x, y)) {
-            tableView.changePinColor(x * tableFragment.pinSize + 1, y * tableFragment.pinSize + 1, R.drawable.pin39);
-            //w.lock();
-            endStruct = table.end();
-            if (endStruct.winner != State.empty){
-                table.publicEmpty(endStruct.first.x, endStruct.first.y);
-                table.publicEmpty(endStruct.second.x, endStruct.second.y);
-                table.publicEmpty(endStruct.third.x, endStruct.third.y);
-                table.publicEmpty(endStruct.fourth.x, endStruct.fourth.y);
-                OtherPlayerCollects otherPlayerCollects = new OtherPlayerCollects(endStruct);
-                runOnUiThread(otherPlayerCollects);
+        //ww.lock();
+        synchronized (table) {
 
-            } else {
-                //w.unlock();
-            }
+            if (this.table.publicPut(State.circle, x, y)) {
+                tableView.changePinColor(x * tableFragment.pinSize + 1, y * tableFragment.pinSize + 1, R.drawable.pin39);
+
+
+                endStruct = table.end();
+                if (endStruct.winner != State.empty) {
+                    table.publicEmpty(endStruct.first.x, endStruct.first.y);
+                    table.publicEmpty(endStruct.second.x, endStruct.second.y);
+                    table.publicEmpty(endStruct.third.x, endStruct.third.y);
+                    table.publicEmpty(endStruct.fourth.x, endStruct.fourth.y);
+                    OtherPlayerCollects otherPlayerCollects = new OtherPlayerCollects(endStruct);
+                    runOnUiThread(otherPlayerCollects);
+
+                } /*else {
+                ww.unlock();
+            }*/
+            } /*else {
+            ww.unlock();
+        }*/
         }
     }
 }
