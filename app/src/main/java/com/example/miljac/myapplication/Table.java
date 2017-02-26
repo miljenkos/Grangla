@@ -171,6 +171,16 @@ public class Table // igraca tabla
     }
 
 
+    public State publicGet(int i,int j)
+    {
+        w.lock();
+        try {
+            return this.get(i, j);
+        } finally {
+            w.unlock();
+        }
+    }
+
     /**
      * Marks every field with a number which should describe how
      * smart it is to put a mark on that field.
@@ -225,7 +235,7 @@ public class Table // igraca tabla
             for (int i = 0; i < TABLE_SIZE; i++) {
                 //s = "";
                 for (int j = (lastMove.y-3); j < (lastMove.y+4); j++) {//for (int j = 0; j < TABLE_SIZE; j++) {
-                    weight = this.evaluateSpaceWeight(i, j, me);
+                    weight = this.evaluateSpaceWeight(i, j, me) + rn.nextDouble();
                     //s += String.format("%6s", weight);
                     if (weight > biggestWeight) {
                         bWICoor = i;

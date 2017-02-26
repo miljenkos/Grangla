@@ -16,6 +16,7 @@ public class Space  //polje u tabli, moze imati tri stanja : krizic, kruzic i pr
      * The default constructor, sets the field (space) to be empty.
      */
     private State state;
+    public Boolean removing = false;
 
     public Space()
     {

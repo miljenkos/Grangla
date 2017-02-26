@@ -30,6 +30,9 @@ public class FieldImageView extends ImageView  {
     private int stato = -1;
     private Context ctx;
     private int currentPinId;
+    private int lastPinId;
+    private Boolean removing = false;
+    private Boolean animRunning = false;
 
     public FieldImageView(Context context, int row, int col) {
         super(context);
@@ -80,7 +83,11 @@ public class FieldImageView extends ImageView  {
     }
 
 
-    public void setPinColor(int resId) {
+    public synchronized void setPinColor(int resId) {
+
+        if ((this.currentPinId == resId) && !removing) return;
+        if (animRunning) return;
+
 
         this.currentPinId = resId;
         final Drawable d = getResources().getDrawable(resId);
@@ -105,20 +112,33 @@ public class FieldImageView extends ImageView  {
 
 
 
-        if (resId != R.drawable.pin39) {
-            Animation fadeInAnim = TableConfig.getFadeInAnim(ctx);
-            AnimView av = new AnimView(fadeInAnim, d);
-            //setImageDrawable(d); KAD JE OVO ZAKOMENTIRANO TITRA KOD MICANJA ZNAKOVA S PLOCE
-            //this.setVisibility(View.GONE);
-            this.post(av);
+        if (resId == TableConfig.pinBackground) {
+            if (!removing){
+                removing = true;
+                Drawable lastD = getResources().getDrawable(this.lastPinId);
+                setImageDrawable(lastD);
+
+            } else {
+                removing = false;
+                this.lastPinId = resId;
+
+                animRunning = true;
+                Animation fadeInAnim = TableConfig.getFadeInAnim(ctx);
+                AnimView av = new AnimView(fadeInAnim, d);
+                //setImageDrawable(d);KAD JE OVO ZAKOMENTIRANO TITRA KOD MICANJA ZNAKOVA S PLOCE
+                //this.setVisibility(View.GONE);
+                this.post(av);
+            }
         }
         else {
-            Animation fadeInAnim = TableConfig.getFadeInAnim(ctx);
+            /*Animation fadeInAnim = TableConfig.getFadeInAnim(ctx);
             AnimView av = new AnimView(fadeInAnim, d);
-            this.post(av);
+            this.post(av);*/
+            this.lastPinId = resId;
+            setImageDrawable(d);
         }
 
-        //this.invalidate();
+        this.invalidate();
 
     }
 
@@ -138,6 +158,7 @@ public class FieldImageView extends ImageView  {
                 @Override
                 public void onAnimationStart(Animation animation) {
                     //TableConfig.playSound(FieldImageView.this.ctx);
+                    //FieldImageView.this.setVisibility(View.VISIBLE);
                 }
 
                 @Override
@@ -146,7 +167,8 @@ public class FieldImageView extends ImageView  {
                 @Override
                 public void onAnimationEnd(Animation animation) {
                     setImageDrawable(d);
-                    FieldImageView.this.setVisibility(View.VISIBLE);
+                    animRunning = false;
+                    //FieldImageView.this.setVisibility(View.VISIBLE);
                 }
             });
 
