@@ -72,29 +72,6 @@ public class Table // igraca tabla
     }
 
     /**
-     * Checks if a field (space) is too distant to be considered
-     * to put a mark on it. Used to prevent the recursion from running
-     * wild across the board.
-     * @param i x-coordinate of a field (space)
-     * @param j y-coordinate of a field (space)
-     * @return is it too distant
-     */
-    private boolean distant(int i, int j)
-    {
-        int count =0;
-        for ( int x=0; x<7; x++)
-            for (int y=0; y<7; y++)
-            {
-                if ((this.get( i-3+x, j-3+y )==State.circle)||(this.get( i-3+x, j-3+y )==State.cross))
-                    count++;
-                if (count>2) return false;
-            }
-        return true;
-
-
-
-    }
-    /**
      * Puts a mark on the board.
      * @param givenState a mark to be put.
      * @param i x-coordinate of a field (space)
@@ -181,35 +158,7 @@ public class Table // igraca tabla
         }
     }
 
-    /**
-     * Marks every field with a number which should describe how
-     * smart it is to put a mark on that field.
-     * @param me
-     */
 
-    /*private void markWeights(State me)
-    {
-        for (int i=1; i<=TABLE_SIZE;i++)
-            for (int j=1;j<=TABLE_SIZE;j++)
-                weights[i][j]+=this.evaluateSpaceWeight( i, j, me ,RECURSION_DEPTH);
-        printOut();
-    }*/
-
-    /**
-     * zprinta tablu
-     */
-    /*private void printOut(){
-        System.out.println("\n\n\n");
-        for (int i=0; i<TABLE_SIZE;i++)
-        {
-            for (int j=0;j<TABLE_SIZE;j++)
-            {
-                System.out.format((double)((int)(weights[j][i]*100))/100 +"\t");
-            }
-            System.out.println("\n");
-        }
-        System.out.println("Nivo je: " + this.level);
-    }*/
 
     /**
      * Used when a computer is playing to make it make a move.
@@ -218,6 +167,7 @@ public class Table // igraca tabla
     public Coordinates putAutomatic(State me)
     {
         Double weight = 0.0;
+        Double r = 0.0;
         //String s;
         State enemy;
         double biggestWeight=-1;
@@ -231,11 +181,12 @@ public class Table // igraca tabla
                 enemy= State.cross;
 
 
-            //for (int i = (lastMove.x-3); i < (lastMove.x+4); i++) {
             for (int i = 0; i < TABLE_SIZE; i++) {
                 //s = "";
                 for (int j = (lastMove.y-3); j < (lastMove.y+4); j++) {//for (int j = 0; j < TABLE_SIZE; j++) {
-                    weight = this.evaluateSpaceWeight(i, j, me) + rn.nextDouble();
+                    r = rn.nextDouble();
+                    r = r*r*r * 13;
+                    weight = this.evaluateSpaceWeight(i, j, me) + r;
                     //s += String.format("%6s", weight);
                     if (weight > biggestWeight) {
                         bWICoor = i;
@@ -247,7 +198,6 @@ public class Table // igraca tabla
             }
 
 
-            //for (int i = (lastMove.x-3); i < (lastMove.x+4); i++) {
             for (int i = 0; i < TABLE_SIZE; i++) {
                 //s = "";
                 for (int j = (lastMove.y-3); j < (lastMove.y+4); j++) {//for (int j = 0; j < TABLE_SIZE; j++) {

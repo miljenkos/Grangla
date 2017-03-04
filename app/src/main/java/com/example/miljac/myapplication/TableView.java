@@ -1,17 +1,7 @@
 package com.example.miljac.myapplication;
-//import com.survivingwithandroid.pegboard.R;
-
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.drawable.Drawable;
-import android.media.MediaPlayer;
 import android.util.AttributeSet;
-import android.util.Log;
-import android.view.MotionEvent;
 import android.view.ViewGroup;
-import android.view.View;
-import android.widget.Toast;
 
 
 
@@ -23,8 +13,6 @@ public class TableView extends ViewGroup  {
     private int currentColor;
     private int numRow;
     private int numCol;
-    private int pinSize;
-    //private Table table;
 
     private Context context;
 
@@ -50,21 +38,13 @@ public class TableView extends ViewGroup  {
 
 
 
-    public void setPinSize(int s){
-        pinSize = s;
-    }
 
-    public int[] disposePins(int width, int height, int dotSize) {
-        //Log.d("Pin", "Dispose pins. ["+width+"x" +height+  "]");
+    public int[] disposePins(int dotSize) {
         this.dotSize = dotSize;
 
-        numRow = TableConfig.TABLE_SIZE;// height / dotSize + 1;
-        numCol =  TableConfig.TABLE_SIZE;//width / dotSize + 1;
+        numRow = TableConfig.TABLE_SIZE;// height
+        numCol =  TableConfig.TABLE_SIZE;//width
 
-        //Log.d("Pin", "Col x Row ["+numCol+"]x["+numRow+"]");
-
-
-        //int[] dotColors = Pin.createDotArray(dotSize, true);
 
         for (int r=0; r < numRow ; r++) {
             for (int c=0; c < numCol; c++) {
@@ -91,9 +71,7 @@ public class TableView extends ViewGroup  {
         for (int i=0; i < childCount; i++) {
             FieldImageView pinImg = (FieldImageView) getChildAt(i);
 
-            //int left = pinImg.getCol() * dotSize + dotSize * (pinImg.getType() == PinImageView.COLOR_COMMANDS || pinImg.getType() == PinImageView.DELETE ? 0 : 1);
             int left = pinImg.getCol() * dotSize;
-            //int top = pinImg.getRow()  * dotSize + dotSize * (pinImg.getType() == PinImageView.COLOR_COMMANDS || pinImg.getType() == PinImageView.DELETE ? 0 : 1);
             int top = pinImg.getRow()  * dotSize;
             int right = left + dotSize ;
             int bottom = top + dotSize ;
@@ -117,8 +95,7 @@ public class TableView extends ViewGroup  {
         int row = getRow(y);
         int col = getColumn(x);
 
-        FieldImageView pinImg = (FieldImageView) getChildAt(col + ( row  * numCol ));
-        //Log.d("Pin", "Is Reset ["+isReset+"]");
+        FieldImageView pinImg = (FieldImageView) getChildAt(x + (y*numCol));
 
         if (pinImg != null) {
             pinImg.setPinColor(color);
@@ -127,32 +104,7 @@ public class TableView extends ViewGroup  {
         }
     }
 
-    public int verify(int x, int y) {
-        int x1 = x ;
-        int y1 = y;
 
-        int col = getColumn(x1);
-        int row = getRow(y1);
-
-        //Log.d("Pin", "X ["+x1+"] - Y ["+y1+"] : Row ["+row+"] - Col ["+col+"]");
-
-        if (x1 < 0 || y1 < 0)
-            return -1;
-
-
-        // Calc board size
-        int width = numCol * dotSize;
-        int height = numRow * dotSize;
-
-        if (x1 > width)
-            return -1;
-
-        if (y1 > height)
-            return 0;
-
-        return 1;
-
-    }
 
     public int getRow(int y) {
         return (int) Math.ceil(y / dotSize);
@@ -161,19 +113,5 @@ public class TableView extends ViewGroup  {
     public int getColumn(int x) {
         return (int) Math.ceil( x / dotSize);
     }
-
-
-
-    public Bitmap createBitmap() {
-        //Log.d("Pin", "Image W ["+this.getWidth()+"] x H ["+this.getHeight()+"]");
-        Bitmap b = Bitmap.createBitmap(this.getWidth(), this.getHeight(), Bitmap.Config.RGB_565);
-        Canvas c = new Canvas(b);
-
-        this.draw(c);
-
-        return b;
-    }
-
-
 
 }
