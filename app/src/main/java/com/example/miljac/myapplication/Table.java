@@ -328,6 +328,86 @@ public class Table // igraca tabla
 
 
 
+
+    public void end2(int iC, int jC)
+    {
+        w.lock();
+        try {
+
+
+            State state = this.get(iC, jC);
+            System.out.println(state.toString());
+            Boolean found = false;
+
+
+            for (int counter = 0; counter < 4; counter++) {
+                int k1, k2;
+                switch (counter) {
+                    case 0:
+                        k1 = 1; k2 = 0;
+                        break;
+                    case 1:
+                        k1 = 0; k2 = 1;
+                        break;
+                    case 2:
+                        k1 = 1; k2 = 1;
+                        break;
+                    default:
+                        k1 = 1; k2 = -1;
+                        break;
+
+
+                }
+
+                int k22 = k2;
+                if (k2 == 0) k22 = 1;
+                int k11 = k1;
+                if (k1 == 0) k11 = 1;
+
+                for (int i = iC - 3 * k1; i != iC + k11; i = i + k11) {
+                    for (int j = jC - 3 * k2; j != jC + k22; j = j + k22) {
+
+                        if ((this.get(i, j).equals(state)) &&
+                                (this.get(i + 1 * k1, j + 1 * k2).equals(state)) &&
+                                (this.get(i + 2 * k1, j + 2 * k2).equals(state)) &&
+                                (this.get(i + 3 * k1, j + 3 * k2).equals(state))) {
+
+                            System.out.println(this.get(i, j));
+
+                            this.put(State.empty, i, j);
+                            this.put(State.empty, i + 1 * k1, j + 1 * k2);
+                            this.put(State.empty, i + 2 * k1, j + 2 * k2);
+                            this.put(State.empty, i + 3 * k1, j + 3 * k2);
+
+                            if (this.get(i + 4 * k1, j + 4 * k2).equals(state)) {
+                                this.put(State.empty, i + 4 * k1, j + 4 * k2);
+                                if (this.get(i + 5 * k1, j + 5 * k2).equals(state)) {
+                                    this.put(State.empty, i + 5 * k1, j + 5 * k2);
+                                    if (this.get(i + 6 * k1, j + 6 * k2).equals(state)) {
+                                        this.put(State.empty, i + 6 * k1, j + 6 * k2);
+                                    }
+                                }
+                            }
+                            found = true;
+                            this.put(state, iC, jC);
+
+                        }
+                    }
+
+
+                }
+            }
+
+            if (found == true) this.put(State.empty, iC, jC);
+            System.out.println(found);
+
+
+
+        }
+        finally { w.unlock(); }
+
+    }
+
     /**
      * Checks if someone has won.
      * @return A winner or empty.

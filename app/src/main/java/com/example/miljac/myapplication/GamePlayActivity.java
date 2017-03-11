@@ -16,6 +16,8 @@ public class GamePlayActivity extends AppCompatActivity implements TableFragment
     private Boolean gameDone = false;
 
     private Coordinates c;
+    private Coordinates lastMoveX;
+    private Coordinates lastMoveY;
     private EndStruct endStruct;
 
     private final ReentrantReadWriteLock rwl = new ReentrantReadWriteLock();
@@ -42,13 +44,25 @@ public class GamePlayActivity extends AppCompatActivity implements TableFragment
                 }
                 tableView.invalidate();
 
+
+                if (lastMoveX != null) {
+                    table.end2(lastMoveX.x, lastMoveX.y);
+                    lastMoveX = null;
+                }
+
+                if (lastMoveY != null) {
+                    table.end2(lastMoveY.x, lastMoveY.y);
+                    lastMoveY = null;
+                }
+
+            /*
                 endStruct = table.end();
                 if (endStruct.winner != State.empty) {
                     table.publicEmpty(endStruct.first.x, endStruct.first.y);
                     table.publicEmpty(endStruct.second.x, endStruct.second.y);
                     table.publicEmpty(endStruct.third.x, endStruct.third.y);
                     table.publicEmpty(endStruct.fourth.x, endStruct.fourth.y);
-                }
+                }*/
 
                 //}
 
@@ -106,7 +120,7 @@ public class GamePlayActivity extends AppCompatActivity implements TableFragment
 
             while(!gameDone){
                 try {
-                    Thread.sleep(1500);
+                    Thread.sleep(50000);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -116,6 +130,7 @@ public class GamePlayActivity extends AppCompatActivity implements TableFragment
                 synchronized (table) {
 
                     c = table.putAutomatic(State.cross);
+                    lastMoveY = new Coordinates(c.x, c.y);
                 }
 
             }
@@ -127,6 +142,7 @@ public class GamePlayActivity extends AppCompatActivity implements TableFragment
 
         synchronized (table) {
             this.table.publicPut(State.circle, x, y);
+            lastMoveX = new Coordinates(x,y);
         }
     }
 }
