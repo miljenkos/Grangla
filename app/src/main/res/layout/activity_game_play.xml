@@ -13,28 +13,124 @@
 -->
 
 
-<android.support.v4.widget.SlidingPaneLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+
+
 android:id="@+id/sp"
 android:layout_width="match_parent"
 android:layout_height="match_parent"
 android:background="@drawable/suma"
 android:scaleType="centerCrop"
     >
-<!--
-<fragment
-    android:id="@+id/Menu"
-    android:name="com.example.miljac.myapplication.MenuFragment"
-    android:layout_width="200dp"
-    android:layout_height="match_parent"
-    android:layout_gravity="left"
-    />
--->
-<fragment
-    android:id="@+id/Table"
-    android:name="com.example.miljac.myapplication.TableFragment"
-    android:layout_width="600dp"
-    android:layout_height="match_parent"
-    android:layout_gravity="right"
-    android:layout_weight="1" />
 
-</android.support.v4.widget.SlidingPaneLayout>
+<!--
+    <fragment
+        android:id="@+id/Table"
+        android:name="com.example.miljac.myapplication.TableFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="left"
+        android:layout_weight="1" />
+
+    <fragment
+        android:id="@+id/Result"
+        android:name="com.example.miljac.myapplication.ResultFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="right"
+        android:layout_weight="5" />
+-->
+
+
+
+    <fragment
+        android:id="@+id/Table"
+        android:name="com.example.miljac.myapplication.TableFragment"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        />
+
+    <fragment
+        android:id="@+id/Result"
+        android:name="com.example.miljac.myapplication.ResultFragment"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:layout_below="@id/Table"/>
+
+
+    <LinearLayout
+        android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        android:orientation="horizontal"
+        android:layout_below="@+id/Result">
+
+
+        <fragment
+            android:id="@+id/CircleTime"
+            android:name="com.example.miljac.myapplication.CircleTimeFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="5"/>
+
+        <fragment
+        android:id="@+id/CrossTime"
+        android:name="com.example.miljac.myapplication.CrossTimeFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="5"
+        />
+
+
+
+
+    </LinearLayout>
+
+
+
+
+
+
+
+
+
+
+<!--
+
+    <fragment
+        android:id="@+id/Table"
+        android:name="com.example.miljac.myapplication.TableFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1" />
+
+    <fragment
+        android:id="@+id/Result"
+        android:name="com.example.miljac.myapplication.ResultFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="5"
+        android:layout_below="@+id/Table"
+        />
+
+    <fragment
+        android:id="@+id/CrossTime"
+        android:name="com.example.miljac.myapplication.CrossTimeFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="5"
+        android:layout_toRightOf="@+id/Table"
+        android:layout_above="@+id/CircleTime"/>
+
+    <fragment
+        android:id="@+id/CircleTime"
+        android:name="com.example.miljac.myapplication.CrossTimeFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="5"
+        android:layout_toRightOf="@+id/Table"
+        android:layout_above="@+id/Result"/>
+
+-->
+
+</RelativeLayout>

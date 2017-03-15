@@ -48,6 +48,7 @@ public class TableFragment extends Fragment implements OnTouchListener {
         Display d = getActivity().getWindowManager().getDefaultDisplay();
         pinSize = d.getWidth() / TableConfig.TABLE_SIZE;
         pinSize = ((d.getHeight() / TableConfig.TABLE_SIZE) < pinSize) ? (d.getHeight() / TableConfig.TABLE_SIZE) : pinSize;
+        pinSize = pinSize;
 
     }
 
@@ -57,12 +58,17 @@ public class TableFragment extends Fragment implements OnTouchListener {
                              Bundle savedInstanceState) {
 
 
+
         View v = inflater.inflate(R.layout.fragment_table, container, true);
         tableView = (TableView) v.findViewById(R.id.Table);
         tableView.setOnTouchListener(this);
+        //pinSize = tableView.getHeight()/TableConfig.TABLE_SIZE;
+
         tableView.disposePins(pinSize);
 
         tableView.setCurrentColor(currentFieldDraw);
+
+
         this.setRetainInstance(true);
 
         return v;

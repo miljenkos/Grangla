@@ -58,10 +58,32 @@ public class TableView extends ViewGroup  {
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        parentWidth  = MeasureSpec.getSize(widthMeasureSpec) ;
-        parentHeight = MeasureSpec.getSize(heightMeasureSpec) ;
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+        /*int size = 0;
+        int width = getMeasuredWidth();
+        int height = getMeasuredHeight();
 
-        this.setMeasuredDimension(parentWidth, parentHeight);
+        if (width > height) {
+            size = height;
+        } else {
+            size = width;
+        }
+        setMeasuredDimension(size*5/6, size*5/6);*/
+
+        int size = 0;
+        int width =  MeasureSpec.getSize(widthMeasureSpec) ;
+        int height = MeasureSpec.getSize(heightMeasureSpec) ;
+
+
+
+        if (width > height) {
+            size = height;
+        } else {
+            size = width;
+        }
+        setMeasuredDimension(size, size);
+
+        //this.setMeasuredDimension(parentWidth, parentHeight);
     }
 
     @Override

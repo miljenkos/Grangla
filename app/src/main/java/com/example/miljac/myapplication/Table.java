@@ -15,10 +15,12 @@ import java.util.concurrent.locks.Lock;
  */
 public class Table // igraca tabla
 {
-    public static int TABLE_SIZE = 9;
+    public static int TABLE_SIZE = 8;
     private final Space[][] table = new Space[10][10];
 
     private final int[] no=           {0,0,0,1,0,0,0};
+    private final int[] win6=         {1,1,1,1,1,1};
+    private final int[] win5=         {1,1,1,1,1,1};
     private final int[] win=          {1,1,1,1};
 
     private final int[] probablyMust= {0,1,1,1,0};
@@ -301,6 +303,10 @@ public class Table // igraca tabla
 
         for (int x = 0; x<4; x++) {
             if ((this.detectSequence(i, j, me, no, x)) != 0) ;
+            else if ((this.detectSequence(i, j, me, win6, x)) != 0)
+                result += 60000;
+            else if ((this.detectSequence(i, j, me, win5, x)) != 0)
+                result += 30000;
             else if ((this.detectSequence(i, j, me, win, x)) != 0)
                 result += 10000;
             else if ((this.detectSequence(i, j, me, probablyMust, x)) != 0)
@@ -329,9 +335,11 @@ public class Table // igraca tabla
 
 
 
-    public void end2(int iC, int jC)
+    public int end2(int iC, int jC)
     {
         w.lock();
+
+        int result = 0;
         try {
 
 
@@ -378,13 +386,17 @@ public class Table // igraca tabla
                             this.put(State.empty, i + 1 * k1, j + 1 * k2);
                             this.put(State.empty, i + 2 * k1, j + 2 * k2);
                             this.put(State.empty, i + 3 * k1, j + 3 * k2);
+                            result += 3;
 
                             if (this.get(i + 4 * k1, j + 4 * k2).equals(state)) {
                                 this.put(State.empty, i + 4 * k1, j + 4 * k2);
+                                result += 1;
                                 if (this.get(i + 5 * k1, j + 5 * k2).equals(state)) {
                                     this.put(State.empty, i + 5 * k1, j + 5 * k2);
+                                    result += 1;
                                     if (this.get(i + 6 * k1, j + 6 * k2).equals(state)) {
                                         this.put(State.empty, i + 6 * k1, j + 6 * k2);
+                                        result += 1;
                                     }
                                 }
                             }
@@ -405,6 +417,7 @@ public class Table // igraca tabla
 
         }
         finally { w.unlock(); }
+        return result;
 
     }
 

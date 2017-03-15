@@ -2,6 +2,8 @@ package com.example.miljac.myapplication;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.widget.ProgressBar;
+
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
@@ -19,9 +21,11 @@ public class GamePlayActivity extends AppCompatActivity implements TableFragment
     private Coordinates lastMoveX;
     private Coordinates lastMoveY;
     private EndStruct endStruct;
+    private int result = 50;
 
     private final ReentrantReadWriteLock rwl = new ReentrantReadWriteLock();
     private final Lock r = rwl.readLock();
+    ProgressBar resultBar;
 
     Thread opThread;
     Thread refreshThread;
@@ -46,14 +50,26 @@ public class GamePlayActivity extends AppCompatActivity implements TableFragment
 
 
                 if (lastMoveX != null) {
-                    table.end2(lastMoveX.x, lastMoveX.y);
+                    result += table.end2(lastMoveX.x, lastMoveX.y);
                     lastMoveX = null;
+
                 }
 
                 if (lastMoveY != null) {
-                    table.end2(lastMoveY.x, lastMoveY.y);
+                    result -= table.end2(lastMoveY.x, lastMoveY.y);
                     lastMoveY = null;
                 }
+
+                /*if(resultBar.getProgress() < result) {
+                    resultBar.setProgress(resultBar.getProgress() - 1);
+                }
+                else if(resultBar.getProgress() > result) {
+                    resultBar.setProgress(resultBar.getProgress() + 1);*/
+
+
+                resultBar.setProgress(result);
+
+
 
             /*
                 endStruct = table.end();
@@ -94,7 +110,8 @@ public class GamePlayActivity extends AppCompatActivity implements TableFragment
 
         this.table = new Table(3);
 
-
+        resultBar = (ProgressBar)findViewById(R.id.result_bar);
+        resultBar.setProgress(50);
 
         tableFragment = (TableFragment)
                 getSupportFragmentManager().findFragmentById(R.id.Table);
@@ -120,7 +137,7 @@ public class GamePlayActivity extends AppCompatActivity implements TableFragment
 
             while(!gameDone){
                 try {
-                    Thread.sleep(50000);
+                    Thread.sleep(1500);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
