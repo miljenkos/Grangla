@@ -10,12 +10,12 @@
     <item android:id="@android:id/progress">
         <clip
             android:clipOrientation="horizontal"
-            android:gravity="right">
+            android:gravity="left">
             <shape>
                 <gradient
-                    android:startColor="#FF0000"
-                    android:centerColor="#FF0000"
-                    android:endColor="#FF0000"
+                    android:startColor="#000000FF"
+                    android:centerColor="#E00000FF"
+                    android:endColor="#000000FF"
                     android:angle="90" />
             </shape>
         </clip>

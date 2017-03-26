@@ -11,6 +11,7 @@ import android.view.animation.AnimationUtils;
 
 public class TableConfig {
     public static int TABLE_SIZE = 8;
+    public static int MAX_PIECES = 5;
     private static MediaPlayer player ;
 
     public static float convertDpToPixel(float dp, Context context){

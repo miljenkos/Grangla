@@ -113,7 +113,7 @@ public class TableView extends ViewGroup  {
 
 
 
-    public void changePinColor(int x, int y, int color) {
+    public void changePinColor(int x, int y, int color, float alpha) {
         int row = getRow(y);
         int col = getColumn(x);
 
@@ -122,6 +122,7 @@ public class TableView extends ViewGroup  {
         if (pinImg != null) {
             pinImg.setPinColor(color);
             pinImg.invalidate();
+            pinImg.setAlpha(alpha);
 
         }
     }

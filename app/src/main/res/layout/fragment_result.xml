@@ -21,4 +21,14 @@
         android:progress="33"
         android:progressDrawable="@drawable/progress_drawable_result" />
 
+    <ProgressBar
+        android:id="@+id/result_bar2"
+        style="@android:style/Widget.ProgressBar.Horizontal"
+        android:layout_centerInParent="true"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:max="100"
+        android:progress="67"
+        android:progressDrawable="@drawable/progress_drawable_result2" />
+
 </FrameLayout>

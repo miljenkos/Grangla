@@ -5,17 +5,17 @@
     >
 
     <item android:id="@android:id/background">
-        <color android:color="#0000FF" />
+        <color android:color="#000000FF" />
     </item>
     <item android:id="@android:id/progress">
         <clip
             android:clipOrientation="horizontal"
-            android:gravity="left">
+            android:gravity="right">
             <shape>
                 <gradient
-                    android:startColor="#FF0000"
-                    android:centerColor="#FF0000"
-                    android:endColor="#FF0000"
+                    android:startColor="#00FF0000"
+                    android:centerColor="#E0FF0000"
+                    android:endColor="#00FF0000"
                     android:angle="90" />
             </shape>
         </clip>
