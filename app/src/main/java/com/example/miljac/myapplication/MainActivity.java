@@ -10,8 +10,11 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
+import android.widget.SeekBar;
 
 public class MainActivity extends AppCompatActivity {
+
+    private SeekBar levelSeekBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,6 +31,8 @@ public class MainActivity extends AppCompatActivity {
                         .setAction("Action", null).show();
             }
         });
+
+        levelSeekBar = (SeekBar)findViewById(R.id.levelSeekBar);
     }
 
     /** Called when the user clicks the Send button */
@@ -35,8 +40,9 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(this, GamePlayActivity.class);
         //EditText editText = (EditText) findViewById(R.id.edit_message);
         //String message = editText.getText().toString();
-        //intent.putExtra(EXTRA_MESSAGE, message);
+        intent.putExtra("LEVEL", levelSeekBar.getProgress());
         startActivity(intent);
+        System.out.println(levelSeekBar.getProgress());
     }
 
 

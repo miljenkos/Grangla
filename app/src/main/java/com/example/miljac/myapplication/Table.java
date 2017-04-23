@@ -40,7 +40,7 @@ public class Table // igraca tabla
     private final int[] shittierTwo5= {0,0,1,1};
     private final int[] shittierTwo6= {1,0,0,1};
 
-    private int level;
+    private double level;
 
     private final ReentrantReadWriteLock rwl = new ReentrantReadWriteLock();
     private final Lock r = rwl.readLock();
@@ -69,6 +69,12 @@ public class Table // igraca tabla
                 //System.out.println();
 
             }
+        }
+
+        for (int i=0; i<TableConfig.NO_OF_ROCKS; i++){
+            int x = (int) (rn.nextDouble() * TableConfig.TABLE_SIZE);
+            int y = (int) (rn.nextDouble() * TableConfig.TABLE_SIZE);
+            put(State.rock, x, y);
         }
     }
 
@@ -186,7 +192,12 @@ public class Table // igraca tabla
                 //s = "";
                 for (int j = (lastMove.y-3); j < (lastMove.y+4); j++) {//for (int j = 0; j < TableConfig.TABLE_SIZE; j++) {
                     r = rn.nextDouble();
-                    r = r*r*r * 13;
+                    r = r*r*r * (1.2 * (level/10 - 10)*(level/10 - 10)*(level/10 - 10)*(level/10 - 10) );
+
+                    System.out.println("LLLL");
+                    System.out.println(level);
+                    System.out.println((1.2 * (level/10 - 10)*(level/10 - 10)*(level/10 - 10)*(level/10 - 10) ));
+
                     weight = this.evaluateSpaceWeight(i, j, me) + r;
                     //s += String.format("%6s", weight);
                     if (weight > biggestWeight) {
@@ -412,14 +423,45 @@ public class Table // igraca tabla
                 }
             }
 
-            if (found == true) this.put(State.empty, iC, jC);
-            System.out.println(found);
+            if (found == true) {
+                this.put(State.empty, iC, jC);
+            }
+
+            int rr = (int) (rn.nextDouble() * TableConfig.ROCK_MOVEMENT_PROBABILITY);
+            if (rr == 1) moveRock();
 
 
 
         }
         finally { w.unlock(); }
         return result;
+
+    }
+
+    void moveRock(){
+        int rockNo = (int) (Math.ceil(rn.nextDouble() * TableConfig.NO_OF_ROCKS) -1);
+        int c = 0;
+        for (int i=0; i<TableConfig.TABLE_SIZE; i++) {
+            for (int j = 0; j < TableConfig.TABLE_SIZE; j++) {
+                if (this.get(i, j) == State.rock){
+                    if(c == rockNo){
+                        this.put(State.empty, i, j);
+                    }
+                    c++;
+                }
+            }
+        }
+
+        Boolean rockPut = false;
+        while(!rockPut) {
+            int x = (int) (rn.nextDouble() * TableConfig.TABLE_SIZE);
+            int y = (int) (rn.nextDouble() * TableConfig.TABLE_SIZE);
+            if (get(x, y) == State.empty) {
+                put(State.rock, x, y);
+                rockPut = true;
+            }
+        }
+
 
     }
 

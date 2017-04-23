@@ -1,6 +1,9 @@
 package com.example.miljac.myapplication;
 
 import android.app.WallpaperInfo;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.ProgressBar;
@@ -23,7 +26,7 @@ public class GamePlayActivity extends AppCompatActivity implements TableFragment
     private Coordinates lastMoveO;
     private Coordinates lastMoveX;
     private EndStruct endStruct;
-    private int result = 50;
+    private double result = 50;
     private long waitingTimeCircle = 3000;
     private long waitingMomentCircle = 0;
     private boolean allowCircle = true;
@@ -31,6 +34,7 @@ public class GamePlayActivity extends AppCompatActivity implements TableFragment
     private long waitingMomentCross = 0;
     private long gameStartTime, currentTime;
     private boolean allowCross = true;
+    private int level;
 
 
     private final ReentrantReadWriteLock rwl = new ReentrantReadWriteLock();
@@ -84,20 +88,24 @@ public class GamePlayActivity extends AppCompatActivity implements TableFragment
                         movesO.remove(new Coordinates(i, j));
                         movesX.remove(new Coordinates(i, j));
                     }
+
+                    if (table.publicGet(i, j) == State.rock) {
+                        tableView.changePinColor(i/* * tableFragment.pinSize + 1*/, j/* * tableFragment.pinSize + 1*/, R.drawable.pin20, 1f);
+                    }
                 }
             }
             tableView.invalidate();
 
 
             if (lastMoveO != null) {
-                int r = 0;
+                double r = 0;
                 r = table.end2(lastMoveO.x, lastMoveO.y);
-                result += r;
+                result += r * TableConfig.RESULT_FACTOR;
                 if (r == 0){
                     if(movesO.size() >= TableConfig.MAX_PIECES) {
                         Coordinates c = (Coordinates) movesO.remove(TableConfig.MAX_PIECES - 1);
                         table.publicEmpty(c.x, c.y);
-                        result -= 3;
+                        result -= 3 * TableConfig.RESULT_FACTOR;
                     }
 
                 }
@@ -106,14 +114,14 @@ public class GamePlayActivity extends AppCompatActivity implements TableFragment
             }
 
             if (lastMoveX != null) {
-                int r = 0;
+                double r = 0;
                 r = table.end2(lastMoveX.x, lastMoveX.y);
-                result -= r;
+                result -= r * TableConfig.RESULT_FACTOR;
                 if (r == 0){
                     if(movesX.size() >= TableConfig.MAX_PIECES) {
                         Coordinates c = (Coordinates) movesX.remove(TableConfig.MAX_PIECES - 1);
                         table.publicEmpty(c.x, c.y);
-                        result += 3;
+                        result += 3 * TableConfig.RESULT_FACTOR;
                     }
 
                 }
@@ -134,25 +142,44 @@ public class GamePlayActivity extends AppCompatActivity implements TableFragment
             else if(resultBar.getProgress() > result) {
                 resultBar.setProgress(resultBar.getProgress() + 1);*/
 
-            if ((result<=0) || (result >=100)){
+            currentTime = System.currentTimeMillis();
+
+            if ((result<=0) ||
+                    (result >=100) /*||
+                    ((currentTime - gameStartTime) >= TableConfig.GAME_DURATION)*/){
+
                 gameDone = true;
-                finish();
+                AlertDialog alertDialog = new AlertDialog.Builder(GamePlayActivity.this).create();
+                alertDialog.setTitle("Alert");
+                if(result>=50) {
+                    alertDialog.setMessage("YOU WIN THIS TIME");
+                } else {
+                    alertDialog.setMessage("YOU FUCKING LOOSE");
+                }
+                alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                                finish();
+                            }
+                        });
+                alertDialog.show();
             }
 
 
-            resultBar.setProgress(100-result);
-            resultBar2.setProgress(result);
+            resultBar.setProgress(100-(int)result);
+            resultBar2.setProgress((int)result);
 
-            if(System.currentTimeMillis() < waitingMomentCircle){
-                circleBar.setProgress((int)((waitingMomentCircle - System.currentTimeMillis()) * 100 / waitingTimeCircle ));
+            if(currentTime < waitingMomentCircle){
+                circleBar.setProgress((int)((waitingMomentCircle - currentTime) * 100 / waitingTimeCircle ));
 
             } else {
                 allowCircle = true;
                 circleBar.setProgress(0);
             }
 
-            if(System.currentTimeMillis() < waitingMomentCross){
-                crossBar.setProgress((int)((waitingMomentCross - System.currentTimeMillis()) * 100 / waitingTimeCross ));
+            if(currentTime < waitingMomentCross){
+                crossBar.setProgress((int)((waitingMomentCross - currentTime ) * 100 / waitingTimeCross ));
 
             } else {
                 allowCross = true;
@@ -199,7 +226,11 @@ public class GamePlayActivity extends AppCompatActivity implements TableFragment
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game_play);
 
-        this.table = new Table(3);
+        Intent intent = getIntent();
+        level = intent.getIntExtra("LEVEL", 50);
+        System.out.println("LEVEL: " + level);
+
+        this.table = new Table(level);
 
         resultBar = (ProgressBar)findViewById(R.id.result_bar);
         resultBar.setProgress(50);
@@ -251,10 +282,14 @@ public class GamePlayActivity extends AppCompatActivity implements TableFragment
 
                     c = table.putAutomatic(State.cross);
                     lastMoveX = new Coordinates(c.x, c.y);
+
                     currentTime = System.currentTimeMillis();
-                    waitingTimeCross = (2800 - 2600/50 * Math.abs(50 - result)) * (1-(currentTime-gameStartTime)/120000);
-                    if (waitingTimeCross<200) waitingTimeCross = 200;
-                    waitingMomentCross = currentTime + waitingTimeCross;
+                    waitingTimeCross = TableConfig.MAX_WAITING_TIME - (TableConfig.MAX_WAITING_TIME - TableConfig.MIN_WAITING_TIME)/50 * Math.abs(50 - (int)result);
+                    waitingTimeCross -= TableConfig.MIN_WAITING_TIME;
+                    waitingTimeCross = (long)((double)waitingTimeCross/ (1 + (double)(currentTime-gameStartTime)/(double)TableConfig.HALF_LIFE));
+                    waitingTimeCross += TableConfig.MIN_WAITING_TIME;
+                    waitingMomentCross = System.currentTimeMillis() + waitingTimeCross;
+
                     allowCross = false;
 
                     movesX.push(lastMoveX);
@@ -273,8 +308,10 @@ public class GamePlayActivity extends AppCompatActivity implements TableFragment
                     lastMoveO = new Coordinates(x, y);
 
                     currentTime = System.currentTimeMillis();
-                    waitingTimeCircle = (2800 - 2600/50 * Math.abs(50 - result)) * (1-(currentTime-gameStartTime)/120000);
-                    if (waitingTimeCircle<200) waitingTimeCircle = 200;
+                    waitingTimeCircle = TableConfig.MAX_WAITING_TIME - (TableConfig.MAX_WAITING_TIME - TableConfig.MIN_WAITING_TIME)/50 * Math.abs(50 - (int)result);
+                    waitingTimeCircle -= TableConfig.MIN_WAITING_TIME;
+                    waitingTimeCircle = (long)((double)waitingTimeCircle/ (1 + (double)(currentTime-gameStartTime)/(double)TableConfig.HALF_LIFE));
+                    waitingTimeCircle += TableConfig.MIN_WAITING_TIME;
                     waitingMomentCircle = System.currentTimeMillis() + waitingTimeCircle;
 
                     allowCircle = false;

@@ -12,7 +12,7 @@ package com.example.miljac.myapplication;
  */
 public enum State // stanje polja u tabli
 {
-    cross, circle, empty;
+    cross, circle, empty, rock;
 
 
 }

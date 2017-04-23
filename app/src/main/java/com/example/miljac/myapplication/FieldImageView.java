@@ -112,7 +112,7 @@ public class FieldImageView extends ImageView  {
 
 
 
-        if (resId == TableConfig.pinBackground) {
+        if ((resId == TableConfig.pinBackground) && (this.lastPinId != TableConfig.pinRock)) {
             if (!removing){
                 removing = true;
                 Drawable lastD = getResources().getDrawable(this.lastPinId);
