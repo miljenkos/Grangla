@@ -84,7 +84,27 @@ public class GamePlayActivity extends AppCompatActivity implements TableFragment
 
                     }
                     if (table.publicGet(i, j) == State.empty) {
-                        tableView.changePinColor(i/* * tableFragment.pinSize + 1*/, j/* * tableFragment.pinSize + 1*/, R.drawable.pin41, 1f);
+
+
+
+
+                        /*if ((movesO.size() >= (TableConfig.MAX_PIECES)) &&
+                                (movesO.get(TableConfig.MAX_PIECES - 1).equals(new Coordinates(i,j)))) {
+                        //if(!(movesO.contains(new Coordinates(i,j)))){
+                            tableView.removeImediately(i, j);
+
+                        } else
+                        if ((movesX.size() >= (TableConfig.MAX_PIECES)) &&
+                                (movesX.get(TableConfig.MAX_PIECES - 1).equals(new Coordinates(i,j)))) {
+                        //if(!(movesX.contains(new Coordinates(i,j)))){
+                            tableView.removeImediately(i, j);
+
+                        } else {*/
+                            tableView.changePinColor(i/* * tableFragment.pinSize + 1*/, j/* * tableFragment.pinSize + 1*/, R.drawable.pin41, 1f);
+                            System.out.println("NIJE IMEDIATELYYYYYYYYYYYYYYYYYY");
+
+                        //}
+
                         movesO.remove(new Coordinates(i, j));
                         movesX.remove(new Coordinates(i, j));
                     }
@@ -105,6 +125,7 @@ public class GamePlayActivity extends AppCompatActivity implements TableFragment
                     if(movesO.size() >= TableConfig.MAX_PIECES) {
                         Coordinates c = (Coordinates) movesO.remove(TableConfig.MAX_PIECES - 1);
                         table.publicEmpty(c.x, c.y);
+                        tableView.removeImediately(c.x, c.y);
                         result -= 3 * TableConfig.RESULT_FACTOR;
                     }
 
@@ -121,6 +142,7 @@ public class GamePlayActivity extends AppCompatActivity implements TableFragment
                     if(movesX.size() >= TableConfig.MAX_PIECES) {
                         Coordinates c = (Coordinates) movesX.remove(TableConfig.MAX_PIECES - 1);
                         table.publicEmpty(c.x, c.y);
+                        tableView.removeImediately(c.x, c.y);
                         result += 3 * TableConfig.RESULT_FACTOR;
                     }
 
@@ -271,7 +293,8 @@ public class GamePlayActivity extends AppCompatActivity implements TableFragment
             while(!gameDone){
                 try {
                     double a = Math.random();
-                    Thread.sleep(waitingTimeCross + (long)(a*a*waitingTimeCross));
+                    a*= (0.7 + 0.42/50 * Math.abs(50 - (int)result));
+                    Thread.sleep(waitingTimeCross + (long)(a*( (6400 - 200) * (101-level) / 100 + 200)));
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }

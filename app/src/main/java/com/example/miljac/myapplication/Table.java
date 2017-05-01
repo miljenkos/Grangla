@@ -41,6 +41,7 @@ public class Table // igraca tabla
     private final int[] shittierTwo6= {1,0,0,1};
 
     private double level;
+    private double mistakeFactor;
 
     private final ReentrantReadWriteLock rwl = new ReentrantReadWriteLock();
     private final Lock r = rwl.readLock();
@@ -59,6 +60,8 @@ public class Table // igraca tabla
     {
         //this.table = new ArrayList<ArrayList<Space>>();
         this.level = l;
+        this.mistakeFactor = (1.2 * (level/10 - 10)*(level/10 - 10)*(level/10 - 10)*(level/10 - 10));
+
         for (int i=0; i<TableConfig.TABLE_SIZE; i++)
         {
             for (int j=0; j<TableConfig.TABLE_SIZE; j++){
@@ -192,11 +195,11 @@ public class Table // igraca tabla
                 //s = "";
                 for (int j = (lastMove.y-3); j < (lastMove.y+4); j++) {//for (int j = 0; j < TableConfig.TABLE_SIZE; j++) {
                     r = rn.nextDouble();
-                    r = r*r*r * (1.2 * (level/10 - 10)*(level/10 - 10)*(level/10 - 10)*(level/10 - 10) );
+                    r = r*r*r * mistakeFactor;
 
                     System.out.println("LLLL");
                     System.out.println(level);
-                    System.out.println((1.2 * (level/10 - 10)*(level/10 - 10)*(level/10 - 10)*(level/10 - 10) ));
+                    System.out.println(mistakeFactor);
 
                     weight = this.evaluateSpaceWeight(i, j, me) + r;
                     //s += String.format("%6s", weight);
@@ -308,7 +311,7 @@ public class Table // igraca tabla
     {
         double result=0;
 
-        if (this.get( i, j )!=State.empty) return -1;
+        if (this.get( i, j )!=State.empty) return -100000;
 
 
         for (int x = 0; x<4; x++) {

@@ -106,9 +106,6 @@ public class FieldImageView extends ImageView  {
 
         //mImageView.setImageBitmap(bmResult);
         d.draw(tempCanvas);*/
-        
-        Log.d("PROBA", "PROBA");
-
 
 
 
@@ -118,16 +115,18 @@ public class FieldImageView extends ImageView  {
                 Drawable lastD = getResources().getDrawable(this.lastPinId);
                 setImageDrawable(lastD);
 
+
             } else {
                 removing = false;
                 this.lastPinId = resId;
 
-                animRunning = true;
-                Animation fadeInAnim = TableConfig.getFadeInAnim(ctx);
-                AnimView av = new AnimView(fadeInAnim, d);
-                //setImageDrawable(d);KAD JE OVO ZAKOMENTIRANO TITRA KOD MICANJA ZNAKOVA S PLOCE
-                //this.setVisibility(View.GONE);
-                this.post(av);
+
+                if(!(getAlpha() == 0.3f)) {
+                    animRunning = true;
+                    Animation fadeInAnim = TableConfig.getFadeInAnim(ctx);
+                    AnimView av = new AnimView(fadeInAnim, d);
+                    this.post(av);
+                }
             }
         }
         else {
@@ -141,6 +140,30 @@ public class FieldImageView extends ImageView  {
         this.invalidate();
 
     }
+
+
+    public synchronized void
+    remove() {
+
+        int resId = TableConfig.pinBackground;
+
+        //System.out.println("AAAA");
+
+        if (animRunning) return;
+
+
+        this.currentPinId = resId;
+        final Drawable d = getResources().getDrawable(resId);
+
+
+        this.lastPinId = resId;
+        setImageDrawable(d);
+
+        this.invalidate();
+        //System.out.println("BBBBb");
+
+    }
+
 
     class AnimView implements Runnable {
 

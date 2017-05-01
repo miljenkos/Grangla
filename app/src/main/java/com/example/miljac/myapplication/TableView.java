@@ -127,7 +127,20 @@ public class TableView extends ViewGroup  {
         }
     }
 
+    public void removeImediately(int x, int y) {
+        //System.out.println("REMOVE IMEDIATELY");
 
+        int row = getRow(y);
+        int col = getColumn(x);
+
+        FieldImageView pinImg = (FieldImageView) getChildAt(x + (y*numCol));
+
+        if (pinImg != null) {
+            pinImg.remove();
+            pinImg.invalidate();
+
+        }
+    }
 
     public int getRow(int y) {
         return (int) Math.ceil(y / dotSize);
