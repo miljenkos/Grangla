@@ -121,12 +121,12 @@ public class FieldImageView extends ImageView  {
                 this.lastPinId = resId;
 
 
-                if(!(getAlpha() == 0.3f)) {
+                //if(!(getAlpha() == 0.3f)) {
                     animRunning = true;
                     Animation fadeInAnim = TableConfig.getFadeInAnim(ctx);
                     AnimView av = new AnimView(fadeInAnim, d);
                     this.post(av);
-                }
+                //}
             }
         }
         else {

@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.widget.ProgressBar;
 
 import java.util.LinkedList;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
@@ -32,7 +33,7 @@ public class GamePlayActivity extends AppCompatActivity implements TableFragment
     private boolean allowCircle = true;
     private long waitingTimeCross = 3000;
     private long waitingMomentCross = 0;
-    private long gameStartTime, currentTime;
+    private long gameStartTime, currentTime, lastEventTime;
     private boolean allowCross = true;
     private int level;
 
@@ -45,8 +46,8 @@ public class GamePlayActivity extends AppCompatActivity implements TableFragment
     Thread refreshThread;
     Thread uIPutThread;
 
-    LinkedList movesO = new LinkedList();
-    LinkedList movesX = new LinkedList();
+    CopyOnWriteArrayList movesO = new CopyOnWriteArrayList();//LinkedList();
+    CopyOnWriteArrayList movesX = new CopyOnWriteArrayList();//LinkedList();
 
     class UIPut implements Runnable {
 
@@ -59,7 +60,7 @@ public class GamePlayActivity extends AppCompatActivity implements TableFragment
                     if (table.publicGet(i, j) == State.circle) {
                         if ((movesO.size() >= (TableConfig.MAX_PIECES-1)) &&
                                 (movesO.get(TableConfig.MAX_PIECES - 2).equals(new Coordinates(i,j)))) {
-                            tableView.changePinColor(i/* * tableFragment.pinSize + 1*/, j/* * tableFragment.pinSize + 1*/, R.drawable.pin39, 0.3f);
+                            tableView.changePinColor(i/* * tableFragment.pinSize + 1*/, j/* * tableFragment.pinSize + 1*/, R.drawable.pin39, 0.33f);
                         }
                         else if ((movesO.size() >= (TableConfig.MAX_PIECES-2)) &&
                                    (movesO.get(TableConfig.MAX_PIECES - 3).equals(new Coordinates(i,j)))) {
@@ -72,7 +73,7 @@ public class GamePlayActivity extends AppCompatActivity implements TableFragment
                     if (table.publicGet(i, j) == State.cross){
                         if ((movesX.size() >= (TableConfig.MAX_PIECES-1)) &&
                                 (movesX.get(TableConfig.MAX_PIECES - 2).equals(new Coordinates(i,j)))) {
-                            tableView.changePinColor(i/* * tableFragment.pinSize + 1*/, j/* * tableFragment.pinSize + 1*/, R.drawable.pin40, 0.3f);
+                            tableView.changePinColor(i/* * tableFragment.pinSize + 1*/, j/* * tableFragment.pinSize + 1*/, R.drawable.pin40, 0.33f);
                         }
                         else if ((movesX.size() >= (TableConfig.MAX_PIECES-2)) &&
                                 (movesX.get(TableConfig.MAX_PIECES - 3).equals(new Coordinates(i,j)))) {
@@ -119,7 +120,7 @@ public class GamePlayActivity extends AppCompatActivity implements TableFragment
 
             if (lastMoveO != null) {
                 double r = 0;
-                r = table.end2(lastMoveO.x, lastMoveO.y);
+                r = table.end2(lastMoveO.x, lastMoveO.y, lastEventTime);
                 result += r * TableConfig.RESULT_FACTOR;
                 if (r == 0){
                     if(movesO.size() >= TableConfig.MAX_PIECES) {
@@ -128,7 +129,8 @@ public class GamePlayActivity extends AppCompatActivity implements TableFragment
                         tableView.removeImediately(c.x, c.y);
                         result -= 3 * TableConfig.RESULT_FACTOR;
                     }
-
+                } else {
+                    lastEventTime = System.currentTimeMillis();
                 }
                 lastMoveO = null;
 
@@ -136,7 +138,7 @@ public class GamePlayActivity extends AppCompatActivity implements TableFragment
 
             if (lastMoveX != null) {
                 double r = 0;
-                r = table.end2(lastMoveX.x, lastMoveX.y);
+                r = table.end2(lastMoveX.x, lastMoveX.y, lastEventTime);
                 result -= r * TableConfig.RESULT_FACTOR;
                 if (r == 0){
                     if(movesX.size() >= TableConfig.MAX_PIECES) {
@@ -144,8 +146,9 @@ public class GamePlayActivity extends AppCompatActivity implements TableFragment
                         table.publicEmpty(c.x, c.y);
                         tableView.removeImediately(c.x, c.y);
                         result += 3 * TableConfig.RESULT_FACTOR;
+                    } else {
+                        lastEventTime = System.currentTimeMillis();
                     }
-
                 }
                 lastMoveX = null;
             }
@@ -277,6 +280,7 @@ public class GamePlayActivity extends AppCompatActivity implements TableFragment
         refreshThread.start();
 
         gameStartTime = System.currentTimeMillis();
+        lastEventTime = gameStartTime;
 
     }
 
@@ -294,9 +298,18 @@ public class GamePlayActivity extends AppCompatActivity implements TableFragment
                 try {
                     double a = Math.random();
                     a*= (0.7 + 0.42/50 * Math.abs(50 - (int)result));
-                    Thread.sleep(waitingTimeCross + (long)(a*( (6400 - 200) * (101-level) / 100 + 200)));
+                    Thread.sleep(waitingTimeCross +
+                            (long)(a*( (TableConfig.THINKING_TIME_MIN_LEVEL - TableConfig.THINKING_TIME_MAX_LEVEL) * (101-level) / 100 + TableConfig.THINKING_TIME_MAX_LEVEL)));
                 } catch (InterruptedException e) {
                     e.printStackTrace();
+                }
+
+                if ((System.currentTimeMillis() - lastEventTime) < 90){
+                    try {
+                        Thread.sleep(90);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                 }
 
 
@@ -315,7 +328,7 @@ public class GamePlayActivity extends AppCompatActivity implements TableFragment
 
                     allowCross = false;
 
-                    movesX.push(lastMoveX);
+                    movesX.add(0, lastMoveX);
                 }
 
             }
@@ -339,7 +352,7 @@ public class GamePlayActivity extends AppCompatActivity implements TableFragment
 
                     allowCircle = false;
 
-                    movesO.push(lastMoveO);
+                    movesO.add(0, lastMoveO);
                 }
             }
 

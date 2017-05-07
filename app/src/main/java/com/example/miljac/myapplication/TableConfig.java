@@ -17,7 +17,9 @@ public class TableConfig {
     public static double RESULT_FACTOR = 1.2;
     public static int HALF_LIFE = 240000;
     public static int NO_OF_ROCKS = 9;
-    public static int ROCK_MOVEMENT_PROBABILITY = 8;
+    public static int ROCK_MOVEMENT_PROBABILITY = 15000;
+    public static int THINKING_TIME_MIN_LEVEL = 6400;
+    public static int THINKING_TIME_MAX_LEVEL = 200;
 
 
 

@@ -43,11 +43,14 @@ public class Table // igraca tabla
     private double level;
     private double mistakeFactor;
 
+    private long lastEventTime = 0;
+
     private final ReentrantReadWriteLock rwl = new ReentrantReadWriteLock();
     private final Lock r = rwl.readLock();
     private final Lock w = rwl.writeLock();
 
     private Coordinates lastMove = new Coordinates(5,5);
+    private long lastRockMove = 0;
 
     Random rn = new Random();
 
@@ -74,10 +77,18 @@ public class Table // igraca tabla
             }
         }
 
-        for (int i=0; i<TableConfig.NO_OF_ROCKS; i++){
-            int x = (int) (rn.nextDouble() * TableConfig.TABLE_SIZE);
-            int y = (int) (rn.nextDouble() * TableConfig.TABLE_SIZE);
-            put(State.rock, x, y);
+        Boolean rockPut;
+        for (int i=0; i<(TableConfig.NO_OF_ROCKS); i++){
+            rockPut = false;
+            while(!rockPut) {
+                int x = (int) (rn.nextDouble() * TableConfig.TABLE_SIZE);
+                int y = (int) (rn.nextDouble() * TableConfig.TABLE_SIZE);
+                if (get(x, y) == State.empty) {
+                    put(State.rock, x, y);
+                    rockPut = true;
+                }
+            }
+
         }
     }
 
@@ -162,7 +173,18 @@ public class Table // igraca tabla
     {
         w.lock();
         try {
+
+            int rr = (int) (rn.nextDouble() * TableConfig.ROCK_MOVEMENT_PROBABILITY);
+            if ((rr == 1) &&
+                    !((System.currentTimeMillis() - lastEventTime) < 200) &&
+                    !((System.currentTimeMillis() - lastRockMove) < 2000)) {
+                moveRock();
+                lastRockMove = System.currentTimeMillis();
+            }
+
+
             return this.get(i, j);
+
         } finally {
             w.unlock();
         }
@@ -348,11 +370,12 @@ public class Table // igraca tabla
 
 
 
-    public int end2(int iC, int jC)
+    public int end2(int iC, int jC, long lastEventT)
     {
         w.lock();
 
         int result = 0;
+        lastEventTime = lastEventT;
         try {
 
 
@@ -429,11 +452,6 @@ public class Table // igraca tabla
             if (found == true) {
                 this.put(State.empty, iC, jC);
             }
-
-            int rr = (int) (rn.nextDouble() * TableConfig.ROCK_MOVEMENT_PROBABILITY);
-            if (rr == 1) moveRock();
-
-
 
         }
         finally { w.unlock(); }
