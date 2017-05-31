@@ -42,7 +42,6 @@ public class MainActivity extends AppCompatActivity {
         //String message = editText.getText().toString();
         intent.putExtra("LEVEL", levelSeekBar.getProgress());
         startActivity(intent);
-        System.out.println(levelSeekBar.getProgress());
     }
 
 

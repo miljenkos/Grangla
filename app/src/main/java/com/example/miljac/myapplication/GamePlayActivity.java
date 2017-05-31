@@ -3,6 +3,9 @@ package com.example.miljac.myapplication;
 import android.app.WallpaperInfo;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.media.AudioFormat;
+import android.media.AudioManager;
+import android.media.AudioTrack;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -48,6 +51,12 @@ public class GamePlayActivity extends AppCompatActivity implements TableFragment
 
     CopyOnWriteArrayList movesO = new CopyOnWriteArrayList();//LinkedList();
     CopyOnWriteArrayList movesX = new CopyOnWriteArrayList();//LinkedList();
+
+
+    Thread musicPlayerThread;
+    MusicPlayer musicPlayer;
+
+
 
     class UIPut implements Runnable {
 
@@ -102,7 +111,6 @@ public class GamePlayActivity extends AppCompatActivity implements TableFragment
 
                         } else {*/
                             tableView.changePinColor(i/* * tableFragment.pinSize + 1*/, j/* * tableFragment.pinSize + 1*/, R.drawable.pin41, 1f);
-                            System.out.println("NIJE IMEDIATELYYYYYYYYYYYYYYYYYY");
 
                         //}
 
@@ -251,9 +259,16 @@ public class GamePlayActivity extends AppCompatActivity implements TableFragment
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game_play);
 
+
+
+        musicPlayer = new MusicPlayer();
+        musicPlayerThread = new Thread(musicPlayer);
+        musicPlayerThread.start();
+
+
+
         Intent intent = getIntent();
         level = intent.getIntExtra("LEVEL", 50);
-        System.out.println("LEVEL: " + level);
 
         this.table = new Table(level);
 
@@ -288,11 +303,29 @@ public class GamePlayActivity extends AppCompatActivity implements TableFragment
     protected void onDestroy(){
         super.onDestroy();
         gameDone = true;
+
+        try {
+            opThread.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        opThread = null;
+
+        try {
+            refreshThread.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        refreshThread = null;
+
+        musicPlayer.stop();
+
     }
 
 
     private class OtherPlayer implements Runnable {
         public void run() {
+
 
             while(!gameDone){
                 try {
@@ -325,6 +358,7 @@ public class GamePlayActivity extends AppCompatActivity implements TableFragment
                     waitingTimeCross = (long)((double)waitingTimeCross/ (1 + (double)(currentTime-gameStartTime)/(double)TableConfig.HALF_LIFE));
                     waitingTimeCross += TableConfig.MIN_WAITING_TIME;
                     waitingMomentCross = System.currentTimeMillis() + waitingTimeCross;
+                    musicPlayer.setNoteDuration((long)(TableConfig.NOTE_DURATION_FACTOR * waitingTimeCross));
 
                     allowCross = false;
 
@@ -349,6 +383,7 @@ public class GamePlayActivity extends AppCompatActivity implements TableFragment
                     waitingTimeCircle = (long)((double)waitingTimeCircle/ (1 + (double)(currentTime-gameStartTime)/(double)TableConfig.HALF_LIFE));
                     waitingTimeCircle += TableConfig.MIN_WAITING_TIME;
                     waitingMomentCircle = System.currentTimeMillis() + waitingTimeCircle;
+                    musicPlayer.setNoteDuration((long)(TableConfig.NOTE_DURATION_FACTOR * waitingTimeCircle));
 
                     allowCircle = false;
 

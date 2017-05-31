@@ -17,9 +17,11 @@ public class TableConfig {
     public static double RESULT_FACTOR = 1.2;
     public static int HALF_LIFE = 240000;
     public static int NO_OF_ROCKS = 9;
-    public static int ROCK_MOVEMENT_PROBABILITY = 15000;
+    public static int ROCK_MOVEMENT_PROBABILITY = 8000;
     public static int THINKING_TIME_MIN_LEVEL = 6400;
     public static int THINKING_TIME_MAX_LEVEL = 200;
+    public static int DEFAULT_STREAM_REFRESH_TIME = 25;
+    public static float NOTE_DURATION_FACTOR = 0.12F;
 
 
 
