@@ -132,15 +132,15 @@ class MusicPlayer implements Runnable {
                 }
                 Note n = bassGenerator.getNextBassNote();
                 Note n2 = bassGenerator.getNextBassNote();
-                System.out.println(n.getIndex());
+                //System.out.println(n.getIndex());
                 bassFr = n.getFrequency();
                 amp = n.getVolume();
             //}
-            System.out.println("QWQWQWQWQWQWQWQWQWQWQWQWQWQWtfdjztdjdrdhtrdstartstarttstarsrstatsr2 " + (start - System.currentTimeMillis()));
+            //System.out.println("QWQWQWQWQWQWQWQWQWQWQWQWQWQWtfdjztdjdrdhtrdstartstarttstarsrstatsr2 " + (start - System.currentTimeMillis()));
 
             //synchronized (samples) {
             buffsize = (int)noteDuration*8; //*8;
-            System.out.println(noteDuration);
+            //System.out.println(noteDuration);
             //writing = true;
                 for (int i = 0; i < buffsize*2; i++) {
                     index = (int) (phaseFactor * ph);
@@ -151,7 +151,7 @@ class MusicPlayer implements Runnable {
                     ph += phaseStep;
                     if (ph > twopi) ph -= twopi;
 
-
+                    //fade out i fade in zbog krcanja
                     if(i < 60) {
                         pom = samples[i] * i;
                         samples[i] = (short)(pom / 60);
@@ -163,7 +163,7 @@ class MusicPlayer implements Runnable {
 
                     if(i==(buffsize)) bassFr = n.getFrequency();
                     //ovo je drugi ton, bez sinusa
-                /*samples[i] += (short) (amp * (ph2 - twopi/2));
+                /*samples[i] += (short) (5000 * (ph2 - twopi/2)/20);
                 ph2 += twopi * fr2 / sr;
                 if(ph2 > twopi) ph2 -= twopi;*/
                 }
@@ -196,7 +196,7 @@ class MusicPlayer implements Runnable {
 //            }
             //writing = false;
             //}
-            System.out.println("QWQWQWQWQWQWQWQWQWQWQWQWQWQWtfdjztdjdrdhtrdstartstarttstarsrstatsr3 " + (start - System.currentTimeMillis()));
+            //System.out.println("QWQWQWQWQWQWQWQWQWQWQWQWQWQWtfdjztdjdrdhtrdstartstarttstarsrstatsr3 " + (start - System.currentTimeMillis()));
             //bassLevel = (int) (amp - amp * (start - noteStartTime) / noteDuration / 2);
 
             //System.out.println("QWQWQWQWQWQWQWQWQWQWQWQWQWQWtfdjztdjdrdhtrdstartstarttstarsrstatsr5 " + (start - System.currentTimeMillis()));
@@ -228,7 +228,7 @@ class MusicPlayer implements Runnable {
                 }
             }
 
-            System.out.println("QWQWQWQWQWQWQWQWQWQWQWQWQWQWtfdjztdjdrdhtrdstartstarttstarsrstatsr4 " + (start - System.currentTimeMillis()));
+            //System.out.println("QWQWQWQWQWQWQWQWQWQWQWQWQWQWtfdjztdjdrdhtrdstartstarttstarsrstatsr4 " + (start - System.currentTimeMillis()));
 
         }
         audioTrack.stop();
@@ -249,7 +249,11 @@ class MusicPlayer implements Runnable {
 
     public void setNoteDuration(long duration) {
         this.noteDuration = duration;
-        System.out.println("DURATION: " + noteDuration);
+        //System.out.println("DURATION: " + noteDuration);
+    }
+
+    public void setMeasure(int measure){
+        bassGenerator.setMeasure(measure);
     }
 
 }

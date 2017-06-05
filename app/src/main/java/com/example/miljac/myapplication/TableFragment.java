@@ -40,7 +40,7 @@ public class TableFragment extends Fragment implements OnTouchListener {
 
         try {
             fieldSelectedListener = (OnFieldSelectedListener) context;
-            System.out.println("\n\nmislim da sam se ataciral\n\n");
+            //System.out.println("\n\nmislim da sam se ataciral\n\n");
         } catch (ClassCastException e) {
             throw new ClassCastException(context.toString() + " must implement OnFieldSelectedListener");
         }

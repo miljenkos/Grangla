@@ -358,7 +358,15 @@ public class GamePlayActivity extends AppCompatActivity implements TableFragment
                     waitingTimeCross = (long)((double)waitingTimeCross/ (1 + (double)(currentTime-gameStartTime)/(double)TableConfig.HALF_LIFE));
                     waitingTimeCross += TableConfig.MIN_WAITING_TIME;
                     waitingMomentCross = System.currentTimeMillis() + waitingTimeCross;
+
                     musicPlayer.setNoteDuration((long)(TableConfig.NOTE_DURATION_FACTOR * waitingTimeCross));
+                    if (waitingTimeCross > (TableConfig.MAX_WAITING_TIME + TableConfig.MIN_WAITING_TIME)/2) {
+                        musicPlayer.setMeasure(3);
+                        System.out.println("TRI");
+                    } else {
+                        musicPlayer.setMeasure(4);
+                        System.out.println("CETIRI");
+                    }
 
                     allowCross = false;
 

@@ -117,10 +117,10 @@ public class Table // igraca tabla
                 w.unlock();
             }
             lastMove = new Coordinates(i, j);
-            System.out.println("JESAM");
+            //System.out.println("JESAM");
             return true;
         }
-        System.out.println("NISAM");
+        //System.out.println("NISAM");
         return false;
     }
 
@@ -136,10 +136,10 @@ public class Table // igraca tabla
                 w.unlock();
             }
             lastMove = new Coordinates(i, j);
-            System.out.println("JESAM");
+            //System.out.println("JESAM");
             return true;
         }
-        System.out.println("NISAM");
+        //System.out.println("NISAM");
         return false;
     }
 
@@ -160,10 +160,10 @@ public class Table // igraca tabla
         }
         catch (Exception e) {
             e.printStackTrace();
-            System.out.println(i);
+            /*System.out.println(i);
             System.out.println(i2);
             System.out.println(j);
-            System.out.println(j2);
+            System.out.println(j2);*/
             return null;
         }
     }
@@ -219,9 +219,9 @@ public class Table // igraca tabla
                     r = rn.nextDouble();
                     r = r*r*r * mistakeFactor;
 
-                    System.out.println("LLLL");
+                    /*System.out.println("LLLL");
                     System.out.println(level);
-                    System.out.println(mistakeFactor);
+                    System.out.println(mistakeFactor);*/
 
                     weight = this.evaluateSpaceWeight(i, j, me) + r;
                     //s += String.format("%6s", weight);
@@ -380,7 +380,7 @@ public class Table // igraca tabla
 
 
             State state = this.get(iC, jC);
-            System.out.println(state.toString());
+            //System.out.println(state.toString());
             Boolean found = false;
 
 
@@ -416,7 +416,7 @@ public class Table // igraca tabla
                                 (this.get(i + 2 * k1, j + 2 * k2).equals(state)) &&
                                 (this.get(i + 3 * k1, j + 3 * k2).equals(state))) {
 
-                            System.out.println(this.get(i, j));
+                            //System.out.println(this.get(i, j));
 
                             this.put(State.empty, i, j);
                             this.put(State.empty, i + 1 * k1, j + 1 * k2);
@@ -575,7 +575,7 @@ public class Table // igraca tabla
 
     public void setLevel(int l){
         this.level = l;
-        System.out.println("Stavio sam nivo: " + l + "     " + this.level);
+        //System.out.println("Stavio sam nivo: " + l + "     " + this.level);
     }
 
 }

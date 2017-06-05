@@ -24,6 +24,10 @@ public class TableConfig {
     public static float NOTE_DURATION_FACTOR = 0.12F;
 
 
+    public static double BASSS_TONES_DISPERSION = 0.6;
+    public static int BASS_NOTE_LOWER_BOUNDARY = 23;
+    public static int BASS_NOTE_UPPER_BOUNDARY = 35;
+
 
 
     private static MediaPlayer player ;

@@ -5,15 +5,39 @@ package com.example.miljac.myapplication;
  */
 
 public class Note {
+
+    public Note(int i){
+
+        this.noteIndex = i;
+        this.relativeIndex = i;
+    }
+
+
     private int noteIndex;
+
+    public int getRelativeIndex() {
+        return relativeIndex;
+    }
+
+    public void setRelativeIndex(int relativeIndex) {
+        this.relativeIndex = relativeIndex;
+    }
+
+    private int relativeIndex;
 
 
 
     private int volume;
 
-    public Note(int i){
-        this.noteIndex = i;
+    public boolean isRelativetoKey() {
+        return relativetoKey;
     }
+
+    public void setRelativetoKey(boolean relativetoKey) {
+        this.relativetoKey = relativetoKey;
+    }
+
+    private boolean relativetoKey = false;
 
     private double indexToFrequency(int x) {
         if (x == 1) return 32.7;
@@ -29,6 +53,8 @@ public class Note {
         return noteIndex;
     }
 
+    public void  setIndex(int noteIndex){ this.noteIndex = noteIndex; }
+
     public int getVolume() {
         return volume;
     }
@@ -36,6 +62,27 @@ public class Note {
     public void setVolume(int volume) {
         this.volume = volume;
     }
+
+
+    public void setIndexToFifth(){
+        noteIndex += 7;
+    }
+
+    public void setIndexToFourth(){
+        noteIndex += 5;
+    }
+
+    public void setUpperBoundary(int boundary){
+        while (noteIndex>boundary){
+            noteIndex -= 12;
+        }
+    }
+
+
+    public void applyKeyOnRelativeNote(int key){
+        this.noteIndex = this.relativeIndex + key;
+    }
+
     //kljuc je ova nota, i je 2- sekunda, 3 - terca itd.
     public int getNoteIndexInMinorKey(int i){
         if (i <= 0 ) return 0;
