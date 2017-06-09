@@ -185,9 +185,9 @@ public class GamePlayActivity extends AppCompatActivity implements TableFragment
                 AlertDialog alertDialog = new AlertDialog.Builder(GamePlayActivity.this).create();
                 alertDialog.setTitle("Alert");
                 if(result>=50) {
-                    alertDialog.setMessage("YOU WIN THIS TIME");
+                    alertDialog.setMessage("YOU WIN");
                 } else {
-                    alertDialog.setMessage("YOU FUCKING LOOSE");
+                    alertDialog.setMessage("YOU LOSE");
                 }
                 alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
                         new DialogInterface.OnClickListener() {
@@ -202,6 +202,10 @@ public class GamePlayActivity extends AppCompatActivity implements TableFragment
 
             resultBar.setProgress(100-(int)result);
             resultBar2.setProgress((int)result);
+
+
+
+
 
             if(currentTime < waitingMomentCircle){
                 circleBar.setProgress((int)((waitingMomentCircle - currentTime) * 100 / waitingTimeCircle ));
@@ -220,6 +224,42 @@ public class GamePlayActivity extends AppCompatActivity implements TableFragment
             }
 
 
+
+            //currentTime = System.currentTimeMillis();
+            waitingTimeCircle = TableConfig.MAX_WAITING_TIME - (TableConfig.MAX_WAITING_TIME - TableConfig.MIN_WAITING_TIME)/50 * Math.abs(50 - (int)result);
+            waitingTimeCircle -= TableConfig.MIN_WAITING_TIME;
+            waitingTimeCircle = (long)((double)waitingTimeCircle/ (1 + (double)(currentTime-gameStartTime)/(double)TableConfig.HALF_LIFE));
+            waitingTimeCircle += TableConfig.MIN_WAITING_TIME;
+            //waitingMomentCircle = System.currentTimeMillis() + waitingTimeCircle;
+            //musicPlayer.setNoteDuration((long)(TableConfig.NOTE_DURATION_FACTOR * waitingTimeCircle));
+
+            //currentTime = System.currentTimeMillis();
+            waitingTimeCross = TableConfig.MAX_WAITING_TIME - (TableConfig.MAX_WAITING_TIME - TableConfig.MIN_WAITING_TIME)/50 * Math.abs(50 - (int)result);
+            waitingTimeCross -= TableConfig.MIN_WAITING_TIME;
+            waitingTimeCross = (long)((double)waitingTimeCross/ (1 + (double)(currentTime-gameStartTime)/(double)TableConfig.HALF_LIFE));
+            waitingTimeCross += TableConfig.MIN_WAITING_TIME;
+            //waitingMomentCross = System.currentTimeMillis() + waitingTimeCross;
+
+            System.out.println((TableConfig.MAX_WAITING_TIME - TableConfig.MIN_WAITING_TIME + TableConfig.MIN_WAITING_TIME*3/4));
+            System.out.println((TableConfig.MAX_WAITING_TIME - TableConfig.MIN_WAITING_TIME + TableConfig.MIN_WAITING_TIME*6/16));
+            System.out.println((TableConfig.MAX_WAITING_TIME - TableConfig.MIN_WAITING_TIME + TableConfig.MIN_WAITING_TIME/4));
+            System.out.println(waitingTimeCross);
+
+
+            musicPlayer.setNoteDuration((long)(TableConfig.NOTE_DURATION_FACTOR * waitingTimeCross));
+            if (waitingTimeCross > ((TableConfig.MAX_WAITING_TIME - TableConfig.MIN_WAITING_TIME)*12/16 + TableConfig.MIN_WAITING_TIME)) {// *12/16
+                musicPlayer.setMeasure(3);
+                System.out.println("TRI");
+            } else if (waitingTimeCross > ((TableConfig.MAX_WAITING_TIME - TableConfig.MIN_WAITING_TIME)*8/16 + TableConfig.MIN_WAITING_TIME)) {// 8/16
+                musicPlayer.setMeasure(4);
+                System.out.println("CETIRI");
+            } else if (waitingTimeCross > ((TableConfig.MAX_WAITING_TIME - TableConfig.MIN_WAITING_TIME)*4/16 + TableConfig.MIN_WAITING_TIME)) {// 4/16
+                musicPlayer.setMeasure(2);
+                System.out.println("DVA");
+            } else {
+                musicPlayer.setMeasure(5);
+                System.out.println("PET");
+            }
 
 
             /*
@@ -263,6 +303,7 @@ public class GamePlayActivity extends AppCompatActivity implements TableFragment
 
         musicPlayer = new MusicPlayer();
         musicPlayerThread = new Thread(musicPlayer);
+        musicPlayer.setNoteDuration((long)(TableConfig.NOTE_DURATION_FACTOR * waitingTimeCross));
         musicPlayerThread.start();
 
 
@@ -352,21 +393,21 @@ public class GamePlayActivity extends AppCompatActivity implements TableFragment
                     c = table.putAutomatic(State.cross);
                     lastMoveX = new Coordinates(c.x, c.y);
 
-                    currentTime = System.currentTimeMillis();
-                    waitingTimeCross = TableConfig.MAX_WAITING_TIME - (TableConfig.MAX_WAITING_TIME - TableConfig.MIN_WAITING_TIME)/50 * Math.abs(50 - (int)result);
-                    waitingTimeCross -= TableConfig.MIN_WAITING_TIME;
-                    waitingTimeCross = (long)((double)waitingTimeCross/ (1 + (double)(currentTime-gameStartTime)/(double)TableConfig.HALF_LIFE));
-                    waitingTimeCross += TableConfig.MIN_WAITING_TIME;
+//                    currentTime = System.currentTimeMillis();
+//                    waitingTimeCross = TableConfig.MAX_WAITING_TIME - (TableConfig.MAX_WAITING_TIME - TableConfig.MIN_WAITING_TIME)/50 * Math.abs(50 - (int)result);
+//                    waitingTimeCross -= TableConfig.MIN_WAITING_TIME;
+//                    waitingTimeCross = (long)((double)waitingTimeCross/ (1 + (double)(currentTime-gameStartTime)/(double)TableConfig.HALF_LIFE));
+//                    waitingTimeCross += TableConfig.MIN_WAITING_TIME;
                     waitingMomentCross = System.currentTimeMillis() + waitingTimeCross;
-
-                    musicPlayer.setNoteDuration((long)(TableConfig.NOTE_DURATION_FACTOR * waitingTimeCross));
-                    if (waitingTimeCross > (TableConfig.MAX_WAITING_TIME + TableConfig.MIN_WAITING_TIME)/2) {
-                        musicPlayer.setMeasure(3);
-                        System.out.println("TRI");
-                    } else {
-                        musicPlayer.setMeasure(4);
-                        System.out.println("CETIRI");
-                    }
+//
+//                    musicPlayer.setNoteDuration((long)(TableConfig.NOTE_DURATION_FACTOR * waitingTimeCross));
+//                    if (waitingTimeCross > (TableConfig.MAX_WAITING_TIME + TableConfig.MIN_WAITING_TIME)/2) {
+//                        musicPlayer.setMeasure(3);
+//                        System.out.println("TRI");
+//                    } else {
+//                        musicPlayer.setMeasure(4);
+//                        System.out.println("CETIRI");
+//                    }
 
                     allowCross = false;
 
@@ -385,13 +426,13 @@ public class GamePlayActivity extends AppCompatActivity implements TableFragment
                 if(this.table.publicPut(State.circle, x, y)) {
                     lastMoveO = new Coordinates(x, y);
 
-                    currentTime = System.currentTimeMillis();
-                    waitingTimeCircle = TableConfig.MAX_WAITING_TIME - (TableConfig.MAX_WAITING_TIME - TableConfig.MIN_WAITING_TIME)/50 * Math.abs(50 - (int)result);
-                    waitingTimeCircle -= TableConfig.MIN_WAITING_TIME;
-                    waitingTimeCircle = (long)((double)waitingTimeCircle/ (1 + (double)(currentTime-gameStartTime)/(double)TableConfig.HALF_LIFE));
-                    waitingTimeCircle += TableConfig.MIN_WAITING_TIME;
+//                    currentTime = System.currentTimeMillis();
+//                    waitingTimeCircle = TableConfig.MAX_WAITING_TIME - (TableConfig.MAX_WAITING_TIME - TableConfig.MIN_WAITING_TIME)/50 * Math.abs(50 - (int)result);
+//                    waitingTimeCircle -= TableConfig.MIN_WAITING_TIME;
+//                    waitingTimeCircle = (long)((double)waitingTimeCircle/ (1 + (double)(currentTime-gameStartTime)/(double)TableConfig.HALF_LIFE));
+//                    waitingTimeCircle += TableConfig.MIN_WAITING_TIME;
                     waitingMomentCircle = System.currentTimeMillis() + waitingTimeCircle;
-                    musicPlayer.setNoteDuration((long)(TableConfig.NOTE_DURATION_FACTOR * waitingTimeCircle));
+//                    musicPlayer.setNoteDuration((long)(TableConfig.NOTE_DURATION_FACTOR * waitingTimeCircle));
 
                     allowCircle = false;
 

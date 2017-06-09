@@ -12,6 +12,15 @@ public class Note {
         this.relativeIndex = i;
     }
 
+    public boolean isKeyChange() {
+        return keyChange;
+    }
+
+    public void setKeyChange(boolean keyChange) {
+        this.keyChange = keyChange;
+    }
+
+    private boolean keyChange = false;
 
     private int noteIndex;
 

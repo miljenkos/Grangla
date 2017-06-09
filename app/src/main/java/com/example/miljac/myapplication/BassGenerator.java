@@ -44,7 +44,7 @@ public class BassGenerator {
 
 
     private Note[] generateChordset(){
-        int numberOfChords = 5 + (int) (Math.ceil(3* Math.random()));
+        int numberOfChords = (int) (1.4 + Math.ceil(3* Math.random()));
         Note[] chordSet = new Note[numberOfChords];
         for (int x=0; x<chordSet.length; x++) {
             int r = (int)(Math.ceil(2* Math.random()));
@@ -83,11 +83,12 @@ public class BassGenerator {
             Note a = mainBeatNoteGenerate(TableConfig.BASSS_TONES_DISPERSION);
             Note a2 = new Note(a.getIndex());
             if (j == 0) {
-                a.setVolume(10000);
+                a.setVolume(5000);
+                a.setKeyChange(true);
                 a2.setVolume(5000);
             } else {
-                a.setVolume(5000);
-                a2.setVolume(2500);
+                a.setVolume(4000);
+                a2.setVolume(3000);
             }
             riff[j] = a;
             riff[j + 1] = a2;
@@ -168,7 +169,7 @@ public class BassGenerator {
             lastChordNo = 0;
 
 
-            int f =(int)(Math.ceil(3 - Math.random() * 3));
+            int f =(int)(Math.ceil(3 - Math.random() * 2.6));
             switch(f){
                 case 1:
                     currentChordSet = chordSet1;
@@ -199,7 +200,7 @@ public class BassGenerator {
 
             currentKey = getNextChord();
 
-            int f =(int)(Math.ceil(3 - Math.random() * 3));
+            int f =(int)(Math.ceil(3 - Math.random() * 2.6));
             switch(f){
                 case 1:
                     currentRiff = riff1;
