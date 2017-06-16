@@ -78,10 +78,42 @@ public class BassGenerator {
 
     private Note[] generateRiff() {
         Note[] riff = new Note[10];
+        Note a2 = new Note(5);
+        Note a = new Note(5);
+        double rnd;
+        int lastIndex;
 
         for (int j = 0; j < 10; j = j + 2) {
-            Note a = mainBeatNoteGenerate(TableConfig.BASSS_TONES_DISPERSION);
-            Note a2 = new Note(a.getIndex());
+            lastIndex = a2.getIndex();
+            a = mainBeatNoteGenerate(TableConfig.BASSS_TONES_DISPERSION);
+            rnd = Math.random();
+
+            if (rnd<0.25) {
+                a2 = new Note(a.getNextIndexInMinorKey(0));
+                System.out.println("A   " +a.getIndex());
+                System.out.println("A2  " +a2.getIndex());
+
+            } else {
+                a2 = new Note(a.getIndex());
+            }
+
+            rnd = Math.random();
+            if (rnd<0.2) {
+                a2.setIndex(a.getPreviousIndexInMinorKey(0));
+            }
+
+            rnd = Math.random();
+            if (rnd<0.2) {
+                a.setSlide(true);
+                a.setIndex(lastIndex);
+                a.setNextNoteIndex(a2.getIndex());
+
+                System.out.println("LLL " + a2.getIndex());
+
+                System.out.println("LASTINDEX "  + a.getIndex() + " NEXTINDEX " + a.getNextNoteIndex());
+            }
+
+
             if (j == 0) {
                 a.setVolume(5000);
                 a.setKeyChange(true);
@@ -92,6 +124,8 @@ public class BassGenerator {
             }
             riff[j] = a;
             riff[j + 1] = a2;
+
+            //System.out.println(a.);
         }
 
         System.out.print("riff: ");

@@ -13,6 +13,7 @@ class MusicPlayer implements Runnable {
     int sr = 8000;//44100;
     boolean isRunning = true;
     double bassFr = 440.f;
+    double bassFrSlide = 440.f;
     double fr2, fr3, fr4 = 440.f;
     double sinArray[] = new double[1000];
     double twopi = 8. * Math.atan(1.);
@@ -34,6 +35,7 @@ class MusicPlayer implements Runnable {
 
     double phaseFactor = 1000. / twopi;
     double phaseStep;
+    double phaseStepSlide;
 
     BassGenerator bassGenerator = new BassGenerator();
 
@@ -139,12 +141,25 @@ class MusicPlayer implements Runnable {
                 Note n2 = bassGenerator.getNextBassNote();
                 //System.out.println(n.getIndex());
                 bassFr = n.getFrequency();
+
+                //if(n.getNextNoteIndex() != -20) {
+                if(n.isSlide()) {
+                    System.out.println(n.getNextNoteIndex());
+                    bassFrSlide = n.getNextNoteFrequency();
+                } else {
+                    bassFrSlide = bassFr;
+                }
+
+
+            System.out.println("BASSFRSLIDE " + bassFrSlide + " BASSFR " + bassFr);
+
                 amp = n.getVolume();
             if (n.isKeyChange()) chordAmp = 1000;
             System.out.println(n.isKeyChange());
 
 
             phaseStep = twopi * bassFr / sr;
+            phaseStepSlide = twopi * bassFrSlide / sr;
             //}
             //System.out.println("QWQWQWQWQWQWQWQWQWQWQWQWQWQWtfdjztdjdrdhtrdstartstarttstarsrstatsr2 " + (start - System.currentTimeMillis()));
 
@@ -169,8 +184,15 @@ class MusicPlayer implements Runnable {
                         sinArray[index] = Math.sin(ph);
                     }
                     samples[i] = (short) (/*bassLevel*/ amp * sinArray[index] * (buffsize*2-i) / buffsize  + amp/2); //Math.sin(ph));
-                    ph += phaseStep;
+
+                    if(i<buffsize) {
+                        ph += (phaseStep - phaseStepSlide)*((double)i/(double)buffsize) + phaseStepSlide;
+                    } else {
+                        ph += phaseStep;
+                    }//ph += phaseStep;
+
                     if (ph > twopi) ph -= twopi;
+                    if (ph < 0) ph += twopi;
 
                     //fade out i fade in zbog krcanja
                     if(i < 60) {
@@ -182,7 +204,11 @@ class MusicPlayer implements Runnable {
                         samples[i] = (short)(pom / 60);
                     }
 
-                    if(i==(buffsize)) bassFr = n.getFrequency();
+                    if(i==(buffsize)) {
+                        bassFr = n2.getFrequency();
+                        phaseStep = twopi * bassFr / sr;
+                        phaseStepSlide = phaseStep;
+                    }
 
 
                 //SAMO PROBNO DA VIDIM KAK SE AKORDI MIJENJAJU LAKSE
@@ -300,11 +326,6 @@ class MusicPlayer implements Runnable {
         isRunning = false;
     }
 
-    public void setBassFrequency(double frequency) {
-        this.bassFr = frequency;
-    }
-
-    public double getBassFrequency() {return bassFr;}
 
     public void setNoteDuration(long duration) {
         this.noteDuration = duration;

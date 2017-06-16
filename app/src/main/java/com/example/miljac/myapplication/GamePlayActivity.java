@@ -247,13 +247,13 @@ public class GamePlayActivity extends AppCompatActivity implements TableFragment
 
 
             musicPlayer.setNoteDuration((long)(TableConfig.NOTE_DURATION_FACTOR * waitingTimeCross));
-            if (waitingTimeCross > ((TableConfig.MAX_WAITING_TIME - TableConfig.MIN_WAITING_TIME)*12/16 + TableConfig.MIN_WAITING_TIME)) {// *12/16
+            if (waitingTimeCross > ((TableConfig.MAX_WAITING_TIME - TableConfig.MIN_WAITING_TIME)*10.6/16 + TableConfig.MIN_WAITING_TIME)) {// *12/16
                 musicPlayer.setMeasure(3);
                 System.out.println("TRI");
-            } else if (waitingTimeCross > ((TableConfig.MAX_WAITING_TIME - TableConfig.MIN_WAITING_TIME)*8/16 + TableConfig.MIN_WAITING_TIME)) {// 8/16
+            } else if (waitingTimeCross > ((TableConfig.MAX_WAITING_TIME - TableConfig.MIN_WAITING_TIME)*6/16 + TableConfig.MIN_WAITING_TIME)) {// 8/16
                 musicPlayer.setMeasure(4);
                 System.out.println("CETIRI");
-            } else if (waitingTimeCross > ((TableConfig.MAX_WAITING_TIME - TableConfig.MIN_WAITING_TIME)*4/16 + TableConfig.MIN_WAITING_TIME)) {// 4/16
+            } else if (waitingTimeCross > ((TableConfig.MAX_WAITING_TIME - TableConfig.MIN_WAITING_TIME)*1.4/16 + TableConfig.MIN_WAITING_TIME)) {// 4/16
                 musicPlayer.setMeasure(2);
                 System.out.println("DVA");
             } else {
