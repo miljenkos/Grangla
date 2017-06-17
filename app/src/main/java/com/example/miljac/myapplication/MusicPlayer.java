@@ -41,7 +41,7 @@ class MusicPlayer implements Runnable {
 
     AudioTrack audioTrack;
     short samples[];
-    short samplesChords[];
+    short samplesChords1[], samplesChords2[], samplesChords3[];
     int buffsize;
 
     boolean writing = false;
@@ -70,7 +70,9 @@ class MusicPlayer implements Runnable {
                 AudioTrack.MODE_STREAM);
 
         samples = new short[20000];
-        samplesChords = new short[20000];
+        samplesChords1 = new short[20000];
+        samplesChords2 = new short[20000];
+        samplesChords3 = new short[20000];
         // start audio
         audioTrack.play();
 
@@ -217,7 +219,7 @@ class MusicPlayer implements Runnable {
                     if (sinArray[index] == 0.0d) {
                         sinArray[index] = Math.sin(ph2);
                     }
-                    samplesChords[i] = (short) ( chordAmp * sinArray[index]); //Math.sin(ph));
+                    samplesChords1[i] = (short) ( chordAmp * sinArray[index]); //Math.sin(ph));
                 //samples[i] += (short) (5000 * (ph2 - twopi/2)/30);
                 ph2 += twopi * fr2 / sr;
                 if(ph2 > twopi) ph2 -= twopi;
@@ -228,7 +230,14 @@ class MusicPlayer implements Runnable {
                     if (sinArray[index] == 0.0d) {
                         sinArray[index] = Math.sin(ph3);
                     }
-                    samplesChords[i] += (short) ( chordAmp * sinArray[index]); //Math.sin(ph));
+                    /*if(n.isKeyChange()) {
+                        if ((i + 200) < (buffsize * 2)) {
+                            System.out.println("WRGRTNTNRZJRTUMTUTRUMRU;RZ");
+                            samplesChords2[i + 200] += (short) (chordAmp * sinArray[index]); //Math.sin(ph));
+                        }//samplesChords[i] += (short) (chordAmp * sinArray[index]); //Math.sin(ph));
+                    } else {*/
+                        samplesChords2[i] = (short) ( chordAmp * sinArray[index]);
+                    //}
                     //samples[i] += (short) (5000 * (ph2 - twopi/2)/30);
                     ph3 += twopi * fr3 / sr;
                     if(ph3 > twopi) ph3 -= twopi;
@@ -239,7 +248,13 @@ class MusicPlayer implements Runnable {
                     if (sinArray[index] == 0.0d) {
                         sinArray[index] = Math.sin(ph4);
                     }
-                    samplesChords[i] += (short) ( chordAmp * sinArray[index]); //Math.sin(ph));
+                    /*if(n.isKeyChange()) {
+                        if (((i + 400) < (buffsize * 2)) ) {
+                            samplesChords3[i + 400] += (short) (chordAmp * sinArray[index]); //Math.sin(ph));
+                        }
+                    } else {*/
+                        samplesChords3[i] = (short) ( chordAmp * sinArray[index]);
+                    //}
                     //samples[i] += (short) (5000 * (ph2 - twopi/2)/30);
                     ph4 += twopi * fr4 / sr;
                     if(ph4 > twopi) ph4 -= twopi;
@@ -252,12 +267,30 @@ class MusicPlayer implements Runnable {
 
                     //fade in
                     if((i < 900) && n.isKeyChange()) {
-                        pom = samplesChords[i] * i;
-                        samplesChords[i] = (short)(pom / 900);
+                        pom = samplesChords1[i] * i;
+                        samplesChords1[i] = (short)(pom / 900);
+                    }
+                    if((i < 1300) && n.isKeyChange()) {
+                        pom = samplesChords2[i] * (i-400);
+                        if (i>400)
+                            samplesChords2[i] = (short)(pom / 900);
+                        else
+                            samplesChords2[i] = 0;
+                    }
+                    if((i < 1500) && n.isKeyChange()) {
+                        pom = samplesChords3[i] * (i-800);
+                        if (i>800)
+                            samplesChords3[i] = (short)(pom / 900);
+                        else
+                            samplesChords3[i] = 0;
                     }
 
 
-                    samples[i] += samplesChords[i];
+                    samples[i] += samplesChords1[i];
+                    /*if(((i+200)<(buffsize*2)) && n.isKeyChange()) samples[i+200] += samplesChords2[i];
+                    if(!n.isKeyChange())*/ samples[i] += samplesChords2[i];
+                    /*if(((i+400)<(buffsize*2)) && n.isKeyChange()) samples[i+400] += samplesChords3[i];
+                    if(!n.isKeyChange())*/ samples[i] += samplesChords3[i];
                 }
 
 //            //drugi ton, da budu po dva spojena

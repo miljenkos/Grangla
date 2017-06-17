@@ -103,7 +103,7 @@ public class BassGenerator {
             }
 
             rnd = Math.random();
-            if (rnd<0.2) {
+            if (rnd<0.12) {
                 a.setSlide(true);
                 a.setIndex(lastIndex);
                 a.setNextNoteIndex(a2.getIndex());
