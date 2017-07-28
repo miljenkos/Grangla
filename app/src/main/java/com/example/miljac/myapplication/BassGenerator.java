@@ -1,5 +1,7 @@
 package com.example.miljac.myapplication;
 
+import java.util.Random;
+
 /**
  * Created by miljac on 28.5.2017..
  */
@@ -40,14 +42,14 @@ public class BassGenerator {
     private int currentKey;
 
     private Note[] lastRiff;
-
+    Random rand = new Random();
 
 
     private Note[] generateChordset(){
-        int numberOfChords = (int) (1.4 + Math.ceil(3* Math.random()));
+        int numberOfChords = (int) (1.4 + Math.ceil(3* rand.nextDouble()));
         Note[] chordSet = new Note[numberOfChords];
         for (int x=0; x<chordSet.length; x++) {
-            int r = (int)(Math.ceil(2* Math.random()));
+            int r = (int)(Math.ceil(2* rand.nextDouble()));
             if (r<2)
                 chordSet[x] = new Note(chordKey1);
             else
@@ -55,7 +57,7 @@ public class BassGenerator {
         }
         for(int j =0; j<3; j++){
             for (int x = 0; x < numberOfChords; x++) {
-                int r = (int) (Math.ceil(2 * Math.random()));
+                int r = (int) (Math.ceil(2 * rand.nextDouble()));
                 if (r < 2)
                     chordSet[x].setIndexToFifth();
                 else
@@ -86,7 +88,7 @@ public class BassGenerator {
         for (int j = 0; j < 10; j = j + 2) {
             lastIndex = a2.getIndex();
             a = mainBeatNoteGenerate(TableConfig.BASSS_TONES_DISPERSION);
-            rnd = Math.random();
+            rnd = rand.nextDouble();
 
             if (rnd<0.25) {
                 a2 = new Note(a.getNextIndexInMinorKey(0));
@@ -97,12 +99,12 @@ public class BassGenerator {
                 a2 = new Note(a.getIndex());
             }
 
-            rnd = Math.random();
+            rnd = rand.nextDouble();
             if (rnd<0.2) {
                 a2.setIndex(a.getPreviousIndexInMinorKey(0));
             }
 
-            rnd = Math.random();
+            rnd = rand.nextDouble();
             if (rnd<0.12) {
                 a.setSlide(true);
                 a.setIndex(lastIndex);
@@ -142,8 +144,8 @@ public class BassGenerator {
 
         Note a, a2;
 
-        chordKey1 = (int)(Math.ceil(Math.random() * 12) + TableConfig.BASS_NOTE_LOWER_BOUNDARY);
-        chordKey2 = (int)(Math.ceil(Math.random() * 12) + TableConfig.BASS_NOTE_LOWER_BOUNDARY);
+        chordKey1 = (int)(Math.ceil(rand.nextDouble() * 12) + TableConfig.BASS_NOTE_LOWER_BOUNDARY);
+        chordKey2 = (int)(Math.ceil(rand.nextDouble() * 12) + TableConfig.BASS_NOTE_LOWER_BOUNDARY);
 
 
         System.out.println(chordKey1);
@@ -175,7 +177,7 @@ public class BassGenerator {
 
 
         /*for(int x=0; x<5; x++){
-            currentKey = new Note((int)(Math.ceil(Math.random() * 11) + 30));
+            currentKey = new Note((int)(Math.ceil(rand.nextDouble() * 11) + 30));
             for (int j = 0; j<10; j=j+2){
                 a = mainBeatNoteGenerate(0.2);
                 a2 = new Note(a.getIndex());
@@ -203,7 +205,7 @@ public class BassGenerator {
             lastChordNo = 0;
 
 
-            int f =(int)(Math.ceil(3 - Math.random() * 2.6));
+            int f =(int)(Math.ceil(3 - rand.nextDouble() * 2.6));
             switch(f){
                 case 1:
                     currentChordSet = chordSet1;
@@ -234,7 +236,7 @@ public class BassGenerator {
 
             currentKey = getNextChord();
 
-            int f =(int)(Math.ceil(3 - Math.random() * 2.6));
+            int f =(int)(Math.ceil(3 - rand.nextDouble() * 2.6));
             switch(f){
                 case 1:
                     currentRiff = riff1;
@@ -265,28 +267,28 @@ public class BassGenerator {
         Note result;
 
 
-        double r = Math.random();
+        double r = rand.nextDouble();
 
         if (r > rndFactor) {
             result = new Note(0);
             result.setRelativetoKey(true);
             return result;
         }
-        r = Math.random();
+        r = rand.nextDouble();
         if (r > rndFactor) {
             result = new Note(3);
             result.setRelativetoKey(true);
             return result;
         }
 
-        r = Math.random();
+        r = rand.nextDouble();
         if (r > rndFactor) {
             result = new Note(7);
             result.setRelativetoKey(true);
             return result;
         }
 
-        r = Math.random();
+        r = rand.nextDouble();
         if (r > rndFactor) {
             result = new Note(10);
             result.setRelativetoKey(true);

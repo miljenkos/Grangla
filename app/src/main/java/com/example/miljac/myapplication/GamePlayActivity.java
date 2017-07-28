@@ -1,17 +1,13 @@
 package com.example.miljac.myapplication;
 
-import android.app.WallpaperInfo;
+
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.media.AudioFormat;
-import android.media.AudioManager;
-import android.media.AudioTrack;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.ProgressBar;
 
-import java.util.LinkedList;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
@@ -29,7 +25,6 @@ public class GamePlayActivity extends AppCompatActivity implements TableFragment
     private Coordinates c;
     private Coordinates lastMoveO;
     private Coordinates lastMoveX;
-    private EndStruct endStruct;
     private double result = 50;
     private long waitingTimeCircle = 3000;
     private long waitingMomentCircle = 0;
@@ -247,18 +242,18 @@ public class GamePlayActivity extends AppCompatActivity implements TableFragment
 
 
             musicPlayer.setNoteDuration((long)(TableConfig.NOTE_DURATION_FACTOR * waitingTimeCross));
-            if (waitingTimeCross > ((TableConfig.MAX_WAITING_TIME - TableConfig.MIN_WAITING_TIME)*10.6/16 + TableConfig.MIN_WAITING_TIME)) {// *12/16
+            if (waitingTimeCross > ((TableConfig.MAX_WAITING_TIME - TableConfig.MIN_WAITING_TIME)*10.3/16 + TableConfig.MIN_WAITING_TIME)) {// *12/16
                 musicPlayer.setMeasure(3);
-                System.out.println("TRI");
+                //System.out.println("TRI");
             } else if (waitingTimeCross > ((TableConfig.MAX_WAITING_TIME - TableConfig.MIN_WAITING_TIME)*6/16 + TableConfig.MIN_WAITING_TIME)) {// 8/16
                 musicPlayer.setMeasure(4);
-                System.out.println("CETIRI");
-            } else if (waitingTimeCross > ((TableConfig.MAX_WAITING_TIME - TableConfig.MIN_WAITING_TIME)*1.4/16 + TableConfig.MIN_WAITING_TIME)) {// 4/16
+                //System.out.println("CETIRI");
+            } else if (waitingTimeCross > ((TableConfig.MAX_WAITING_TIME - TableConfig.MIN_WAITING_TIME)*1.2/16 + TableConfig.MIN_WAITING_TIME)) {// 4/16
                 musicPlayer.setMeasure(2);
-                System.out.println("DVA");
+                //System.out.println("DVA");
             } else {
                 musicPlayer.setMeasure(5);
-                System.out.println("PET");
+                //System.out.println("PET");
             }
 
 

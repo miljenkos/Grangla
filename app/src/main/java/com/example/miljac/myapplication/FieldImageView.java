@@ -1,24 +1,11 @@
 package com.example.miljac.myapplication;
 
-//import com.survivingwithandroid.pegboard.R;
-//import com.survivingwithandroid.pegboard.TableConfig;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.Paint.Style;
 import android.graphics.drawable.Drawable;
-import android.util.Log;
-import android.view.MotionEvent;
-import android.view.View;
-import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.widget.ImageView;
 
-import java.util.Random;
 
 
 public class FieldImageView extends ImageView  {
@@ -91,7 +78,6 @@ public class FieldImageView extends ImageView  {
 
         this.currentPinId = resId;
         final Drawable d = getResources().getDrawable(resId);
-
 
 
         /*Random r = new Random();
