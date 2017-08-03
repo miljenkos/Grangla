@@ -66,6 +66,12 @@ public class Note {
 
     private boolean relativetoKey = false;
 
+    public void setRelativetoPrevious(boolean RelativetoPrevious) {
+        this.relativetoPrevious = relativetoPrevious;
+    }
+
+    private boolean relativetoPrevious = false;
+
     private double indexToFrequency(int x) {
         if (x == 1) return 32.7;
         if (x > 12) return (2 * indexToFrequency(x-12));
@@ -119,6 +125,15 @@ public class Note {
         }
     }
 
+    /*public void setLowerBoundary(int boundary){
+        while (this.noteIndex<boundary){
+            this.noteIndex += 12;
+        }
+        while (this.nextNoteIndex<boundary){
+            this.nextNoteIndex += 12;
+        }
+    }*/
+
 
     public void applyKeyOnRelativeNote(int key){
         this.noteIndex = this.relativeIndex + key;
@@ -154,58 +169,101 @@ public class Note {
     }
 
 
-    /*public int getPreviousIndexInMinorKey(int key){
+
+    public int downOneInMinorKey(int key){
         switch((noteIndex - key) % 12) { //provjeri kak se ovo s negativnim brojevima ponasa
             case 0:
+                noteIndex = noteIndex - 2;
+                return noteIndex - 2;
             case 1:
-                return noteIndex + 2;
+                noteIndex = noteIndex - 1;
+                return noteIndex - 1;
             case 2:
-                return noteIndex + 3;
+                noteIndex = noteIndex - 2;
+                return noteIndex - 2;
             case 3:
+                noteIndex = noteIndex - 1;
+                return noteIndex - 1;
             case 4:
-                return noteIndex + 5;
+                noteIndex = noteIndex - 1;
+                return noteIndex - 1;
             case 5:
+                noteIndex = noteIndex - 2;
+                return noteIndex - 2;
             case 6:
-                return noteIndex + 7;
+                noteIndex = noteIndex - 1;
+                return noteIndex - 1;
             case 7:
-                return noteIndex + 8;
+                noteIndex = noteIndex - 2;
+                return noteIndex - 2;
             case 8:
+                noteIndex = noteIndex - 1;
+                return noteIndex - 1;
             case 9:
-                return noteIndex + 10;
+                noteIndex = noteIndex - 1;
+                return noteIndex - 1;
             case 10:
+                noteIndex = noteIndex - 2;
+                return noteIndex - 2;
             case 11:
-                return noteIndex + 12;
+                noteIndex = noteIndex - 1;
+                return noteIndex - 1;
             default:
-                return getNextIndexInMinorKey(key - 12);
+                return noteIndex;
         }
     }
 
 
-    public int getNextIndexInMinorKey(int key){
+    public int upOneInMinorKey(int key){
         switch((noteIndex - key) % 12) { //provjeri kak se ovo s negativnim brojevima ponasa
             case 0:
-            case 1:
+                noteIndex = noteIndex + 2;
                 return noteIndex + 2;
+            case 1:
+                noteIndex = noteIndex + 1;
+                return noteIndex + 1;
             case 2:
-                return noteIndex + 3;
+                noteIndex = noteIndex + 1;
+                return noteIndex + 1;
             case 3:
+                noteIndex = noteIndex + 2;
+                return noteIndex + 2;
             case 4:
-                return noteIndex + 5;
+                noteIndex = noteIndex + 1;
+                return noteIndex + 1;
             case 5:
+                noteIndex = noteIndex + 2;
+                return noteIndex + 2;
             case 6:
-                return noteIndex + 7;
+                noteIndex = noteIndex + 1;
+                return noteIndex + 1;
             case 7:
-                return noteIndex + 8;
+                noteIndex = noteIndex + 1;
+                return noteIndex + 1;
             case 8:
+                noteIndex = noteIndex + 2;
+                return noteIndex + 2;
             case 9:
-                return noteIndex + 10;
+                noteIndex = noteIndex + 1;
+                return noteIndex + 1;
             case 10:
+                noteIndex = noteIndex + 2;
+                return noteIndex + 2;
             case 11:
-                return noteIndex + 12;
+                noteIndex = noteIndex + 1;
+                return noteIndex + 1;
             default:
-                return getNextIndexInMinorKey(key - 12);
+                return noteIndex;
         }
-    }*/
+    }
+
+
+
+
+
+
+
+
 
     public int getPreviousIndexInMinorKey(int key){
         switch((noteIndex - key) % 12) { //provjeri kak se ovo s negativnim brojevima ponasa
@@ -234,7 +292,7 @@ public class Note {
             case 11:
                 return noteIndex - 1;
             default:
-                return getNextIndexInMinorKey(key - 12);
+                return noteIndex;
         }
     }
 
@@ -266,10 +324,9 @@ public class Note {
             case 11:
                 return noteIndex + 1;
             default:
-                return getNextIndexInMinorKey(key - 12);
+                return noteIndex;
         }
     }
-
 
 
 }

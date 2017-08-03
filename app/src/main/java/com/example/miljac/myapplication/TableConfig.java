@@ -27,7 +27,8 @@ public class TableConfig {
     public static double BASSS_TONES_DISPERSION = 0.6;
     public static int BASS_NOTE_LOWER_BOUNDARY = 23;
     public static int BASS_NOTE_UPPER_BOUNDARY = 35;
-
+    public static int SOLO_NOTE_LOWER_BOUNDARY = 53;
+    public static int SOLO_NOTE_UPPER_BOUNDARY = 80;
 
 
     private static MediaPlayer player ;

@@ -15,6 +15,7 @@ class MusicPlayer implements Runnable {
     int sr = 8000;//44100;
     boolean isRunning = true;
     double bassFr = 440.f;
+    double soloFr = 440.f;
     double bassFrSlide = 440.f;
     double fr2, fr3, fr4 = 440.f;
     double sinArray[] = new double[1000];
@@ -26,24 +27,30 @@ class MusicPlayer implements Runnable {
 
     int amp = 30000;
     int chordAmp = 500;
+    int soloAmp = 200;
     int bassLevel;
     int pom;
+    int soloTimeFrameDeviation;
 
     //double fr = 440.f;
     double ph = 0.0;
     double ph2 = 0.0;
     double ph3 = 0.0;
     double ph4 = 0.0;
+    double phSolo = 0.0;
+
 
     double phaseFactor = 1000. / twopi;
     double phaseStep;
     double phaseStepSlide;
 
     BassGenerator bassGenerator = new BassGenerator();
+    SoloGenerator soloGenerator = new SoloGenerator();
 
     AudioTrack audioTrack;
     short samples[];
     short samplesChords1[], samplesChords2[], samplesChords3[];
+    short samplesSolo[];
     int buffsize;
     Random rand = new Random();
 
@@ -61,6 +68,7 @@ class MusicPlayer implements Runnable {
         samplesChords1 = new short[20000];
         samplesChords2 = new short[20000];
         samplesChords3 = new short[20000];
+        samplesSolo = new short[20000];
         // start audio
         audioTrack.play();
 
@@ -121,8 +129,16 @@ class MusicPlayer implements Runnable {
                 //System.out.println("dur!");
             }
 
-            //sample generation for bass
+            soloGenerator.setKey(key2-3);
+            Note s = soloGenerator.getNextSoloNote();
+            soloFr = s.getFrequency();
+
+            rnd = rand.nextDouble();
+            soloTimeFrameDeviation = (int)(rnd*500) - 250;
+
+            //sample generation
             for (int i = 0; i < buffsize*2; i++) {
+//BASS
                 index = (int) (phaseFactor * ph);//speed up sin calculating
                 if (sinArray[index] == 0.0d) {
                     sinArray[index] = Math.sin(ph);
@@ -224,7 +240,33 @@ class MusicPlayer implements Runnable {
                 samples[i] += samplesChords1[i];
                 samples[i] += samplesChords2[i];
                 samples[i] += samplesChords3[i];
-            }
+
+//SOLO
+
+
+
+
+                //switch to second solo note
+                if(i == (buffsize + soloTimeFrameDeviation)) {
+                    s = soloGenerator.getNextSoloNote();
+                    soloFr = s.getFrequency();
+                }
+
+
+                index = (int) (phaseFactor * phSolo);
+                if (sinArray[index] == 0.0d) {
+                    sinArray[index] = Math.sin(phSolo);
+                }
+                samplesSolo[i] = (short) ( soloAmp * sinArray[index]);
+                phSolo += twopi * soloFr / sr;
+                if(phSolo > twopi) phSolo -= twopi;
+
+                samples[i] += samplesSolo[i];
+
+
+
+
+            }//end of synth loop
 
 
 

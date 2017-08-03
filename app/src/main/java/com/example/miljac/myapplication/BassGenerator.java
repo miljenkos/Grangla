@@ -8,25 +8,17 @@ import java.util.Random;
 
 public class BassGenerator {
 
-
-
-    //private int lastRiff = 0;
     private int lastNoteInRiff = -1;
     private int lastChordNo = -1;
 
     int chordKey1;
     int chordKey2;
 
-
-    private Note[] keys;
     private int measure = 3;
     private int currentMeasure = 3;
-    public void setKey(int inkey){this.currentKey = inkey;}
     public int getKey(){return this.currentKey;}
     public void setMeasure (int m){this.measure = m;}
-    public int getMeasure(){return this.measure;}
 
-    private Note[][] bassRiffs = new Note[5][10];
 
     Note[] currentChordSet;
     Note[] currentRiff;
@@ -41,9 +33,7 @@ public class BassGenerator {
 
     private int currentKey;
 
-    private Note[] lastRiff;
     Random rand = new Random();
-
 
     private Note[] generateChordset(){
         int numberOfChords = (int) (1.4 + Math.ceil(3* rand.nextDouble()));
@@ -81,7 +71,7 @@ public class BassGenerator {
     private Note[] generateRiff() {
         Note[] riff = new Note[10];
         Note a2 = new Note(5);
-        Note a = new Note(5);
+        Note a;
         double rnd;
         int lastIndex;
 
@@ -91,7 +81,7 @@ public class BassGenerator {
             rnd = rand.nextDouble();
 
             if (rnd<0.25) {
-                a2 = new Note(a.getNextIndexInMinorKey(0));
+                a2 = new Note(a.getNextIndexInMinorKey(0));//key is 0 because these are relative values
                 System.out.println("A   " +a.getIndex());
                 System.out.println("A2  " +a2.getIndex());
 
@@ -142,23 +132,11 @@ public class BassGenerator {
 
     public BassGenerator(){
 
-        Note a, a2;
-
         chordKey1 = (int)(Math.ceil(rand.nextDouble() * 12) + TableConfig.BASS_NOTE_LOWER_BOUNDARY);
         chordKey2 = (int)(Math.ceil(rand.nextDouble() * 12) + TableConfig.BASS_NOTE_LOWER_BOUNDARY);
 
-
         System.out.println(chordKey1);
         System.out.println(chordKey2);
-
-
-        /*chordSet1 = generateChordset();
-        chordSet2 = generateChordset();
-        chordSet3 = generateChordset();
-
-        riff1 = generateRiff();
-        riff2 = generateRiff();
-        riff3 = generateRiff();*/
 
         chordSet1 = generateChordset();
         chordSet2 = generateChordset();
@@ -172,30 +150,6 @@ public class BassGenerator {
         currentChordSet = chordSet1;
         currentRiff = riff1;
         currentKey = getNextChord();
-
-
-
-
-        /*for(int x=0; x<5; x++){
-            currentKey = new Note((int)(Math.ceil(rand.nextDouble() * 11) + 30));
-            for (int j = 0; j<10; j=j+2){
-                a = mainBeatNoteGenerate(0.2);
-                a2 = new Note(a.getIndex());
-                if(j == 0) {
-                    a.setVolume(10000);
-                    a2.setVolume(5000);
-                }else {
-                    a.setVolume(6000);
-                    a2.setVolume(3000);
-                }
-                bassRiffs[x][j] = a;
-                bassRiffs[x][j+1] = a2;
-
-                System.out.println("AAAAAAAAAAAAA" + x+ "   " + j);
-                System.out.println(bassRiffs[x][j].getIndex());
-                System.out.println(bassRiffs[x][j].getFrequency());
-            }
-        }*/
 
     }
 
@@ -218,10 +172,6 @@ public class BassGenerator {
                     break;
             }
         }
-
-        /*System.out.println("LL " + lastRiff);
-        System.out.println("KK " + lastNoteInRiff);
-        System.out.println(bassRiffs[lastRiff][lastNoteInRiff]);*/
 
         System.out.println("next Chord " + currentChordSet[lastChordNo].getIndex());
         return currentChordSet[lastChordNo].getIndex();
