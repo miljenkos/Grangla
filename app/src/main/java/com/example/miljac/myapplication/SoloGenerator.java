@@ -20,6 +20,12 @@ public class SoloGenerator {
     int currentKey;
     int soloIndex = 0;
     double rnd;
+    boolean keyChange = false;
+
+
+    public void setKeyChange(boolean keyChange) {
+        this.keyChange = keyChange;
+    }
 
 
     public SoloGenerator() {
@@ -34,7 +40,7 @@ public class SoloGenerator {
     public void setKey(int key){currentKey = key;}
 
     private Note[] generateSolo(){
-        int length = 10 + (int)(rand.nextDouble() * 20);
+        int length = 15 + (int)(rand.nextDouble() * 15);
         Note[] solo = new Note[length];
 
         int up = (int)(rand.nextDouble() * 3) + 1;
@@ -42,6 +48,13 @@ public class SoloGenerator {
 
 
         for(int x=0; x<length; x++){
+            rnd = rand.nextDouble();
+            if (rnd < 0.1){
+                up++;
+                down--;
+            }
+
+
             if (x%2 == 0){
                 a = new Note(up);
             } else {
@@ -49,9 +62,13 @@ public class SoloGenerator {
             }
 
             rnd = rand.nextDouble();
-            if (rnd<0.4) {
+            if (rnd < (0.1 + x*0.02)) {
                 a.setIndex(0);
             }
+
+
+            rnd = rand.nextDouble();
+            a.setVolume(190 + (int)(55*rnd) - x*5);
 
             solo[x] = a;
         }
@@ -66,21 +83,30 @@ public class SoloGenerator {
     public Note getNextSoloNote(){
         soloIndex++;
         if (soloIndex >= (currentSolo.length)){
-            soloIndex = 0;
+            if(keyChange) {
 
-            int f =(int)(Math.ceil(3 - rand.nextDouble() * 2.6));
-            switch(f){
-                case 1:
-                    currentSolo = solo1;
-                    break;
-                case 2:
-                    currentSolo = solo2;
-                    break;
-                case 3:
-                    currentSolo = solo3;
-                    break;
+                soloIndex = 0;
+
+                int f = (int) (Math.ceil(3 - rand.nextDouble() * 2.6));
+                switch (f) {
+                    case 1:
+                        currentSolo = solo1;
+                        break;
+                    case 2:
+                        currentSolo = solo2;
+                        break;
+                    case 3:
+                        currentSolo = solo3;
+                        break;
+                }
+            } else {
+                Note a = new Note(1);
+                a.setVolume(0);
+                return a;
             }
         }
+
+        keyChange = false;
 
         for(int x=0; x<solo1.length; x++){
             System.out.print(solo1[x] + " ");
@@ -91,6 +117,9 @@ public class SoloGenerator {
         }
 
         nextNote = new Note(lastNote.getIndex());
+
+        nextNote.setVolume(currentSolo[soloIndex].getVolume());
+
         if (currentSolo[soloIndex].getIndex() > 0){
             for (int x=0; x<currentSolo[soloIndex].getIndex(); x++){
                 nextNote.upOneInMinorKey(currentKey);

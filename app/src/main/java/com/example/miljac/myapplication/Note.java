@@ -54,7 +54,7 @@ public class Note {
 
     private int nextNoteIndex = -20;
 
-    private int volume;
+    private int volume = 100;
 
     public boolean isRelativetoKey() {
         return relativetoKey;

@@ -130,11 +130,16 @@ class MusicPlayer implements Runnable {
             }
 
             soloGenerator.setKey(key2-3);
+
+            if (n.isKeyChange()){
+                System.out.println("KEYCHANGE");
+                soloGenerator.setKeyChange(true);
+            }
             Note s = soloGenerator.getNextSoloNote();
             soloFr = s.getFrequency();
 
             rnd = rand.nextDouble();
-            soloTimeFrameDeviation = (int)(rnd*500) - 250;
+            soloTimeFrameDeviation = (int)(rnd*450) - 225;
 
             //sample generation
             for (int i = 0; i < buffsize*2; i++) {
@@ -244,10 +249,12 @@ class MusicPlayer implements Runnable {
 //SOLO
 
 
-
-
                 //switch to second solo note
                 if(i == (buffsize + soloTimeFrameDeviation)) {
+                    if (n.isKeyChange()){
+                        System.out.println("KEYCHANGE");
+                        soloGenerator.setKeyChange(true);
+                    }
                     s = soloGenerator.getNextSoloNote();
                     soloFr = s.getFrequency();
                 }
@@ -257,13 +264,11 @@ class MusicPlayer implements Runnable {
                 if (sinArray[index] == 0.0d) {
                     sinArray[index] = Math.sin(phSolo);
                 }
-                samplesSolo[i] = (short) ( soloAmp * sinArray[index]);
+                samplesSolo[i] = (short) ( s.getVolume() * sinArray[index]);
                 phSolo += twopi * soloFr / sr;
                 if(phSolo > twopi) phSolo -= twopi;
 
                 samples[i] += samplesSolo[i];
-
-
 
 
             }//end of synth loop
