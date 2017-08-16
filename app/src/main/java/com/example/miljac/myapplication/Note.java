@@ -1,15 +1,39 @@
 package com.example.miljac.myapplication;
 
+import java.util.Random;
+
 /**
  * Created by miljac on 23.5.2017..
  */
 
 public class Note {
 
+    Random rand = new Random();
+    double rnd = rand.nextDouble();
+
+    public double getSoloFrBendFactor() {
+        return soloFrBendFactor;
+    }
+
+    double soloFrBendFactor;
+
+    public double getSoloFrBendFr() {
+        return soloFrBendFr;
+    }
+
+    double soloFrBendFr;
+
     public Note(int i){
 
         this.noteIndex = i;
         this.relativeIndex = i;
+
+        rnd = rand.nextDouble();
+        this.soloFrBendFactor = (((18.0/17.0) - 1.0) / 14) * rnd*rnd*rnd*rnd;
+
+        rnd = rand.nextDouble();
+        this.soloFrBendFr = 0.2 + rnd*rnd*rnd*14;
+
     }
 
     public boolean isKeyChange() {

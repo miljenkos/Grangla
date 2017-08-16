@@ -57,6 +57,7 @@ public class GamePlayActivity extends AppCompatActivity implements TableFragment
 
         public void run() {
             //synchronized (table) {
+            System.out.println("ISCRTAVAMMM::: " + System.currentTimeMillis());
 
 
             for (int i = 0; i < TableConfig.TABLE_SIZE; i++) {
@@ -276,14 +277,14 @@ public class GamePlayActivity extends AppCompatActivity implements TableFragment
 
             while (!gameDone) {
                 try {
-                    Thread.sleep(100);
-                    Thread.yield();
+                    Thread.sleep(30);
+                    //Thread.yield();
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
 
-            uIPutThread = new Thread(uIPut);
-            runOnUiThread(uIPutThread);
+                uIPutThread = new Thread(uIPut);
+                runOnUiThread(uIPutThread);
 
             }
         }
