@@ -57,11 +57,11 @@ public class BassGenerator {
             }
         }
 
-        System.out.print("chordset: ");
+        //System.out.print("chordset: ");
         for (int x=0; x<chordSet.length; x++) {
-            System.out.print(chordSet[x].getIndex() + " ");
+            //System.out.print(chordSet[x].getIndex() + " ");
         }
-        System.out.println();
+        //System.out.println();
 
         return chordSet;
     }
@@ -82,8 +82,8 @@ public class BassGenerator {
 
             if (rnd<0.25) {
                 a2 = new Note(a.getNextIndexInMinorKey(0));//key is 0 because these are relative values
-                System.out.println("A   " +a.getIndex());
-                System.out.println("A2  " +a2.getIndex());
+                //System.out.println("A   " +a.getIndex());
+                //System.out.println("A2  " +a2.getIndex());
 
             } else {
                 a2 = new Note(a.getIndex());
@@ -100,9 +100,9 @@ public class BassGenerator {
                 a.setIndex(lastIndex);
                 a.setNextNoteIndex(a2.getIndex());
 
-                System.out.println("LLL " + a2.getIndex());
+                //System.out.println("LLL " + a2.getIndex());
 
-                System.out.println("LASTINDEX "  + a.getIndex() + " NEXTINDEX " + a.getNextNoteIndex());
+                //System.out.println("LASTINDEX "  + a.getIndex() + " NEXTINDEX " + a.getNextNoteIndex());
             }
 
 
@@ -120,11 +120,11 @@ public class BassGenerator {
             //System.out.println(a.);
         }
 
-        System.out.print("riff: ");
+        //System.out.print("riff: ");
         for (int x=0; x<riff.length; x++) {
-            System.out.print(riff[x].getIndex() + " ");
+            //System.out.print(riff[x].getIndex() + " ");
         }
-        System.out.println();
+       //System.out.println();
 
         return riff;
     }
@@ -135,8 +135,8 @@ public class BassGenerator {
         chordKey1 = (int)(Math.ceil(rand.nextDouble() * 12) + TableConfig.BASS_NOTE_LOWER_BOUNDARY);
         chordKey2 = (int)(Math.ceil(rand.nextDouble() * 12) + TableConfig.BASS_NOTE_LOWER_BOUNDARY);
 
-        System.out.println(chordKey1);
-        System.out.println(chordKey2);
+        //System.out.println(chordKey1);
+        //System.out.println(chordKey2);
 
         chordSet1 = generateChordset();
         chordSet2 = generateChordset();
@@ -173,7 +173,7 @@ public class BassGenerator {
             }
         }
 
-        System.out.println("next Chord " + currentChordSet[lastChordNo].getIndex());
+        //System.out.println("next Chord " + currentChordSet[lastChordNo].getIndex());
         return currentChordSet[lastChordNo].getIndex();
     }
 
@@ -202,13 +202,13 @@ public class BassGenerator {
 
         }
 
-        System.out.println("next relative note: " + currentRiff[lastNoteInRiff].getIndex() + " on key " + currentKey);
+        //System.out.println("next relative note: " + currentRiff[lastNoteInRiff].getIndex() + " on key " + currentKey);
 
         Note newNote = currentRiff[lastNoteInRiff];
         newNote.applyKeyOnRelativeNote(currentKey);
         newNote.setUpperBoundary(TableConfig.BASS_NOTE_UPPER_BOUNDARY);
 
-        System.out.println("next note: " + newNote.getIndex());
+        //System.out.println("next note: " + newNote.getIndex());
 
         return newNote;
     }

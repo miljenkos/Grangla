@@ -121,7 +121,7 @@ public class TableView extends ViewGroup  {
 
         if (pinImg != null) {
             pinImg.setPinColor(color);
-            pinImg.invalidate();
+            //pinImg.invalidate();
             pinImg.setAlpha(alpha);
 
         }

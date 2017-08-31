@@ -5,6 +5,7 @@ import android.media.AudioManager;
 import android.media.AudioTrack;
 
 import java.util.Random;
+import java.util.concurrent.locks.LockSupport;
 
 /**
  * Created by miljac on 10.5.2017..
@@ -27,7 +28,7 @@ class MusicPlayer implements Runnable {
     boolean major = false;
 
     int amp = 30000;
-    int chordAmp = 600;
+    int chordAmp = 750;
     int soloAmp = 200;
     int bassLevel;
     int pom;
@@ -35,6 +36,7 @@ class MusicPlayer implements Runnable {
 
     //double fr = 440.f;
     double ph = 0.0;
+    double phOct = 0.0;
     double ph2 = 0.0;
     double ph3 = 0.0;
     double ph4 = 0.0;
@@ -48,13 +50,15 @@ class MusicPlayer implements Runnable {
     double phaseFactor = 1000. / twopi;
     double phaseStep;
     double phaseStepSlide;
+    double phaseStepOct;
+    double phaseStepSlideOct;
 
     BassGenerator bassGenerator = new BassGenerator();
     SoloGenerator soloGenerator = new SoloGenerator();
 
     AudioTrack audioTrack;
     short samples[];
-    short samplesChords1[], samplesChords2[], samplesChords3[], samplesChordsBass1[], samplesChordsBass2[];
+    short samplesChords1[], samplesChords2[], samplesChords3[], samplesChordsBass1[], samplesOct[], samplesBassBase[];
     short samplesSolo[];
     double soloFrBendFactor;
     int buffsize;
@@ -75,8 +79,9 @@ class MusicPlayer implements Runnable {
         samplesChords2 = new short[20000];
         samplesChords3 = new short[20000];
         samplesChordsBass1 = new short[20000];
-        samplesChordsBass2 = new short[20000];
+        samplesOct = new short[20000];
         samplesSolo = new short[20000];
+        samplesBassBase = new short[20000];
         // start audio
         audioTrack.play();
 
@@ -104,20 +109,23 @@ class MusicPlayer implements Runnable {
             bassFr = n.getFrequency();
 
             if(n.isSlide()) {//slide effect
-                System.out.println(n.getNextNoteIndex());
+                //System.out.println(n.getNextNoteIndex());
                 bassFrSlide = n.getNextNoteFrequency();
             } else {
                 bassFrSlide = bassFr;
             }
 
             amp = n.getVolume();
-            if (n.isKeyChange()) chordAmp = 1300;
-            System.out.println(n.isKeyChange());
+            if (n.isKeyChange()) chordAmp = 1600;
+            //System.out.println(n.isKeyChange());
 
             //frequency calculations
             phaseStep = twopi * bassFr / sr;
             phaseStepSlide = twopi * bassFrSlide / sr;
             buffsize = (int)noteDuration*8;
+
+            phaseStepOct = twopi * bassFr * 2 / sr;
+            phaseStepSlideOct = twopi * bassFrSlide * 2 / sr;
 
             //get key and calculate other chord tones
             int key1 = bassGenerator.getKey() + 12;
@@ -143,7 +151,7 @@ class MusicPlayer implements Runnable {
             soloGenerator.setKey(key2-3);
 
             if (n.isKeyChange()){
-                System.out.println("KEYCHANGE");
+                //System.out.println("KEYCHANGE");
                 soloGenerator.setKeyChange(true);
             }
             Note s = soloGenerator.getNextSoloNote();
@@ -185,7 +193,43 @@ class MusicPlayer implements Runnable {
                     bassFr = n2.getFrequency();
                     phaseStep = twopi * bassFr / sr;
                     phaseStepSlide = phaseStep;
+
+                    phaseStepOct = twopi * bassFr * 2 / sr;
+                    phaseStepSlideOct = phaseStepOct;
                 }
+
+
+//BASS octave
+                index = (int) (phaseFactor * phOct);//speed up sin calculating
+                if (sinArray[index] == 0.0d) {
+                    sinArray[index] = Math.sin(phOct);
+                }
+                samplesOct[i] = (short) (amp/55 * (
+                        (sinArray[index] > 0) ? 1 : -1
+                                                        )* (buffsize*2-i) / buffsize  + amp/55/2);
+
+                if(i<buffsize) {//first bass note
+                    phOct += (phaseStepOct - phaseStepSlideOct)*((double)i/(double)buffsize) + phaseStepSlideOct;
+                } else {//second bass note
+                    phOct += phaseStepOct;
+                }
+
+                if (phOct > twopi) phOct -= twopi;
+                if (phOct < 0) phOct += twopi;
+
+                //fade out i fade in zbog krcanja
+                if(i < 60) {
+                    pom = samplesOct[i] * i;
+                    samplesOct[i] = (short)(pom / 60);
+                }
+                if(i > (2*buffsize - 60)) {
+                    pom = samplesOct[i] * (2*buffsize-i);
+                    samplesOct[i] = (short)(pom / 60);
+                }
+
+                samplesBassBase[i] = samples[i];
+                samples[i] += samplesOct[i];
+
 
 //CHORDS
 
@@ -221,7 +265,7 @@ class MusicPlayer implements Runnable {
                     samplesChordsBass1[i] = (short) (-230);
 
                 }
-                System.out.println("GETKEYYYYYYY::  " + bassGenerator.getKey());
+                //System.out.println("GETKEYYYYYYY::  " + bassGenerator.getKey());
 
 
                 //first tone in a chord
@@ -287,6 +331,13 @@ class MusicPlayer implements Runnable {
                 samples[i] += samplesChords2[i];
                 samples[i] += samplesChords3[i];
                 samples[i] += samplesChordsBass1[i];
+
+                samples[i] += ((samplesChords1[i]
+                        + samplesChords2[i]
+                        + samplesChords3[i]
+                        + samplesChordsBass1[i]
+                        + samplesBassBase[i] /3) > 0) ?
+                        170 : - 170;
                 /*samples[i] +=
                         ((samplesChords1[i] + samplesChords2[i] + samplesChords3[i]) > 0) ?
                                 chordAmp: -chordAmp;*/
@@ -297,7 +348,7 @@ class MusicPlayer implements Runnable {
                 //switch to second solo note
                 if(i == (buffsize + soloTimeFrameDeviation)) {
                     if (n.isKeyChange()){
-                        System.out.println("KEYCHANGE");
+                        //System.out.println("KEYCHANGE");
                         soloGenerator.setKeyChange(true);
                     }
                     s = soloGenerator.getNextSoloNote();
@@ -317,7 +368,7 @@ class MusicPlayer implements Runnable {
                 phSoloFrBendFactor += twopi * soloFrBendFactorFr / sr;
                 if(phSoloFrBendFactor > twopi) phSoloFrBendFactor -= twopi;
 
-                System.out.println("\n\nSOLOFRBENDFACTOR:::   " + soloFrBendFactor);
+                //System.out.println("\n\nSOLOFRBENDFACTOR:::   " + soloFrBendFactor);
 
 
 
@@ -344,12 +395,13 @@ class MusicPlayer implements Runnable {
 
             long start55  = System.currentTimeMillis();
 
-            while(System.currentTimeMillis()<(noteEndTime-5)) {
-                try {
-                    Thread.sleep(1);
+            while(System.currentTimeMillis()<(noteEndTime-6)) {
+                LockSupport.parkNanos(2_000_000);
+                /*try {
+                    Thread.sleep(2);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
-                }
+                }*/
             }
 
             System.out.println("MusicPlayer: vrijeme cekanja " + (System.currentTimeMillis() - start55));

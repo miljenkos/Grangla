@@ -84,7 +84,7 @@ public class TableFragment extends Fragment implements OnTouchListener {
         int y = (int) event.getY() ;
 
         if (event.getAction() == MotionEvent.ACTION_DOWN) {
-            Log.d("koordinate:",  "x:" + x + "  y:" + y + "\n");
+            //Log.d("koordinate:",  "x:" + x + "  y:" + y + "\n");
             fieldSelectedListener.onFieldSelected(tableView.getColumn(x),tableView.getRow(y));
         }
 

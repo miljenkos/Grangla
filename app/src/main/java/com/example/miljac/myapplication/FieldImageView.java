@@ -112,6 +112,7 @@ public class FieldImageView extends ImageView  {
                     Animation fadeInAnim = TableConfig.getFadeInAnim(ctx);
                     AnimView av = new AnimView(fadeInAnim, d);
                     this.post(av);
+                    //this.
                 //}
             }
         }

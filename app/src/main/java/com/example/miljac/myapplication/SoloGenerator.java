@@ -30,7 +30,7 @@ public class SoloGenerator {
 
 
     public SoloGenerator() {
-        System.out.println("usel sam u konstruktor!");
+        //System.out.println("usel sam u konstruktor!");
         solo1 = generateSolo2();
         solo2 = generateSolo();
         solo3 = generateSolo();
@@ -176,11 +176,11 @@ public class SoloGenerator {
         keyChange = false;
 
         for(int x=0; x<solo1.length; x++){
-            System.out.print(solo1[x] + " ");
+            //System.out.print(solo1[x] + " ");
         }
 
         for(int x=0; x<currentSolo.length; x++){
-            System.out.print(currentSolo[x] + " ");
+            //System.out.print(currentSolo[x] + " ");
         }
 
         nextNote = new Note(lastNote.getIndex());

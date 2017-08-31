@@ -10,6 +10,7 @@ import android.widget.ProgressBar;
 
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.LockSupport;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 public class GamePlayActivity extends AppCompatActivity implements TableFragment.OnFieldSelectedListener {
@@ -91,24 +92,7 @@ public class GamePlayActivity extends AppCompatActivity implements TableFragment
                     }
                     if (table.publicGet(i, j) == State.empty) {
 
-
-
-
-                        /*if ((movesO.size() >= (TableConfig.MAX_PIECES)) &&
-                                (movesO.get(TableConfig.MAX_PIECES - 1).equals(new Coordinates(i,j)))) {
-                        //if(!(movesO.contains(new Coordinates(i,j)))){
-                            tableView.removeImediately(i, j);
-
-                        } else
-                        if ((movesX.size() >= (TableConfig.MAX_PIECES)) &&
-                                (movesX.get(TableConfig.MAX_PIECES - 1).equals(new Coordinates(i,j)))) {
-                        //if(!(movesX.contains(new Coordinates(i,j)))){
-                            tableView.removeImediately(i, j);
-
-                        } else {*/
-                            tableView.changePinColor(i/* * tableFragment.pinSize + 1*/, j/* * tableFragment.pinSize + 1*/, R.drawable.pin41, 1f);
-
-                        //}
+                        tableView.changePinColor(i/* * tableFragment.pinSize + 1*/, j/* * tableFragment.pinSize + 1*/, R.drawable.pin41, 1f);
 
                         movesO.remove(new Coordinates(i, j));
                         movesX.remove(new Coordinates(i, j));
@@ -119,7 +103,7 @@ public class GamePlayActivity extends AppCompatActivity implements TableFragment
                     }
                 }
             }
-            tableView.invalidate();
+            //tableView.invalidate();
 
 
             if (lastMoveO != null) {
@@ -158,18 +142,6 @@ public class GamePlayActivity extends AppCompatActivity implements TableFragment
             }
 
 
-
-
-
-
-
-
-
-            /*if(resultBar.getProgress() < result) {
-                resultBar.setProgress(resultBar.getProgress() - 1);
-            }
-            else if(resultBar.getProgress() > result) {
-                resultBar.setProgress(resultBar.getProgress() + 1);*/
 
             currentTime = System.currentTimeMillis();
 
@@ -236,10 +208,10 @@ public class GamePlayActivity extends AppCompatActivity implements TableFragment
             waitingTimeCross += TableConfig.MIN_WAITING_TIME;
             //waitingMomentCross = System.currentTimeMillis() + waitingTimeCross;
 
-            System.out.println((TableConfig.MAX_WAITING_TIME - TableConfig.MIN_WAITING_TIME + TableConfig.MIN_WAITING_TIME*3/4));
+            /*System.out.println((TableConfig.MAX_WAITING_TIME - TableConfig.MIN_WAITING_TIME + TableConfig.MIN_WAITING_TIME*3/4));
             System.out.println((TableConfig.MAX_WAITING_TIME - TableConfig.MIN_WAITING_TIME + TableConfig.MIN_WAITING_TIME*6/16));
             System.out.println((TableConfig.MAX_WAITING_TIME - TableConfig.MIN_WAITING_TIME + TableConfig.MIN_WAITING_TIME/4));
-            System.out.println(waitingTimeCross);
+            System.out.println(waitingTimeCross);*/
 
 
             musicPlayer.setNoteDuration((long)(TableConfig.NOTE_DURATION_FACTOR * waitingTimeCross));
@@ -258,16 +230,6 @@ public class GamePlayActivity extends AppCompatActivity implements TableFragment
             }
 
 
-            /*
-                endStruct = table.end();
-                if (endStruct.winner != State.empty) {
-                    table.publicEmpty(endStruct.first.x, endStruct.first.y);
-                    table.publicEmpty(endStruct.second.x, endStruct.second.y);
-                    table.publicEmpty(endStruct.third.x, endStruct.third.y);
-                    table.publicEmpty(endStruct.fourth.x, endStruct.fourth.y);
-                }*/
-
-                //}
 
         }
     }
@@ -276,12 +238,13 @@ public class GamePlayActivity extends AppCompatActivity implements TableFragment
         public void run() {
 
             while (!gameDone) {
-                try {
-                    Thread.sleep(30);
+                LockSupport.parkNanos(100_000_000);
+                /*try {
+                    Thread.sleep(50);
                     //Thread.yield();
                 } catch (InterruptedException e) {
                     e.printStackTrace();
-                }
+                }*/
 
                 uIPutThread = new Thread(uIPut);
                 runOnUiThread(uIPutThread);
@@ -417,21 +380,13 @@ public class GamePlayActivity extends AppCompatActivity implements TableFragment
 
     public void onFieldSelected(int x,int y) {
 
+
         synchronized (table) {
             if(allowCircle) {
                 if(this.table.publicPut(State.circle, x, y)) {
                     lastMoveO = new Coordinates(x, y);
-
-//                    currentTime = System.currentTimeMillis();
-//                    waitingTimeCircle = TableConfig.MAX_WAITING_TIME - (TableConfig.MAX_WAITING_TIME - TableConfig.MIN_WAITING_TIME)/50 * Math.abs(50 - (int)result);
-//                    waitingTimeCircle -= TableConfig.MIN_WAITING_TIME;
-//                    waitingTimeCircle = (long)((double)waitingTimeCircle/ (1 + (double)(currentTime-gameStartTime)/(double)TableConfig.HALF_LIFE));
-//                    waitingTimeCircle += TableConfig.MIN_WAITING_TIME;
                     waitingMomentCircle = System.currentTimeMillis() + waitingTimeCircle;
-//                    musicPlayer.setNoteDuration((long)(TableConfig.NOTE_DURATION_FACTOR * waitingTimeCircle));
-
                     allowCircle = false;
-
                     movesO.add(0, lastMoveO);
                 }
             }
