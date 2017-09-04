@@ -137,7 +137,7 @@ public class TableView extends ViewGroup  {
 
         if (pinImg != null) {
             pinImg.remove();
-            pinImg.invalidate();
+            //pinImg.invalidate();
 
         }
     }

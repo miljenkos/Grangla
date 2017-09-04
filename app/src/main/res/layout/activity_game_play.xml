@@ -77,14 +77,22 @@ android:background="@drawable/suma">
             android:name="com.example.miljac.myapplication.CircleTimeFragment"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="5"/>
+            android:layout_weight="1"/>
+
+        <ToggleButton
+            android:id="@+id/toggle_sound_button"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:button="@drawable/toggle_sound"
+            android:background="@null"
+            android:layout_weight="1"/>
 
         <fragment
         android:id="@+id/CrossTime"
         android:name="com.example.miljac.myapplication.CrossTimeFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight="5"
+        android:layout_weight="1"
         />
 
 

@@ -6,7 +6,9 @@ import android.content.Intent;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.widget.CompoundButton;
 import android.widget.ProgressBar;
+import android.widget.ToggleButton;
 
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.locks.Lock;
@@ -238,7 +240,7 @@ public class GamePlayActivity extends AppCompatActivity implements TableFragment
         public void run() {
 
             while (!gameDone) {
-                LockSupport.parkNanos(100_000_000);
+                LockSupport.parkNanos(70_000_000);
                 /*try {
                     Thread.sleep(50);
                     //Thread.yield();
@@ -247,6 +249,7 @@ public class GamePlayActivity extends AppCompatActivity implements TableFragment
                 }*/
 
                 uIPutThread = new Thread(uIPut);
+                System.out.println(System.currentTimeMillis());
                 runOnUiThread(uIPutThread);
 
             }
@@ -260,10 +263,10 @@ public class GamePlayActivity extends AppCompatActivity implements TableFragment
 
 
 
-        musicPlayer = new MusicPlayer();
+        /*musicPlayer = new MusicPlayer();
         musicPlayerThread = new Thread(musicPlayer);
         musicPlayer.setNoteDuration((long)(TableConfig.NOTE_DURATION_FACTOR * waitingTimeCross));
-        musicPlayerThread.start();
+        musicPlayerThread.start();*/
 
 
 
@@ -287,6 +290,21 @@ public class GamePlayActivity extends AppCompatActivity implements TableFragment
         tableFragment = (TableFragment)
                 getSupportFragmentManager().findFragmentById(R.id.Table);
         tableView = tableFragment.tableView;
+
+        ToggleButton soundToggle = (ToggleButton) findViewById(R.id.toggle_sound_button);
+        soundToggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    musicPlayer = new MusicPlayer();
+                    musicPlayerThread = new Thread(musicPlayer);
+                    musicPlayer.setNoteDuration((long)(TableConfig.NOTE_DURATION_FACTOR * waitingTimeCross));
+                    musicPlayerThread.start();
+                } else {
+                    musicPlayer.mute();
+                }
+            }
+        });
+        soundToggle.setChecked(true);
 
         opThread = new Thread(otherPlayer);
         opThread.start();

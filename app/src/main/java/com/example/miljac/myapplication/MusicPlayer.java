@@ -33,6 +33,7 @@ class MusicPlayer implements Runnable {
     int bassLevel;
     int pom;
     int soloTimeFrameDeviation;
+    double mutingFactor = 200.0;
 
     //double fr = 440.f;
     double ph = 0.0;
@@ -63,6 +64,17 @@ class MusicPlayer implements Runnable {
     double soloFrBendFactor;
     int buffsize;
     Random rand = new Random();
+    volatile boolean mute = false;
+    boolean dieFinally = false;
+
+    public void mute(){
+        System.out.println("MUTE");
+        mute = true;
+    }
+    public void unmute(){
+        System.out.println("UNMUTE");
+        mute = false;
+    }
 
     public void run() {
 
@@ -88,6 +100,7 @@ class MusicPlayer implements Runnable {
         int index;
         start = System.currentTimeMillis();
         boolean beat = false;
+        boolean firstTime = true;
 
         // synthesis loop
         while (isRunning) {
@@ -389,29 +402,50 @@ class MusicPlayer implements Runnable {
 
 
                 samples[i] *= 2;
+
+
+                if (mute) {
+                    System.out.println(" : " + samples[i]);
+                    samples[i] = (short) (mutingFactor/200.0*(double)samples[i]);
+                    if (mutingFactor>0) mutingFactor = mutingFactor - 1;
+
+                    System.out.println("MMMMMUTINGFFFGFGG: " + mutingFactor);
+                    System.out.println(" : " + samples[i]);
+                }
+                System.out.println(" : " + samples[i]);
             }//end of synth loop
 
 
 
             long start55  = System.currentTimeMillis();
 
-            while(System.currentTimeMillis()<(noteEndTime-6)) {
-                LockSupport.parkNanos(2_000_000);
+            if (! firstTime) {
+                while (System.currentTimeMillis() < (noteEndTime - 6)) {
+                    LockSupport.parkNanos(20_000_000);
                 /*try {
                     Thread.sleep(2);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }*/
+                }
+                firstTime = false;
             }
 
             System.out.println("MusicPlayer: vrijeme cekanja " + (System.currentTimeMillis() - start55));
 
-            audioTrack.write(samples, 0, buffsize*2);
+            if (mute){/* && dieFinally){
+                isRunning = false;*/
+            } else {
+                audioTrack.write(samples, 0, buffsize * 2);
+            }
+
+            //if (mutingFactor < 2) dieFinally = true;
 
             System.out.println("MusicPlayer: vrijeme nakon pisanja buffera  " + (System.currentTimeMillis() - start55));
+            System.out.println(mute);
 
         }
-        audioTrack.stop();
+        audioTrack.pause();
         audioTrack.release();
     }
 
