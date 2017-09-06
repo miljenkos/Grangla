@@ -3,8 +3,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
 
-    android:enterFadeDuration="450"
-    android:exitFadeDuration="450"
+    android:enterFadeDuration="700"
+    android:exitFadeDuration="700"
     >
     <item android:drawable="@drawable/sound_on"
         android:state_checked="true" />

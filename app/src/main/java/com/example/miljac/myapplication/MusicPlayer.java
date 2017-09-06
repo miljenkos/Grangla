@@ -66,6 +66,7 @@ class MusicPlayer implements Runnable {
     Random rand = new Random();
     volatile boolean mute = false;
     boolean dieFinally = false;
+    int countBars = 0;
 
     public void mute(){
         System.out.println("MUTE");
@@ -164,8 +165,10 @@ class MusicPlayer implements Runnable {
             soloGenerator.setKey(key2-3);
 
             if (n.isKeyChange()){
-                //System.out.println("KEYCHANGE");
+                System.out.println("KEYCHANGE");
+                System.out.println("KEYCHANGE: " + countBars);
                 soloGenerator.setKeyChange(true);
+                if(countBars<10) countBars++;
             }
             Note s = soloGenerator.getNextSoloNote();
             soloFr = s.getFrequency();
@@ -340,20 +343,31 @@ class MusicPlayer implements Runnable {
                         samplesChords3[i] = 0;
                 }
 
-                samples[i] += samplesChords1[i];
-                samples[i] += samplesChords2[i];
-                samples[i] += samplesChords3[i];
-                samples[i] += samplesChordsBass1[i];
+                if((countBars == 1) || (countBars == 2) || (countBars == 3) || (countBars == 4)){
 
-                samples[i] += ((samplesChords1[i]
-                        + samplesChords2[i]
-                        + samplesChords3[i]
-                        + samplesChordsBass1[i]
-                        + samplesBassBase[i] /3) > 0) ?
-                        170 : - 170;
-                /*samples[i] +=
-                        ((samplesChords1[i] + samplesChords2[i] + samplesChords3[i]) > 0) ?
-                                chordAmp: -chordAmp;*/
+                /*} else if (
+                        (countBars == 5) ||
+                        (countBars == 6)){
+                    samples[i] += ((samplesChords1[i]
+                            + samplesChords2[i]
+                            + samplesChords3[i]
+                            + samplesChordsBass1[i]
+                            + samplesBassBase[i] / 3) > 0) ?
+                            170 : -170;
+                */} else {
+                    samples[i] += samplesChords1[i];
+                    samples[i] += samplesChords2[i];
+                    samples[i] += samplesChords3[i];
+                    samples[i] += samplesChordsBass1[i];
+
+                    samples[i] += ((samplesChords1[i]
+                            + samplesChords2[i]
+                            + samplesChords3[i]
+                            + samplesChordsBass1[i]
+                            + samplesBassBase[i] / 3) > 0) ?
+                            170 : -170;
+                }
+
 
 //SOLO
 
@@ -361,7 +375,6 @@ class MusicPlayer implements Runnable {
                 //switch to second solo note
                 if(i == (buffsize + soloTimeFrameDeviation)) {
                     if (n.isKeyChange()){
-                        //System.out.println("KEYCHANGE");
                         soloGenerator.setKeyChange(true);
                     }
                     s = soloGenerator.getNextSoloNote();
@@ -398,21 +411,25 @@ class MusicPlayer implements Runnable {
                 phSolo += twopi * soloFr / sr * soloFrBendFactor;
                 if(phSolo > twopi) phSolo -= twopi;
 
-                samples[i] += samplesSolo[i]*2.9;
+                if(!((countBars == 1) ||
+                        (countBars == 2)
+                        )) {
+                    samples[i] += samplesSolo[i] * 2.9;
+                }
 
 
                 samples[i] *= 2;
 
 
                 if (mute) {
-                    System.out.println(" : " + samples[i]);
-                    samples[i] = (short) (mutingFactor/200.0*(double)samples[i]);
+                    //System.out.println(" : " + samples[i]);
+                    samples[i] = 0;//(short) (mutingFactor/200.0*(double)samples[i]);
                     if (mutingFactor>0) mutingFactor = mutingFactor - 1;
 
-                    System.out.println("MMMMMUTINGFFFGFGG: " + mutingFactor);
-                    System.out.println(" : " + samples[i]);
+                    //System.out.println("MMMMMUTINGFFFGFGG: " + mutingFactor);
+                    //System.out.println(" : " + samples[i]);
                 }
-                System.out.println(" : " + samples[i]);
+                //System.out.println(" : " + samples[i]);
             }//end of synth loop
 
 
@@ -433,8 +450,8 @@ class MusicPlayer implements Runnable {
 
             System.out.println("MusicPlayer: vrijeme cekanja " + (System.currentTimeMillis() - start55));
 
-            if (mute){/* && dieFinally){
-                isRunning = false;*/
+            if (mute){/* && dieFinally){*/
+                isRunning = false;
             } else {
                 audioTrack.write(samples, 0, buffsize * 2);
             }

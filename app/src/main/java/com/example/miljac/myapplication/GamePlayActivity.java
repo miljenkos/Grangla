@@ -336,7 +336,13 @@ public class GamePlayActivity extends AppCompatActivity implements TableFragment
         }
         refreshThread = null;
 
-        musicPlayer.stop();
+        musicPlayer.mute();
+        try {
+            musicPlayerThread.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        musicPlayerThread = null;
 
     }
 
