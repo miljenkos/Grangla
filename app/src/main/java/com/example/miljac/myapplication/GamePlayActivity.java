@@ -8,8 +8,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.CompoundButton;
 import android.widget.ProgressBar;
+import android.widget.Spinner;
 import android.widget.ToggleButton;
 
+import java.util.ArrayList;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.LockSupport;
@@ -314,13 +316,14 @@ public class GamePlayActivity extends AppCompatActivity implements TableFragment
 
         gameStartTime = System.currentTimeMillis();
         lastEventTime = gameStartTime;
-
     }
+
 
     @Override
     protected void onDestroy(){
         super.onDestroy();
         gameDone = true;
+        musicPlayer.mute();
 
         try {
             opThread.join();
@@ -336,7 +339,7 @@ public class GamePlayActivity extends AppCompatActivity implements TableFragment
         }
         refreshThread = null;
 
-        musicPlayer.mute();
+
         try {
             musicPlayerThread.join();
         } catch (InterruptedException e) {
