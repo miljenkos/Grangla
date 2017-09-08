@@ -25,7 +25,6 @@ public class MyAdapter extends ArrayAdapter<ListItem> {
 
     public MyAdapter(Context context, int textViewResourceId, ArrayList<ListItem> objects) {
         super(context, textViewResourceId, objects);
-        System.out.println("NJU MAJADAPTER");
         inflater = ((Activity) context).getLayoutInflater();
         this.objects = objects;
     }

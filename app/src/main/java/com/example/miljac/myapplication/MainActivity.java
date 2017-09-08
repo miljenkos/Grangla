@@ -10,6 +10,7 @@ import android.view.TextureView;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.SeekBar;
 import android.widget.Spinner;
@@ -21,6 +22,12 @@ public class MainActivity extends AppCompatActivity {
 
     private SeekBar levelSeekBar;
     private TextView levelTextView;
+    Spinner spinnerPlayer1;
+    Spinner spinnerPlayer2;
+    ListItem itemOko = new ListItem();
+    ListItem itemGumb = new ListItem();
+    ListItem itemDjetelina = new ListItem();
+    ListItem itemZvijezda = new ListItem();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,6 +35,11 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        itemOko.setData("OKO", "Onaj koji vidi sve,pa i tebe", R.drawable.pin39);
+        itemGumb.setData("GUMB", "Statican, ali pouzdan", R.drawable.pin40);
+        itemDjetelina.setData("DJETELINA", "I to s cetiri lista", R.drawable.pin42);
+        itemZvijezda.setData("ZVIJEZDA", "U tunelu usred mraka", R.drawable.pin43);
 
         levelSeekBar = (SeekBar)findViewById(R.id.levelSeekBar);
         levelSeekBar.setProgress(30);
@@ -49,12 +61,56 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        System.out.println("TU SAMM");
-        Spinner spinnerPlayer1 = (Spinner) findViewById(R.id.spinner_player1);
+        spinnerPlayer1 = (Spinner) findViewById(R.id.spinner_player1);
         spinnerPlayer1.setAdapter(new MyAdapter(this, R.layout.row, getAllList()));
 
-        Spinner spinnerPlayer2 = (Spinner) findViewById(R.id.spinner_player2);
-        spinnerPlayer2.setAdapter(new MyAdapter(this, R.layout.row, getAllList()));
+        spinnerPlayer2 = (Spinner) findViewById(R.id.spinner_player2);
+        final MyAdapter adapterSpinner2 = new MyAdapter(this, R.layout.row, new ArrayList<ListItem>());
+        spinnerPlayer2.setAdapter(adapterSpinner2);
+
+        spinnerPlayer1.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+
+            @Override
+            public void onItemSelected(AdapterView<?> arg0, View arg1,
+                                       int arg2, long arg3) {
+
+//                spinnerPlayer2.getse
+                ListItem selected2;
+                selected2 = (ListItem) spinnerPlayer2.getSelectedItem();
+
+                adapterSpinner2.clear();
+                System.out.println("SELECT ITEM: " + arg2);
+
+                if (!(arg2==0)) {
+                    adapterSpinner2.add(itemOko);
+                }
+
+                if (!(arg2==1)) {
+                    adapterSpinner2.add(itemGumb);
+                }
+
+                if (!(arg2==2)) {
+                    adapterSpinner2.add(itemDjetelina);
+                }
+
+                if (!(arg2==3)) {
+                    adapterSpinner2.add(itemZvijezda);
+                }
+
+                spinnerPlayer2.setSelection(adapterSpinner2.getPosition(selected2));
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> arg0) {
+                adapterSpinner2.clear();
+
+                adapterSpinner2.add(itemOko);
+                adapterSpinner2.add(itemGumb);
+                adapterSpinner2.add(itemDjetelina);
+                adapterSpinner2.add(itemZvijezda);
+            }
+        });
     }
 
     /** Called when the user clicks the Send button */
@@ -63,6 +119,8 @@ public class MainActivity extends AppCompatActivity {
         //EditText editText = (EditText) findViewById(R.id.edit_message);
         //String message = editText.getText().toString();
         intent.putExtra("LEVEL", levelSeekBar.getProgress());
+        intent.putExtra("PLAYER1_IMG", ((ListItem) spinnerPlayer1.getSelectedItem()).logo);
+        intent.putExtra("PLAYER2_IMG", ((ListItem) spinnerPlayer2.getSelectedItem()).logo);
         startActivity(intent);
     }
 
@@ -94,15 +152,13 @@ public class MainActivity extends AppCompatActivity {
 
         ArrayList<ListItem> allList = new ArrayList<ListItem>();
 
-        ListItem item = new ListItem();
-        item.setData("OKO", "Onaj koji vidi sve,pa i tebe", R.drawable.pin39);
-        allList.add(item);
-
-        item = new ListItem();
-        item.setData("GUMB", "Statican, ali pouzdan", R.drawable.pin40);
-        allList.add(item);
+        allList.add(itemOko);
+        allList.add(itemGumb);
+        allList.add(itemDjetelina);
+        allList.add(itemZvijezda);
 
         return allList;
     }
+
 
 }
