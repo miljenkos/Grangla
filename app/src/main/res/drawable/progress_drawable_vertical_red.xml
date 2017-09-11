@@ -12,11 +12,9 @@
             android:clipOrientation="vertical"
             android:gravity="bottom">
             <shape>
-                <gradient
-                    android:startColor="#F0FF0000"
-                    android:centerColor="#80FF0000"
-                    android:endColor="#00FF0000"
-                    android:angle="135" />
+                <solid
+                    android:color="#E00000FF"
+                    />
             </shape>
         </clip>
     </item>

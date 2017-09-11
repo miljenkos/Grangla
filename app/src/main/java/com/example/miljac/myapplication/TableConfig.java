@@ -20,7 +20,6 @@ public class TableConfig {
     public static int ROCK_MOVEMENT_PROBABILITY = 8000;
     public static int THINKING_TIME_MIN_LEVEL = 6400;
     public static int THINKING_TIME_MAX_LEVEL = 200;
-    public static int DEFAULT_STREAM_REFRESH_TIME = 25;
     public static float NOTE_DURATION_FACTOR = 0.12F;
 
 
@@ -29,6 +28,12 @@ public class TableConfig {
     public static int BASS_NOTE_UPPER_BOUNDARY = 35;
     public static int SOLO_NOTE_LOWER_BOUNDARY = 53;
     public static int SOLO_NOTE_UPPER_BOUNDARY = 80;
+
+    public static int OKO_COLOR = 0xFF2CA5A3;
+    public static int GUMB_COLOR = 0xFFD44FB6;
+    public static int DJETELINA_COLOR = 0xFFABFA10;
+    public static int ZVIJEZDA_COLOR = 0xFFFFDE3E;
+
 
 
     private static MediaPlayer player ;

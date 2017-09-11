@@ -3,6 +3,7 @@ package com.example.miljac.myapplication;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -41,6 +42,9 @@ public class GamePlayActivity extends AppCompatActivity implements TableFragment
     private int level;
     private int player1Image;
     private int player2Image;
+    private int player1Color;
+    private int player2Color;
+
 
 
     private final ReentrantReadWriteLock rwl = new ReentrantReadWriteLock();
@@ -282,17 +286,54 @@ public class GamePlayActivity extends AppCompatActivity implements TableFragment
 
         this.table = new Table(level);
 
+
+        if(player1Image == R.drawable.pin39) {
+            player1Color = TableConfig.OKO_COLOR;
+        }
+        if(player1Image == R.drawable.pin40) {
+            player1Color = TableConfig.GUMB_COLOR;
+        }
+        if(player1Image == R.drawable.pin42) {
+            player1Color = TableConfig.DJETELINA_COLOR;
+        }
+        if(player1Image == R.drawable.pin43) {
+            player1Color = TableConfig.ZVIJEZDA_COLOR;
+        }
+
+        if(player2Image == R.drawable.pin39) {
+            player2Color = TableConfig.OKO_COLOR;
+        }
+        if(player2Image == R.drawable.pin40) {
+            player2Color = TableConfig.GUMB_COLOR;
+        }
+        if(player2Image == R.drawable.pin42) {
+            player2Color = TableConfig.DJETELINA_COLOR;
+        }
+        if(player2Image == R.drawable.pin43) {
+            player2Color = TableConfig.ZVIJEZDA_COLOR;
+        }
+
         resultBar = (ProgressBar)findViewById(R.id.result_bar);
         resultBar.setProgress(50);
+        resultBar.getProgressDrawable().setColorFilter(player1Color,
+                android.graphics.PorterDuff.Mode.SRC_IN);
         resultBar2 = (ProgressBar)findViewById(R.id.result_bar2);
         resultBar2.setProgress(50);
+        resultBar2.getProgressDrawable().setColorFilter(player2Color,
+                android.graphics.PorterDuff.Mode.SRC_IN);
+
+
 
         circleBar = (ProgressBar)findViewById(R.id.circle_time_bar);
         circleBar.setProgress(0);
         circleBar.invalidate();
+        circleBar.getProgressDrawable().setColorFilter(
+                player1Color, android.graphics.PorterDuff.Mode.SRC_IN);
         crossBar = (ProgressBar)findViewById(R.id.cross_time_bar);
         crossBar.setProgress(0);
         crossBar.invalidate();
+        crossBar.getProgressDrawable().setColorFilter(
+                player2Color, android.graphics.PorterDuff.Mode.SRC_IN);
 
         tableFragment = (TableFragment)
                 getSupportFragmentManager().findFragmentById(R.id.Table);
