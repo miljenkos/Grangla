@@ -1,6 +1,8 @@
 package com.example.miljac.myapplication;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -28,9 +30,10 @@ public class MainActivity extends AppCompatActivity {
     ListItem itemGumb = new ListItem();
     ListItem itemDjetelina = new ListItem();
     ListItem itemZvijezda = new ListItem();
+    private SharedPreferences mPrefs;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -42,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
         itemZvijezda.setData("ZVIJEZDA", "U tunelu usred mraka", R.drawable.pin43);
 
         levelSeekBar = (SeekBar)findViewById(R.id.levelSeekBar);
-        levelSeekBar.setProgress(30);
+        levelSeekBar.setProgress(20);
         levelTextView = (TextView) findViewById(R.id.level_text);
         levelSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
@@ -63,10 +66,78 @@ public class MainActivity extends AppCompatActivity {
 
         spinnerPlayer1 = (Spinner) findViewById(R.id.spinner_player1);
         spinnerPlayer1.setAdapter(new MyAdapter(this, R.layout.row, getAllList()));
+        spinnerPlayer1.setBackgroundColor(Color.TRANSPARENT);
+        spinnerPlayer1.setDrawingCacheBackgroundColor(Color.TRANSPARENT);
 
         spinnerPlayer2 = (Spinner) findViewById(R.id.spinner_player2);
         final MyAdapter adapterSpinner2 = new MyAdapter(this, R.layout.row, new ArrayList<ListItem>());
         spinnerPlayer2.setAdapter(adapterSpinner2);
+
+
+
+
+
+
+
+
+        if(mPrefs == null) {
+            mPrefs = getSharedPreferences("mrm", MODE_PRIVATE);
+        }
+        levelSeekBar.setProgress(mPrefs.getInt("mrm_LEVEL", 20));
+        spinnerPlayer1.setSelection(mPrefs.getInt("mrm_PLAYER_1_IMG", 0));
+
+
+
+        System.out.println("        get    mrm_PLAYER_1_IMG  " + mPrefs.getInt("mrm_PLAYER_1_IMG", 0));
+
+        ListItem selected2;
+        selected2 = (ListItem) spinnerPlayer2.getSelectedItem();
+
+        adapterSpinner2.clear();
+        System.out.println("SELECT ITEM: " + (mPrefs.getInt("mrm_PLAYER_1_IMG", 0)));
+
+        if (!((mPrefs.getInt("mrm_PLAYER_1_IMG", 0)==0))) {
+            adapterSpinner2.add(itemOko);
+        }
+
+        if (!((mPrefs.getInt("mrm_PLAYER_1_IMG", 0)==1))) {
+            adapterSpinner2.add(itemGumb);
+        }
+
+        if (!((mPrefs.getInt("mrm_PLAYER_1_IMG", 0)==2))) {
+            adapterSpinner2.add(itemDjetelina);
+        }
+
+        if (!((mPrefs.getInt("mrm_PLAYER_1_IMG", 0)==3))) {
+            adapterSpinner2.add(itemZvijezda);
+        }
+
+        spinnerPlayer2.setSelection(mPrefs.getInt("mrm_PLAYER_2_IMG", 0));
+
+
+        System.out.println("        get    mrm_PLAYER_2_IMG  " + mPrefs.getInt("mrm_PLAYER_2_IMG", 0));
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
         spinnerPlayer1.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 
@@ -111,7 +182,54 @@ public class MainActivity extends AppCompatActivity {
                 adapterSpinner2.add(itemZvijezda);
             }
         });
+
+        if(savedInstanceState != null){
+            levelSeekBar.setProgress(savedInstanceState.getInt("LEVEL"));
+            spinnerPlayer1.setSelection(savedInstanceState.getInt("PLAYER_1_IMG"));
+            spinnerPlayer2.setSelection(savedInstanceState.getInt("PLAYER_2_IMG"));
+        }
     }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putInt("LEVEL", levelSeekBar.getProgress());
+        outState.putInt("PLAYER_1_IMG", spinnerPlayer1.getSelectedItemPosition());
+        outState.putInt("PLAYER_2_IMG", spinnerPlayer2.getSelectedItemPosition());
+
+        if(mPrefs == null) {
+            mPrefs = getSharedPreferences("mrm", MODE_PRIVATE);
+        }
+        SharedPreferences.Editor ed = mPrefs.edit();
+        ed.putInt("mrm_LEVEL", levelSeekBar.getProgress());
+        ed.putInt("mrm_PLAYER_1_IMG",spinnerPlayer1.getSelectedItemPosition());
+        ed.putInt("mrm_PLAYER_2_IMG",spinnerPlayer2.getSelectedItemPosition());
+        ed.commit();
+
+        System.out.println("     set       mrm_PLAYER_1_IMG  " + spinnerPlayer1.getSelectedItemPosition());
+        System.out.println("     set       mrm_PLAYER_2_IMG  " + spinnerPlayer2.getSelectedItemPosition());
+
+        super.onSaveInstanceState(outState);
+        //finish();
+    }
+
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        /*if(mPrefs == null) {
+            mPrefs = getSharedPreferences("mrm", MODE_PRIVATE);
+        }
+        levelSeekBar.setProgress(mPrefs.getInt("mrm_LEVEL", 20));
+        spinnerPlayer1.setSelection(mPrefs.getInt("mrm_PLAYER_1_IMG", 0));
+        spinnerPlayer2.setSelection(mPrefs.getInt("mrm_PLAYER_2_IMG", 0));
+
+
+        System.out.println("        get    mrm_PLAYER_1_IMG  " + mPrefs.getInt("mrm_PLAYER_1_IMG", 0));
+        System.out.println("        get    mrm_PLAYER_2_IMG  " + mPrefs.getInt("mrm_PLAYER_2_IMG", 0));*/
+
+    }
+
 
     /** Called when the user clicks the Send button */
     public void sendMessage(View view) {

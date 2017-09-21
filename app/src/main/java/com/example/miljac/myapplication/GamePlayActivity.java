@@ -27,6 +27,8 @@ public class GamePlayActivity extends AppCompatActivity implements TableFragment
     private Table table = new Table(3);
     private TableFragment tableFragment;
     private Boolean gameDone = false;
+    private Boolean gamePaused = false;
+    private Boolean muted = false;
 
     private Coordinates c;
     private Coordinates lastMoveO;
@@ -75,11 +77,11 @@ public class GamePlayActivity extends AppCompatActivity implements TableFragment
                 for (int j = 0; j < TableConfig.TABLE_SIZE; j++) {
                     if (table.publicGet(i, j) == State.circle) {
                         if ((movesO.size() >= (TableConfig.MAX_PIECES-1)) &&
-                                (movesO.get(TableConfig.MAX_PIECES - 2).equals(new Coordinates(i,j)))) {
+                                (new Coordinates(i,j).equals(movesO.get(TableConfig.MAX_PIECES - 2)))) {
                             tableView.changePinColor(i/* * tableFragment.pinSize + 1*/, j/* * tableFragment.pinSize + 1*/, player1Image, 0.33f);
                         }
                         else if ((movesO.size() >= (TableConfig.MAX_PIECES-2)) &&
-                                   (movesO.get(TableConfig.MAX_PIECES - 3).equals(new Coordinates(i,j)))) {
+                                   (new Coordinates(i,j).equals(movesO.get(TableConfig.MAX_PIECES - 3)))) {
                             tableView.changePinColor(i/* * tableFragment.pinSize + 1*/, j/* * tableFragment.pinSize + 1*/, player1Image, 0.65f);
                         }
                         else {
@@ -88,11 +90,11 @@ public class GamePlayActivity extends AppCompatActivity implements TableFragment
                     }
                     if (table.publicGet(i, j) == State.cross){
                         if ((movesX.size() >= (TableConfig.MAX_PIECES-1)) &&
-                                (movesX.get(TableConfig.MAX_PIECES - 2).equals(new Coordinates(i,j)))) {
+                                (new Coordinates(i,j).equals(movesX.get(TableConfig.MAX_PIECES - 2)))) {
                             tableView.changePinColor(i/* * tableFragment.pinSize + 1*/, j/* * tableFragment.pinSize + 1*/, player2Image, 0.33f);
                         }
                         else if ((movesX.size() >= (TableConfig.MAX_PIECES-2)) &&
-                                (movesX.get(TableConfig.MAX_PIECES - 3).equals(new Coordinates(i,j)))) {
+                                (new Coordinates(i,j)).equals(movesX.get(TableConfig.MAX_PIECES - 3))) {
                             tableView.changePinColor(i/* * tableFragment.pinSize + 1*/, j/* * tableFragment.pinSize + 1*/, player2Image, 0.65f);
                         }
                         else {
@@ -265,18 +267,36 @@ public class GamePlayActivity extends AppCompatActivity implements TableFragment
     }
 
     @Override
+    protected void onPause(){
+        super.onPause();
+        musicPlayer.mute();
+        gamePaused = true;
+    }
+
+    @Override
+    protected void onResume(){
+        super.onResume();
+        if(!muted) {
+            musicPlayer = new MusicPlayer();
+            musicPlayerThread = new Thread(musicPlayer);
+            musicPlayer.setNoteDuration((long) (TableConfig.NOTE_DURATION_FACTOR * waitingTimeCross));
+            musicPlayerThread.start();
+        }
+
+        gamePaused = false;
+    }
+
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        //finish();
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game_play);
-
-
-
-        /*musicPlayer = new MusicPlayer();
-        musicPlayerThread = new Thread(musicPlayer);
-        musicPlayer.setNoteDuration((long)(TableConfig.NOTE_DURATION_FACTOR * waitingTimeCross));
-        musicPlayerThread.start();*/
-
-
 
         Intent intent = getIntent();
         level = intent.getIntExtra("LEVEL", 50);
@@ -315,11 +335,11 @@ public class GamePlayActivity extends AppCompatActivity implements TableFragment
 
         resultBar = (ProgressBar)findViewById(R.id.result_bar);
         resultBar.setProgress(50);
-        resultBar.getProgressDrawable().setColorFilter(player1Color,
+        resultBar.getProgressDrawable().setColorFilter(player2Color,
                 android.graphics.PorterDuff.Mode.SRC_IN);
         resultBar2 = (ProgressBar)findViewById(R.id.result_bar2);
         resultBar2.setProgress(50);
-        resultBar2.getProgressDrawable().setColorFilter(player2Color,
+        resultBar2.getProgressDrawable().setColorFilter(player1Color,
                 android.graphics.PorterDuff.Mode.SRC_IN);
 
 
@@ -340,6 +360,8 @@ public class GamePlayActivity extends AppCompatActivity implements TableFragment
         tableView = tableFragment.tableView;
 
         ToggleButton soundToggle = (ToggleButton) findViewById(R.id.toggle_sound_button);
+
+        soundToggle.setChecked(true);
         soundToggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
@@ -347,12 +369,13 @@ public class GamePlayActivity extends AppCompatActivity implements TableFragment
                     musicPlayerThread = new Thread(musicPlayer);
                     musicPlayer.setNoteDuration((long)(TableConfig.NOTE_DURATION_FACTOR * waitingTimeCross));
                     musicPlayerThread.start();
+                    muted = false;
                 } else {
                     musicPlayer.mute();
+                    muted = true;
                 }
             }
         });
-        soundToggle.setChecked(true);
 
         opThread = new Thread(otherPlayer);
         opThread.start();
@@ -417,6 +440,8 @@ public class GamePlayActivity extends AppCompatActivity implements TableFragment
                         e.printStackTrace();
                     }
                 }
+
+                if(gamePaused) continue;
 
 
                 //ww.lock();

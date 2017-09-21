@@ -47,16 +47,16 @@ public class MyAdapter extends ArrayAdapter<ListItem> {
         if (null == row) {
             holder = new ViewHolder();
             row = inflater.inflate(R.layout.row, parent, false);
-            holder.name = (TextView) row.findViewById(R.id.name);
-            holder.place = (TextView) row.findViewById(R.id.place);
+            //holder.name = (TextView) row.findViewById(R.id.name);
+            //holder.place = (TextView) row.findViewById(R.id.place);
             holder.imgThumb = (ImageView) row.findViewById(R.id.imgThumb);
             row.setTag(holder);
         } else {
             holder = (ViewHolder) row.getTag();
         }
 
-        holder.name.setText(listItem.name);
-        holder.place.setText(listItem.place);
+        //holder.name.setText(listItem.name);
+        //holder.place.setText(listItem.place);
         holder.imgThumb.setBackgroundResource(listItem.logo);
 
         return row;

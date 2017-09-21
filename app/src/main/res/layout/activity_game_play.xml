@@ -61,7 +61,7 @@ android:background="@drawable/suma">
         android:id="@+id/Result"
         android:name="com.example.miljac.myapplication.ResultFragment"
         android:layout_width="match_parent"
-        android:layout_height="30dp"
+        android:layout_height="10dp"
         android:layout_below="@id/Table"/>
 
 

@@ -10,7 +10,8 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="com.example.miljac.myapplication.MainActivity"
-    tools:showIn="@layout/activity_main">
+    tools:showIn="@layout/activity_main"
+    android:background="@drawable/suma">>
 
     <!--TextView
         android:layout_width="wrap_content"
@@ -22,14 +23,17 @@
         android:layout_height="wrap_content"
         android:layout_width="wrap_content"
         android:layout_marginTop="20dp"
-        android:text="Razina: "/>
+        android:textColor="@android:color/white"
+        android:text="Razina: "
+        />
 
     <TextView
         android:id="@+id/level_text"
         android:layout_height="wrap_content"
         android:layout_width="wrap_content"
         android:layout_marginTop="20dp"
-        android:text="15"
+        android:text="20"
+        android:textColor="@android:color/white"
         android:layout_toRightOf="@id/level"/>
 
     <SeekBar
@@ -46,7 +50,8 @@
         android:layout_height="wrap_content"
         android:layout_width="wrap_content"
         android:layout_marginTop="35dp"
-        android:text="Ja:"
+        android:textColor="@android:color/white"
+        android:text="Ja: "
         android:layout_below="@id/levelSeekBar"/>
 
     <Spinner
@@ -55,22 +60,28 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
         android:layout_below="@id/levelSeekBar"
-        android:layout_toRightOf="@id/player1"/>
+        android:layout_toRightOf="@id/player1"
+        android:popupBackground="#40050505"
+        android:background="@android:color/transparent"/>
 
     <TextView
         android:id="@+id/player2"
         android:layout_height="wrap_content"
         android:layout_width="wrap_content"
         android:layout_marginTop="35dp"
-        android:text="On:"
-        android:layout_below="@id/spinner_player1"/>
+        android:textColor="@android:color/white"
+        android:text="   On: "
+        android:layout_below="@id/levelSeekBar"
+        android:layout_toRightOf="@id/spinner_player1"/>
     <Spinner
         android:id="@+id/spinner_player2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
-        android:layout_below="@id/spinner_player1"
-        android:layout_toRightOf="@id/player2"/>
+        android:layout_below="@id/levelSeekBar"
+        android:layout_toRightOf="@id/player2"
+        android:popupBackground="#400A0A0A"
+        android:background="@android:color/transparent"/>
 
 
     <Button
