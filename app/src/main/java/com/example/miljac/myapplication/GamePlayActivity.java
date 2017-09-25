@@ -348,12 +348,14 @@ public class GamePlayActivity extends AppCompatActivity implements TableFragment
         circleBar.setProgress(0);
         circleBar.invalidate();
         circleBar.getProgressDrawable().setColorFilter(
-                player1Color, android.graphics.PorterDuff.Mode.SRC_IN);
+                player1Color & 0xA0FFFFFF,
+                android.graphics.PorterDuff.Mode.SRC_IN);
         crossBar = (ProgressBar)findViewById(R.id.cross_time_bar);
         crossBar.setProgress(0);
         crossBar.invalidate();
         crossBar.getProgressDrawable().setColorFilter(
-                player2Color, android.graphics.PorterDuff.Mode.SRC_IN);
+                player2Color & 0xA0FFFFFF,
+                android.graphics.PorterDuff.Mode.SRC_IN);
 
         tableFragment = (TableFragment)
                 getSupportFragmentManager().findFragmentById(R.id.Table);

@@ -13,7 +13,7 @@
             android:gravity="bottom">
             <shape>
                 <solid
-                    android:color="#E00000FF"
+                    android:color="#A00000FF"
                     />
             </shape>
         </clip>

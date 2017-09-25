@@ -8,8 +8,8 @@
     <ProgressBar
         android:id="@+id/circle_time_bar"
         style="@android:style/Widget.ProgressBar.Horizontal"
-        android:layout_centerInParent="true"
-        android:layout_width="match_parent"
+        android:layout_gravity="center"
+        android:layout_width="40dp"
         android:layout_height="match_parent"
         android:max="100"
         android:progress="33"

@@ -49,7 +49,7 @@
         android:id="@+id/player1"
         android:layout_height="wrap_content"
         android:layout_width="wrap_content"
-        android:layout_marginTop="35dp"
+        android:layout_marginTop="30dp"
         android:textColor="@android:color/white"
         android:text="Ja: "
         android:layout_below="@id/levelSeekBar"/>
@@ -61,14 +61,14 @@
         android:layout_marginTop="20dp"
         android:layout_below="@id/levelSeekBar"
         android:layout_toRightOf="@id/player1"
-        android:popupBackground="#40050505"
+        android:popupBackground="#46656565"
         android:background="@android:color/transparent"/>
 
     <TextView
         android:id="@+id/player2"
         android:layout_height="wrap_content"
         android:layout_width="wrap_content"
-        android:layout_marginTop="35dp"
+        android:layout_marginTop="30dp"
         android:textColor="@android:color/white"
         android:text="   On: "
         android:layout_below="@id/levelSeekBar"
@@ -80,7 +80,7 @@
         android:layout_marginTop="20dp"
         android:layout_below="@id/levelSeekBar"
         android:layout_toRightOf="@id/player2"
-        android:popupBackground="#400A0A0A"
+        android:popupBackground="#46656565"
         android:background="@android:color/transparent"/>
 
 
