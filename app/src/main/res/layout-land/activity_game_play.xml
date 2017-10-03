@@ -55,7 +55,7 @@ android:background="@drawable/suma">
         android:name="com.example.miljac.myapplication.TableFragment"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="5dp"
+        android:layout_margin="2dp"
         />
 
     <fragment
@@ -63,14 +63,15 @@ android:background="@drawable/suma">
         android:name="com.example.miljac.myapplication.ResultFragment"
         android:layout_width="match_parent"
         android:layout_height="10dp"
-        android:layout_below="@id/Table"/>
+        android:layout_toRightOf="@id/Table"/>
 
 
     <LinearLayout
         android:layout_height="match_parent"
         android:layout_width="match_parent"
         android:orientation="horizontal"
-        android:layout_below="@+id/Result">
+        android:layout_below="@+id/Result"
+        android:layout_toRightOf="@id/Table">
 
 
         <fragment

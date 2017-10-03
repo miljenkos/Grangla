@@ -40,7 +40,7 @@ public class TableView extends ViewGroup  {
 
 
     public int[] disposePins(int dotSize) {
-        this.dotSize = dotSize;
+        //this.dotSize = dotSize;
 
         numRow = TableConfig.TABLE_SIZE;// height
         numCol =  TableConfig.TABLE_SIZE;//width
@@ -77,11 +77,13 @@ public class TableView extends ViewGroup  {
 
 
         if (width > height) {
-            size = height;
+            size = height;// *8/10;
         } else {
-            size = width;
+            size = width;// *8/10;
         }
         setMeasuredDimension(size, size);
+
+        dotSize = size / TableConfig.TABLE_SIZE;
 
         //this.setMeasuredDimension(parentWidth, parentHeight);
     }

@@ -29,7 +29,8 @@ public class TableFragment extends Fragment implements OnTouchListener {
     public int pinSize;
 
     public interface OnFieldSelectedListener {
-        public void onFieldSelected(int x, int y);
+        public void
+        onFieldSelected(int x, int y);
     }
 
 
@@ -48,7 +49,7 @@ public class TableFragment extends Fragment implements OnTouchListener {
         Display d = getActivity().getWindowManager().getDefaultDisplay();
         pinSize = d.getWidth() / TableConfig.TABLE_SIZE;
         pinSize = ((d.getHeight() / TableConfig.TABLE_SIZE) < pinSize) ? (d.getHeight() / TableConfig.TABLE_SIZE) : pinSize;
-        pinSize = pinSize;
+        pinSize = pinSize;// *8/10*8/10;
 
     }
 
