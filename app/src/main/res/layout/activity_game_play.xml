@@ -16,8 +16,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
 
 
-
-android:id="@+id/sp"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/sp"
 android:layout_width="match_parent"
 android:layout_height="match_parent"
     android:scaleType="centerCrop"
@@ -78,22 +78,52 @@ android:background="@drawable/suma">
             android:name="com.example.miljac.myapplication.CircleTimeFragment"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="1"/>
+            android:layout_weight="2"/>
 
-        <ToggleButton
-            android:id="@+id/toggle_sound_button"
-            android:layout_width="match_parent"
+        <LinearLayout
             android:layout_height="match_parent"
-            android:button="@drawable/toggle_sound"
+            android:layout_width="match_parent"
+
             android:background="@null"
-            android:layout_weight="1"/>
+            android:orientation="vertical"
+            android:layout_weight="2">
+
+            <ToggleButton
+                android:id="@+id/toggle_sound_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+
+                android:layout_margin="0dp"
+
+                android:drawableBottom="@drawable/toggle_sound"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:background="@null"
+
+                android:textOn="@null"
+                android:textOff="@null"
+                android:textSize="0dp"
+                />
+
+            <ImageButton
+                android:id="@+id/discard_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="0dp"
+
+                android:src="@drawable/exit"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:background="@null"/>
+
+        </LinearLayout>
 
         <fragment
         android:id="@+id/CrossTime"
         android:name="com.example.miljac.myapplication.CrossTimeFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight="1"
+        android:layout_weight="2"
         />
 
 

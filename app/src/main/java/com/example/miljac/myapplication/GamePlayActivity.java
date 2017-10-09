@@ -4,14 +4,20 @@ package com.example.miljac.myapplication;
 import android.app.ActionBar;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.graphics.Color;
 import android.os.Build;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.style.ImageSpan;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.CompoundButton;
+import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.ToggleButton;
@@ -51,6 +57,10 @@ public class GamePlayActivity extends AppCompatActivity implements TableFragment
     private int player2Image;
     private int player1Color;
     private int player2Color;
+    private SharedPreferences mPrefs;
+
+    ToggleButton soundToggle;
+    ImageButton imageButton;
 
 
 
@@ -178,6 +188,7 @@ public class GamePlayActivity extends AppCompatActivity implements TableFragment
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
                                 dialog.dismiss();
+                                saveSharedPreferences();
                                 finish();
                             }
                         });
@@ -293,8 +304,20 @@ public class GamePlayActivity extends AppCompatActivity implements TableFragment
     }
 
 
+    private void saveSharedPreferences(){
+        if(mPrefs == null) {
+            mPrefs = getSharedPreferences("mrm", MODE_PRIVATE);
+        }
+        SharedPreferences.Editor ed = mPrefs.edit();
+        ed.putBoolean("mrm_SOUND", soundToggle.isChecked());
+        ed.commit();
+    }
+
     @Override
     public void onSaveInstanceState(Bundle outState) {
+
+        saveSharedPreferences();
+
         super.onSaveInstanceState(outState);
         //finish();
     }
@@ -413,9 +436,37 @@ public class GamePlayActivity extends AppCompatActivity implements TableFragment
                 getSupportFragmentManager().findFragmentById(R.id.Table);
         tableView = tableFragment.tableView;
 
-        ToggleButton soundToggle = (ToggleButton) findViewById(R.id.toggle_sound_button);
 
-        soundToggle.setChecked(true);
+        if(mPrefs == null) {
+            mPrefs = getSharedPreferences("mrm", MODE_PRIVATE);
+        }
+
+        soundToggle = (ToggleButton) findViewById(R.id.toggle_sound_button);
+
+        /*ViewGroup.LayoutParams params = soundToggle.getLayoutParams();
+        params.width = 200;
+        soundToggle.setLayoutParams(params);*/
+
+        /*ImageSpan imageSpan = new ImageSpan(this, R.drawable.sound_on);
+        SpannableString content = new SpannableString("X");
+        content.setSpan(imageSpan, 0, 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        soundToggle.setText(content);
+        soundToggle.setTextOn(content);
+        soundToggle.setTextOff(content);*/
+
+
+
+
+        if((mPrefs.getBoolean("mrm_SOUND", true))) {
+            soundToggle.setChecked(true);
+        } else {
+            //musicPlayer.mute();
+            musicPlayer = new MusicPlayer();
+            musicPlayerThread = new Thread(musicPlayer);
+            musicPlayer.setNoteDuration((long) (TableConfig.NOTE_DURATION_FACTOR * waitingTimeCross));
+            muted = true;
+        }
+
         soundToggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
@@ -430,6 +481,20 @@ public class GamePlayActivity extends AppCompatActivity implements TableFragment
                 }
             }
         });
+
+
+        imageButton = (ImageButton) findViewById(R.id.discard_button);
+
+        imageButton.setOnClickListener(new View.OnClickListener() {
+
+                                           @Override
+                                           public void onClick(View arg0) {
+                                               saveSharedPreferences();
+                                               finish();
+
+                                           }
+                                       });
+
 
         opThread = new Thread(otherPlayer);
         opThread.start();
