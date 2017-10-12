@@ -13,7 +13,7 @@
             android:gravity="left">
             <shape>
                 <solid
-                    android:color="#E00000FF"/>
+                    android:color="#FF0000FF"/>
             </shape>
         </clip>
     </item>

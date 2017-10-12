@@ -211,7 +211,7 @@ public class GamePlayActivity extends AppCompatActivity implements TableFragment
             if(!firstTimeAnimatedProgress)
                 if ((animResult.hasEnded()) && (resultBar2.getProgress() != (int)result)) {
                     animResult = new DoubleProgressBarAnimation(resultBar2, resultBar, (float) result);
-                    animResult.setDuration(250);
+                    animResult.setDuration(600);
                     resultBar.startAnimation(animResult);
                 }
 
