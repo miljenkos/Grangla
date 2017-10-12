@@ -40,6 +40,7 @@ public class GamePlayActivity extends AppCompatActivity implements TableFragment
     private Boolean gameDone = false;
     private Boolean gamePaused = false;
     private Boolean muted = false;
+    private boolean firstTimeAnimatedProgress = true;
 
     private Coordinates c;
     private Coordinates lastMoveO;
@@ -64,6 +65,9 @@ public class GamePlayActivity extends AppCompatActivity implements TableFragment
     ToggleButton soundToggle;
     ImageButton imageButton;
 
+    //ProgressBarAnimation animResult;
+    ProgressBarAnimation animResult2;
+    DoubleProgressBarAnimation animResult;
 
 
     private final ReentrantReadWriteLock rwl = new ReentrantReadWriteLock();
@@ -198,13 +202,26 @@ public class GamePlayActivity extends AppCompatActivity implements TableFragment
             }
 
 
-            resultBar.setProgress(100-(int)result);
-            resultBar2.setProgress((int)result);
+            /*resultBar.setProgress(100-(int)result);
+            resultBar2.setProgress(0);//((int)result);*/
 
-            /*DoubleProgressBarAnimation animResult = new DoubleProgressBarAnimation(resultBar, resultBar2, (float)result);
-            animResult.setDuration(1000);
-            resultBar.startAnimation(animResult);*/
 
+
+
+            if(!firstTimeAnimatedProgress)
+                if ((animResult.hasEnded()) && (resultBar2.getProgress() != (int)result)) {
+                    animResult = new DoubleProgressBarAnimation(resultBar2, resultBar, (float) result);
+                    animResult.setDuration(250);
+                    resultBar.startAnimation(animResult);
+                }
+
+            if(firstTimeAnimatedProgress) {
+                animResult = new DoubleProgressBarAnimation(resultBar, resultBar2, (float) result);
+                animResult.setDuration(100);
+                resultBar.startAnimation(animResult);
+
+                firstTimeAnimatedProgress = false;
+            }
 
 
 
