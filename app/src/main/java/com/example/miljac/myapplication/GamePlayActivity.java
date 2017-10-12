@@ -58,6 +58,8 @@ public class GamePlayActivity extends AppCompatActivity implements TableFragment
     private int player1Color;
     private int player2Color;
     private SharedPreferences mPrefs;
+    private boolean startCircleTime = false;
+    private boolean startCrossTime = false;
 
     ToggleButton soundToggle;
     ImageButton imageButton;
@@ -199,24 +201,42 @@ public class GamePlayActivity extends AppCompatActivity implements TableFragment
             resultBar.setProgress(100-(int)result);
             resultBar2.setProgress((int)result);
 
+            /*DoubleProgressBarAnimation animResult = new DoubleProgressBarAnimation(resultBar, resultBar2, (float)result);
+            animResult.setDuration(1000);
+            resultBar.startAnimation(animResult);*/
 
 
 
 
             if(currentTime < waitingMomentCircle){
-                circleBar.setProgress((int)((waitingMomentCircle - currentTime) * 100 / waitingTimeCircle ));
+                //circleBar.setProgress((int)((waitingMomentCircle - currentTime) * 100 / waitingTimeCircle ));
 
             } else {
                 allowCircle = true;
-                circleBar.setProgress(0);
+                //
+                // circleBar.setProgress(0);
             }
 
             if(currentTime < waitingMomentCross){
-                crossBar.setProgress((int)((waitingMomentCross - currentTime ) * 100 / waitingTimeCross ));
+                //crossBar.setProgress((int)((waitingMomentCross - currentTime ) * 100 / waitingTimeCross ));
 
             } else {
                 allowCross = true;
-                crossBar.setProgress(0);
+                //crossBar.setProgress(0);
+            }
+
+            if(startCircleTime) {
+                ProgressBarAnimation anim = new ProgressBarAnimation(circleBar, 100, 0);
+                anim.setDuration(waitingMomentCircle - currentTime);
+                circleBar.startAnimation(anim);
+                startCircleTime = false;
+            }
+
+            if(startCrossTime) {
+                ProgressBarAnimation anim2 = new ProgressBarAnimation(crossBar, 100, 0);
+                anim2.setDuration(waitingMomentCross - currentTime);
+                crossBar.startAnimation(anim2);
+                startCrossTime = false;
             }
 
 
@@ -592,6 +612,13 @@ public class GamePlayActivity extends AppCompatActivity implements TableFragment
 //                    waitingTimeCross = (long)((double)waitingTimeCross/ (1 + (double)(currentTime-gameStartTime)/(double)TableConfig.HALF_LIFE));
 //                    waitingTimeCross += TableConfig.MIN_WAITING_TIME;
                     waitingMomentCross = System.currentTimeMillis() + waitingTimeCross;
+
+                    startCrossTime = true;
+
+                    /*ProgressBarAnimation anim = new ProgressBarAnimation(crossBar, 100, 0);
+                    anim.setDuration(1000);
+                    crossBar.startAnimation(anim);*/
+
 //
 //                    musicPlayer.setNoteDuration((long)(TableConfig.NOTE_DURATION_FACTOR * waitingTimeCross));
 //                    if (waitingTimeCross > (TableConfig.MAX_WAITING_TIME + TableConfig.MIN_WAITING_TIME)/2) {
@@ -620,6 +647,12 @@ public class GamePlayActivity extends AppCompatActivity implements TableFragment
                 if(this.table.publicPut(State.circle, x, y)) {
                     lastMoveO = new Coordinates(x, y);
                     waitingMomentCircle = System.currentTimeMillis() + waitingTimeCircle;
+
+                    startCircleTime = true;
+                    /*ProgressBarAnimation anim = new ProgressBarAnimation(circleBar, 100, 0);
+                    anim.setDuration(1000);
+                    circleBar.startAnimation(anim);*/
+
                     allowCircle = false;
                     movesO.add(0, lastMoveO);
                 }
