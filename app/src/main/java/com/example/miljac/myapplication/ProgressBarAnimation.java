@@ -1,5 +1,6 @@
 package com.example.miljac.myapplication;
 
+import android.graphics.Color;
 import android.view.animation.Animation;
 import android.view.animation.Interpolator;
 import android.view.animation.LinearInterpolator;
@@ -22,12 +23,19 @@ public class ProgressBarAnimation extends Animation {
     @Override
     protected void applyTransformation(float interpolatedTime, Transformation t) {
         super.applyTransformation(interpolatedTime, t);
+
         float value = from + (to - from) * interpolatedTime;
         progressBar.setProgress((int) value);
-        if(value < 65)
-            progressBar.getProgressDrawable().setAlpha(30 + 225 * (int)value / 65);
-        else if (value > 99)
+
+        if(value < 65) {
+            progressBar.getProgressDrawable().setAlpha(30 + 225 * (int) value / 65);
+            /*progressBar.getProgressDrawable().setc
+            progressBar.getProgressDrawable().setColorFilter(Color.GRAY, android.graphics.PorterDuff.Mode.SRC_IN);*/
+        } else if (value > 99) {
             progressBar.getProgressDrawable().setAlpha(255);
+        }
+
+
     }
 
 }

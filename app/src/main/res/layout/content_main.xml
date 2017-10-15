@@ -18,23 +18,66 @@
         android:layout_height="wrap_content"
         android:text="Hello World!" /-->
 
+
+
+
+    <TextView
+        android:id="@+id/player1"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:layout_marginTop="10dp"
+        android:textColor="@android:color/white"
+        android:text="Ja: "/>
+
+    <Spinner
+        android:id="@+id/spinner_player1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="0dp"
+        android:layout_toRightOf="@id/player1"
+        android:popupBackground="#46656565"
+        android:background="@android:color/transparent"/>
+
+    <TextView
+        android:id="@+id/player2"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:layout_marginTop="10dp"
+        android:textColor="@android:color/white"
+        android:text="   On: "
+        android:layout_toRightOf="@id/spinner_player1"/>
+    <Spinner
+        android:id="@+id/spinner_player2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="0dp"
+        android:layout_toRightOf="@id/player2"
+        android:popupBackground="#46656565"
+        android:background="@android:color/transparent"/>
+
+
+
+
+
     <TextView
         android:id="@+id/level"
         android:layout_height="wrap_content"
         android:layout_width="wrap_content"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="50dp"
         android:textColor="@android:color/white"
         android:text="Razina: "
+        android:layout_below="@id/player1"
         />
 
     <TextView
         android:id="@+id/level_text"
         android:layout_height="wrap_content"
         android:layout_width="wrap_content"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="50dp"
         android:text="20"
         android:textColor="@android:color/white"
-        android:layout_toRightOf="@id/level"/>
+        android:layout_toRightOf="@id/level"
+        android:layout_below="@id/player1"/>
 
     <SeekBar
         android:id="@+id/levelSeekBar"
@@ -45,43 +88,6 @@
         android:layout_below="@id/level"
         />
 
-    <TextView
-        android:id="@+id/player1"
-        android:layout_height="wrap_content"
-        android:layout_width="wrap_content"
-        android:layout_marginTop="30dp"
-        android:textColor="@android:color/white"
-        android:text="Ja: "
-        android:layout_below="@id/levelSeekBar"/>
-
-    <Spinner
-        android:id="@+id/spinner_player1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:layout_below="@id/levelSeekBar"
-        android:layout_toRightOf="@id/player1"
-        android:popupBackground="#46656565"
-        android:background="@android:color/transparent"/>
-
-    <TextView
-        android:id="@+id/player2"
-        android:layout_height="wrap_content"
-        android:layout_width="wrap_content"
-        android:layout_marginTop="30dp"
-        android:textColor="@android:color/white"
-        android:text="   On: "
-        android:layout_below="@id/levelSeekBar"
-        android:layout_toRightOf="@id/spinner_player1"/>
-    <Spinner
-        android:id="@+id/spinner_player2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:layout_below="@id/levelSeekBar"
-        android:layout_toRightOf="@id/player2"
-        android:popupBackground="#46656565"
-        android:background="@android:color/transparent"/>
 
 
     <Button
@@ -90,7 +96,7 @@
         android:layout_height="wrap_content"
         android:text="@string/button_start"
         android:onClick="sendMessage"
-        android:layout_margin="20dp"
-        android:layout_below="@id/spinner_player2"/>
+        android:layout_marginTop="30dp"
+        android:layout_below="@id/levelSeekBar"/>
 
 </RelativeLayout>

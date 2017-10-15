@@ -1,28 +1,20 @@
 package com.example.miljac.myapplication;
 
-
-import android.app.ActionBar;
+import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.ActivityInfo;
-import android.graphics.Color;
 import android.os.Build;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.text.SpannableString;
-import android.text.Spanned;
-import android.text.style.ImageSpan;
 import android.view.View;
-import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.CompoundButton;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
-import android.widget.Spinner;
 import android.widget.ToggleButton;
 
-import java.util.ArrayList;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.LockSupport;
@@ -64,9 +56,8 @@ public class GamePlayActivity extends AppCompatActivity implements TableFragment
 
     ToggleButton soundToggle;
     ImageButton imageButton;
+    ImageButton endImageButton;
 
-    //ProgressBarAnimation animResult;
-    ProgressBarAnimation animResult2;
     DoubleProgressBarAnimation animResult;
 
 
@@ -183,6 +174,8 @@ public class GamePlayActivity extends AppCompatActivity implements TableFragment
                     ((currentTime - gameStartTime) >= TableConfig.GAME_DURATION)*/){
 
                 gameDone = true;
+
+                
                 AlertDialog alertDialog = new AlertDialog.Builder(GamePlayActivity.this).create();
                 alertDialog.setTitle("Alert");
                 if(result>=50) {
@@ -199,6 +192,29 @@ public class GamePlayActivity extends AppCompatActivity implements TableFragment
                             }
                         });
                 alertDialog.show();
+
+                /*Dialog endDialog = new Dialog(GamePlayActivity.this);
+                endDialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
+                endDialog.setContentView(getLayoutInflater().inflate(R.layout.end_dialog, null));
+                endDialog.set
+                endDialog.show();
+
+                endImageButton = (ImageButton) findViewById(R.id.endButton);
+
+                endImageButton.setOnClickListener(new View.OnClickListener() {
+
+                    @Override
+                    public void onClick(View arg0) {
+                        //dialog.dismiss();
+                        saveSharedPreferences();
+                        finish();
+
+                    }
+
+                });*/
+
+
+
             }
 
 
@@ -211,7 +227,7 @@ public class GamePlayActivity extends AppCompatActivity implements TableFragment
             if(!firstTimeAnimatedProgress)
                 if ((animResult.hasEnded()) && (resultBar2.getProgress() != (int)result)) {
                     animResult = new DoubleProgressBarAnimation(resultBar2, resultBar, (float) result);
-                    animResult.setDuration(600);
+                    animResult.setDuration(800);
                     resultBar.startAnimation(animResult);
                 }
 

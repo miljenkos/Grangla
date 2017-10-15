@@ -77,9 +77,14 @@ public class TableView extends ViewGroup  {
 
 
         if (width > height) {
-            size = height;// *8/10;
+            size = height;
         } else {
-            size = width;// *8/10;
+            size = width;
+        }
+
+        if((width < height*1.3) &&
+                (height < width*1.3)) {
+            size = size*85/100;
         }
         setMeasuredDimension(size, size);
 
