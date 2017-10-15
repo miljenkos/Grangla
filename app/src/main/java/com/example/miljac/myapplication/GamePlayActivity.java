@@ -4,6 +4,7 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -33,6 +34,7 @@ public class GamePlayActivity extends AppCompatActivity implements TableFragment
     private Boolean gamePaused = false;
     private Boolean muted = false;
     private boolean firstTimeAnimatedProgress = true;
+    private Dialog endDialog;
 
     private Coordinates c;
     private Coordinates lastMoveO;
@@ -175,8 +177,8 @@ public class GamePlayActivity extends AppCompatActivity implements TableFragment
 
                 gameDone = true;
 
-                
-                AlertDialog alertDialog = new AlertDialog.Builder(GamePlayActivity.this).create();
+
+                /*AlertDialog alertDialog = new AlertDialog.Builder(GamePlayActivity.this).create();
                 alertDialog.setTitle("Alert");
                 if(result>=50) {
                     alertDialog.setMessage("YOU WIN");
@@ -191,16 +193,15 @@ public class GamePlayActivity extends AppCompatActivity implements TableFragment
                                 finish();
                             }
                         });
-                alertDialog.show();
+                alertDialog.show();*/
 
-                /*Dialog endDialog = new Dialog(GamePlayActivity.this);
+                endDialog = new Dialog(GamePlayActivity.this);
                 endDialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
+                endDialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
                 endDialog.setContentView(getLayoutInflater().inflate(R.layout.end_dialog, null));
-                endDialog.set
                 endDialog.show();
 
-                endImageButton = (ImageButton) findViewById(R.id.endButton);
-
+                /*endImageButton = (ImageButton) findViewById(R.id.endButton);
                 endImageButton.setOnClickListener(new View.OnClickListener() {
 
                     @Override
@@ -210,8 +211,8 @@ public class GamePlayActivity extends AppCompatActivity implements TableFragment
                         finish();
 
                     }
-
                 });*/
+
 
 
 
@@ -313,6 +314,13 @@ public class GamePlayActivity extends AppCompatActivity implements TableFragment
 
 
         }
+
+    }
+
+    public void exitGame(View v) {
+        endDialog.dismiss();
+        saveSharedPreferences();
+        finish();
     }
 
     private class TableViewRefreshing implements Runnable {
