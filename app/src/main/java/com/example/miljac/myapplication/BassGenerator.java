@@ -18,6 +18,7 @@ public class BassGenerator {
     private int currentMeasure = 3;
     public int getKey(){return this.currentKey;}
     public void setMeasure (int m){this.measure = m;}
+    public int getMeasure (){return this.measure;}
 
 
     Note[] currentChordSet;

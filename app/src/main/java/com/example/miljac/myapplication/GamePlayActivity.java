@@ -195,6 +195,7 @@ public class GamePlayActivity extends AppCompatActivity implements TableFragment
                             }
                         });
                 alertDialog.show();*/
+                //musicPlayer.twiceNoteDuration();
                 musicPlayer.setMeasure(2);
                 musicPlayer.setEndSong();
 
@@ -237,7 +238,7 @@ public class GamePlayActivity extends AppCompatActivity implements TableFragment
                     public void run() {
                         endDialog.show();
                     }
-                }, 900);  // 1500 seconds
+                }, 800);  // 1500 seconds
                 //endDialog.show();
 
                 /*endImageButton = (ImageButton) findViewById(R.id.endButton);
@@ -335,8 +336,10 @@ public class GamePlayActivity extends AppCompatActivity implements TableFragment
             System.out.println(waitingTimeCross);*/
 
 
-            musicPlayer.setNoteDuration((long)(TableConfig.NOTE_DURATION_FACTOR * waitingTimeCross));
+
             if(!musicPlayer.isEndSong()) {
+                musicPlayer.setNoteDuration((long)(TableConfig.NOTE_DURATION_FACTOR * waitingTimeCross));
+
                 if (waitingTimeCross > ((TableConfig.MAX_WAITING_TIME - TableConfig.MIN_WAITING_TIME) * 10 / 16 + TableConfig.MIN_WAITING_TIME)) {// *12/16
                     musicPlayer.setMeasure(3);
                     //System.out.println("TRI");
@@ -400,7 +403,11 @@ public class GamePlayActivity extends AppCompatActivity implements TableFragment
     protected void onResume(){
         super.onResume();
 
-        if(!muted) {
+        if(musicPlayer == null){
+            musicPlayer = new MusicPlayer();
+        }
+
+        if(!muted && !musicPlayer.isEndSong()) {
             musicPlayer = new MusicPlayer();
             musicPlayerThread = new Thread(musicPlayer);
             musicPlayer.setNoteDuration((long) (TableConfig.NOTE_DURATION_FACTOR * waitingTimeCross));

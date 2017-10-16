@@ -332,12 +332,12 @@ class MusicPlayer implements Runnable {
                 } else chordAmp = 0;
 
                 //fade in
-                if((i < 100) && n.isKeyChange()) {
+                if((i < 100) && (n.isKeyChange() || endSong)) {
                     pom = samplesChords1[i] * i;
                     samplesChords1[i] = (short)(pom / 100);
                 }
                 //second tone is moved later a bit
-                if((i < 200) && n.isKeyChange()) {
+                if((i < 200) && (n.isKeyChange() || endSong)) {
                     pom = samplesChords2[i] * (i-100);
                     if (i>100)
                         samplesChords2[i] = (short)(pom / 100);
@@ -345,7 +345,7 @@ class MusicPlayer implements Runnable {
                         samplesChords2[i] = 0;
                 }
                 //third note is moved a little more
-                if((i < 300) && n.isKeyChange()) {
+                if((i < 300) &&(n.isKeyChange() || endSong)) {
                     pom = samplesChords3[i] * (i-200);
                     if (i>200)
                         samplesChords3[i] = (short)(pom / 100);
@@ -354,13 +354,13 @@ class MusicPlayer implements Runnable {
                 }
 
                 if(endSong && n.isKeyChange()){
-                    samplesChords1[i] /= 15;
-                    samplesChords2[i] /= 15;
-                    samplesChords3[i] /= 15;
+                    samplesChords1[i] = 0;
+                    samplesChords2[i] = 0;
+                    samplesChords3[i] = 0;
                 }
                 if(endSong && !n.isKeyChange()){
-                    samplesChordsBass1[i] /= 15;
-                    samplesBassBase[i] /= 15;
+                    samplesChordsBass1[i] = 0;
+                    samplesBassBase[i] = 0;
                 }
 
 
@@ -432,6 +432,10 @@ class MusicPlayer implements Runnable {
                 phSolo += twopi * soloFr / sr * soloFrBendFactor;
                 if(phSolo > twopi) phSolo -= twopi;
 
+                if(endSong){
+                    samplesSolo[i] *= 0.85;
+                }
+
                 if(!((countBars == 1) ||
                         (countBars == 2)
                         )) {
@@ -497,9 +501,14 @@ class MusicPlayer implements Runnable {
     public void setNoteDuration(long duration) {
         this.noteDuration = duration;
     }
+    public void twiceNoteDuration() {this.noteDuration *= 2;}
 
     public void setMeasure(int measure){
         bassGenerator.setMeasure(measure);
+    }
+
+    public void getMeasure(int measure){
+        bassGenerator.getMeasure();
     }
 
 }
