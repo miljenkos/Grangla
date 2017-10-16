@@ -30,7 +30,7 @@ public class TableConfig {
     public static int SOLO_NOTE_UPPER_BOUNDARY = 80;
 
     public static int OKO_COLOR = 0xFF5BE1CA;
-    public static int GUMB_COLOR = 0xFFD44FB6;
+    public static int GUMB_COLOR = 0xFFEB68C9 ;
     public static int DJETELINA_COLOR = 0xFFA4F80F;
     public static int ZVIJEZDA_COLOR = 0xFFED9D1D;
 

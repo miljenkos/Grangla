@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
+import android.os.Handler;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -202,8 +203,42 @@ public class GamePlayActivity extends AppCompatActivity implements TableFragment
                 endDialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
 
 
-                endDialog.setContentView(getLayoutInflater().inflate(R.layout.end_dialog, null));
-                endDialog.show();
+                if(result<=0){
+                    if(player2Image == R.drawable.pin39) {
+                        endDialog.setContentView(getLayoutInflater().inflate(R.layout.end_dialog_oko, null));
+                    }
+                    if(player2Image == R.drawable.pin40) {
+                        endDialog.setContentView(getLayoutInflater().inflate(R.layout.end_dialog_gumb, null));
+                    }
+                    if(player2Image == R.drawable.pin42) {
+                        endDialog.setContentView(getLayoutInflater().inflate(R.layout.end_dialog_djetelina, null));
+                    }
+                    if(player2Image == R.drawable.pin43) {
+                        endDialog.setContentView(getLayoutInflater().inflate(R.layout.end_dialog_zvijezda, null));
+                    }
+                } else {
+                    if(player1Image == R.drawable.pin39) {
+                        endDialog.setContentView(getLayoutInflater().inflate(R.layout.end_dialog_oko, null));
+                    }
+                    if(player1Image == R.drawable.pin40) {
+                        endDialog.setContentView(getLayoutInflater().inflate(R.layout.end_dialog_gumb, null));
+                    }
+                    if(player1Image == R.drawable.pin42) {
+                        endDialog.setContentView(getLayoutInflater().inflate(R.layout.end_dialog_djetelina, null));
+                    }
+                    if(player1Image == R.drawable.pin43) {
+                        endDialog.setContentView(getLayoutInflater().inflate(R.layout.end_dialog_zvijezda, null));
+                    }
+                }
+
+
+                Handler handler = new Handler();
+                handler.postDelayed(new Runnable() {
+                    public void run() {
+                        endDialog.show();
+                    }
+                }, 900);  // 1500 seconds
+                //endDialog.show();
 
                 /*endImageButton = (ImageButton) findViewById(R.id.endButton);
                 endImageButton.setOnClickListener(new View.OnClickListener() {
