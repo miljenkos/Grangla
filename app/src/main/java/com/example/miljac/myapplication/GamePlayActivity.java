@@ -194,10 +194,14 @@ public class GamePlayActivity extends AppCompatActivity implements TableFragment
                             }
                         });
                 alertDialog.show();*/
+                musicPlayer.setMeasure(2);
+                musicPlayer.setEndSong();
 
                 endDialog = new Dialog(GamePlayActivity.this);
                 endDialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
                 endDialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+
+
                 endDialog.setContentView(getLayoutInflater().inflate(R.layout.end_dialog, null));
                 endDialog.show();
 
@@ -297,18 +301,20 @@ public class GamePlayActivity extends AppCompatActivity implements TableFragment
 
 
             musicPlayer.setNoteDuration((long)(TableConfig.NOTE_DURATION_FACTOR * waitingTimeCross));
-            if (waitingTimeCross > ((TableConfig.MAX_WAITING_TIME - TableConfig.MIN_WAITING_TIME)*10/16 + TableConfig.MIN_WAITING_TIME)) {// *12/16
-                musicPlayer.setMeasure(3);
-                //System.out.println("TRI");
-            } else if (waitingTimeCross > ((TableConfig.MAX_WAITING_TIME - TableConfig.MIN_WAITING_TIME)*4/16 + TableConfig.MIN_WAITING_TIME)) {// 8/16
-                musicPlayer.setMeasure(4);
-                //System.out.println("CETIRI");
-            } else if (waitingTimeCross > ((TableConfig.MAX_WAITING_TIME - TableConfig.MIN_WAITING_TIME)*1.6/16 + TableConfig.MIN_WAITING_TIME)) {// 4/16
-                musicPlayer.setMeasure(2);
-                //System.out.println("DVA");
-            } else {
-                musicPlayer.setMeasure(5);
-                //System.out.println("PET");
+            if(!musicPlayer.isEndSong()) {
+                if (waitingTimeCross > ((TableConfig.MAX_WAITING_TIME - TableConfig.MIN_WAITING_TIME) * 10 / 16 + TableConfig.MIN_WAITING_TIME)) {// *12/16
+                    musicPlayer.setMeasure(3);
+                    //System.out.println("TRI");
+                } else if (waitingTimeCross > ((TableConfig.MAX_WAITING_TIME - TableConfig.MIN_WAITING_TIME) * 4 / 16 + TableConfig.MIN_WAITING_TIME)) {// 8/16
+                    musicPlayer.setMeasure(4);
+                    //System.out.println("CETIRI");
+                } else if (waitingTimeCross > ((TableConfig.MAX_WAITING_TIME - TableConfig.MIN_WAITING_TIME) * 1.6 / 16 + TableConfig.MIN_WAITING_TIME)) {// 4/16
+                    musicPlayer.setMeasure(2);
+                    //System.out.println("DVA");
+                } else {
+                    musicPlayer.setMeasure(5);
+                    //System.out.println("PET");
+                }
             }
 
 
@@ -318,9 +324,14 @@ public class GamePlayActivity extends AppCompatActivity implements TableFragment
     }
 
     public void exitGame(View v) {
-        endDialog.dismiss();
+        //endDialog.cancel();
+
         saveSharedPreferences();
-        finish();
+        System.out.println("EXITEXITEXITEXIT\n\n");
+
+    finish();
+
+
     }
 
     private class TableViewRefreshing implements Runnable {
@@ -588,6 +599,10 @@ public class GamePlayActivity extends AppCompatActivity implements TableFragment
     @Override
     protected void onDestroy(){
         super.onDestroy();
+
+        if (endDialog!=null)
+            endDialog.dismiss();
+
         gameDone = true;
         musicPlayer.mute();
 

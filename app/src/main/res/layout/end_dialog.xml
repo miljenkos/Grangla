@@ -6,11 +6,12 @@
 
     <ImageButton
         android:id="@+id/endButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="300dp"
+        android:layout_height="300dp"
         android:src="@drawable/pin42"
         android:onClick="exitGame"
-        android:background="@null"/>
+        android:background="@null"
+        android:scaleType="fitCenter"/>
 
 
 

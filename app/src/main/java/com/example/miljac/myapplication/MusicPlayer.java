@@ -68,6 +68,16 @@ class MusicPlayer implements Runnable {
     boolean dieFinally = false;
     int countBars = 0;
 
+    public void setEndSong() {
+        this.endSong = true;
+    }
+
+    public boolean isEndSong() {
+        return endSong;
+    }
+
+    boolean endSong = false;
+
     public void mute(){
         System.out.println("MUTE");
         mute = true;
@@ -342,6 +352,17 @@ class MusicPlayer implements Runnable {
                     else
                         samplesChords3[i] = 0;
                 }
+
+                if(endSong && n.isKeyChange()){
+                    samplesChords1[i] /= 15;
+                    samplesChords2[i] /= 15;
+                    samplesChords3[i] /= 15;
+                }
+                if(endSong && !n.isKeyChange()){
+                    samplesChordsBass1[i] /= 15;
+                    samplesBassBase[i] /= 15;
+                }
+
 
                 if((countBars == 1) || (countBars == 2) || (countBars == 3) || (countBars == 4)){
 
