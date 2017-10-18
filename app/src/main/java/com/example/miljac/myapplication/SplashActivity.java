@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
+import java.util.concurrent.locks.LockSupport;
+
 /**
  * Created by miljac on 4.10.2017..
  */
@@ -13,6 +15,7 @@ public class SplashActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        LockSupport.parkNanos(2_000_000_000);
 
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);

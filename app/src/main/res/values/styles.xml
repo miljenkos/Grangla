@@ -24,6 +24,7 @@
 
     <style name="EndDialog" parent="@android:style/Theme.Dialog">
         <item name="android:windowAnimationStyle">@style/EndDialogAnimation</item>
+        <item name="android:windowFullscreen">true</item>
     </style>
 
     <style name="EndDialogAnimation">

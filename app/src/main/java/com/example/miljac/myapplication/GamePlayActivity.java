@@ -12,6 +12,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
+import android.view.WindowManager;
 import android.widget.CompoundButton;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
@@ -35,7 +36,7 @@ public class GamePlayActivity extends AppCompatActivity implements TableFragment
     private Boolean gamePaused = false;
     private Boolean muted = false;
     private boolean firstTimeAnimatedProgress = true;
-    private Dialog endDialog;
+    private FullscreenDialog endDialog;
 
     private Coordinates c;
     private Coordinates lastMoveO;
@@ -184,7 +185,7 @@ public class GamePlayActivity extends AppCompatActivity implements TableFragment
                 musicPlayer.setMeasure(2);
                 musicPlayer.setEndSong();
 
-                endDialog = new Dialog(GamePlayActivity.this, R.style.EndDialog);
+                endDialog = new FullscreenDialog(GamePlayActivity.this, R.style.EndDialog);
                 endDialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
                 endDialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
                 endDialog.setCanceledOnTouchOutside(false);
@@ -458,40 +459,6 @@ public class GamePlayActivity extends AppCompatActivity implements TableFragment
 
 
         currentApiVersion = android.os.Build.VERSION.SDK_INT;
-
-        final int flags = View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-                | View.SYSTEM_UI_FLAG_FULLSCREEN
-                | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;
-
-        // This work only for android 4.4+
-        if(currentApiVersion >= Build.VERSION_CODES.KITKAT)
-        {
-
-            getWindow().getDecorView().setSystemUiVisibility(flags);
-
-            // Code below is to handle presses of Volume up or Volume down.
-            // Without this, after pressing volume buttons, the navigation bar will
-            // show up and won't hide
-            final View decorView = getWindow().getDecorView();
-            decorView
-                    .setOnSystemUiVisibilityChangeListener(new View.OnSystemUiVisibilityChangeListener()
-                    {
-
-                        @Override
-                        public void onSystemUiVisibilityChange(int visibility)
-                        {
-                            if((visibility & View.SYSTEM_UI_FLAG_FULLSCREEN) == 0)
-                            {
-                                decorView.setSystemUiVisibility(flags);
-                            }
-                        }
-                    });
-        }
-
-
         setContentView(R.layout.activity_game_play);
 
         Intent intent = getIntent();
@@ -643,7 +610,7 @@ public class GamePlayActivity extends AppCompatActivity implements TableFragment
     public void onWindowFocusChanged(boolean hasFocus)
     {
         super.onWindowFocusChanged(hasFocus);
-        if(currentApiVersion >= Build.VERSION_CODES.KITKAT && hasFocus)
+        if(currentApiVersion >= Build.VERSION_CODES.KITKAT)// && hasFocus)
         {
             getWindow().getDecorView().setSystemUiVisibility(
                     View.SYSTEM_UI_FLAG_LAYOUT_STABLE
@@ -775,4 +742,7 @@ public class GamePlayActivity extends AppCompatActivity implements TableFragment
 
         }
     }
+
+
+
 }
