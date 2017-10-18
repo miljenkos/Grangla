@@ -34,6 +34,10 @@ public class TableConfig {
     public static int DJETELINA_COLOR = 0xFFA4F80F;
     public static int ZVIJEZDA_COLOR = 0xFFED9D1D;
 
+    public static int OKO_COLOR_DESATURATED = 0xFF9e9e9e;
+    public static int GUMB_COLOR_DESATURATED = 0xFF9a9a9a;
+    public static int DJETELINA_COLOR_DESATURATED = 0xFF838383;
+    public static int ZVIJEZDA_COLOR_DESATURATED = 0xFF858585;
 
 
     private static MediaPlayer player ;

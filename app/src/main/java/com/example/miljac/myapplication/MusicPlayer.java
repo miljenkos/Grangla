@@ -433,7 +433,7 @@ class MusicPlayer implements Runnable {
                 if(phSolo > twopi) phSolo -= twopi;
 
                 if(endSong){
-                    samplesSolo[i] *= 0.85;
+                    samplesSolo[i] *= 0.8;
                 }
 
                 if(!((countBars == 1) ||

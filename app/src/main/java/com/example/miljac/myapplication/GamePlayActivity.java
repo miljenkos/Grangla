@@ -53,6 +53,8 @@ public class GamePlayActivity extends AppCompatActivity implements TableFragment
     private int player2Image;
     private int player1Color;
     private int player2Color;
+    private int player1ColorDesaturated;
+    private int player2ColorDesaturated;
     private SharedPreferences mPrefs;
     private boolean startCircleTime = false;
     private boolean startCrossTime = false;
@@ -300,14 +302,18 @@ public class GamePlayActivity extends AppCompatActivity implements TableFragment
             }
 
             if(startCircleTime) {
-                ProgressBarAnimation anim = new ProgressBarAnimation(circleBar, 100, 0);
+                ProgressBarAnimation anim = new ProgressBarAnimation(circleBar,
+                        player1Color & 0xC5FFFFFF,
+                        player1ColorDesaturated & 0x80FFFFFF);
                 anim.setDuration(waitingMomentCircle - currentTime);
                 circleBar.startAnimation(anim);
                 startCircleTime = false;
             }
 
             if(startCrossTime) {
-                ProgressBarAnimation anim2 = new ProgressBarAnimation(crossBar, 100, 0);
+                ProgressBarAnimation anim2 = new ProgressBarAnimation(crossBar,
+                        player2Color & 0xC5FFFFFF,
+                        player2ColorDesaturated & 0x80FFFFFF);
                 anim2.setDuration(waitingMomentCross - currentTime);
                 crossBar.startAnimation(anim2);
                 startCrossTime = false;
@@ -498,29 +504,39 @@ public class GamePlayActivity extends AppCompatActivity implements TableFragment
 
         if(player1Image == R.drawable.pin39) {
             player1Color = TableConfig.OKO_COLOR;
+            player1ColorDesaturated = TableConfig.OKO_COLOR_DESATURATED;
         }
         if(player1Image == R.drawable.pin40) {
             player1Color = TableConfig.GUMB_COLOR;
+            player1ColorDesaturated = TableConfig.GUMB_COLOR_DESATURATED;
         }
         if(player1Image == R.drawable.pin42) {
             player1Color = TableConfig.DJETELINA_COLOR;
+            player1ColorDesaturated = TableConfig.DJETELINA_COLOR_DESATURATED;
         }
         if(player1Image == R.drawable.pin43) {
             player1Color = TableConfig.ZVIJEZDA_COLOR;
+            player1ColorDesaturated = TableConfig.ZVIJEZDA_COLOR_DESATURATED;
         }
 
         if(player2Image == R.drawable.pin39) {
             player2Color = TableConfig.OKO_COLOR;
+            player2ColorDesaturated = TableConfig.OKO_COLOR_DESATURATED;
         }
         if(player2Image == R.drawable.pin40) {
             player2Color = TableConfig.GUMB_COLOR;
+            player2ColorDesaturated = TableConfig.GUMB_COLOR_DESATURATED;
         }
         if(player2Image == R.drawable.pin42) {
             player2Color = TableConfig.DJETELINA_COLOR;
+            player2ColorDesaturated = TableConfig.DJETELINA_COLOR_DESATURATED;
         }
         if(player2Image == R.drawable.pin43) {
             player2Color = TableConfig.ZVIJEZDA_COLOR;
+            player2ColorDesaturated = TableConfig.ZVIJEZDA_COLOR_DESATURATED;
         }
+
+
 
         resultBar = (ProgressBar)findViewById(R.id.result_bar);
         resultBar.setProgress(50);
