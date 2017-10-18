@@ -9,10 +9,9 @@
         android:layout_width="300dp"
         android:layout_height="300dp"
         android:src="@drawable/pin42"
-        android:onClick="exitGame"
         android:background="@null"
         android:scaleType="fitCenter"/>
 
-
+<!--         android:onClick="exitGame" -->
 
 </LinearLayout>

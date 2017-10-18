@@ -9,7 +9,6 @@
         android:layout_width="300dp"
         android:layout_height="300dp"
         android:src="@drawable/pin39"
-        android:onClick="exitGame"
         android:background="@null"
         android:scaleType="fitCenter"/>
 

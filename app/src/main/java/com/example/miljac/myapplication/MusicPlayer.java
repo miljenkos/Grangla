@@ -357,6 +357,7 @@ class MusicPlayer implements Runnable {
                     samplesChords1[i] = 0;
                     samplesChords2[i] = 0;
                     samplesChords3[i] = 0;
+                    samplesBassBase[i] *= 3;
                 }
                 if(endSong && !n.isKeyChange()){
                     samplesChordsBass1[i] = 0;

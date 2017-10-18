@@ -21,4 +21,15 @@
         <item name="android:windowBackground">@drawable/background_splash</item>
     </style>
 
+
+    <style name="EndDialog" parent="@android:style/Theme.Dialog">
+        <item name="android:windowAnimationStyle">@style/EndDialogAnimation</item>
+    </style>
+
+    <style name="EndDialogAnimation">
+        <item name="android:windowEnterAnimation">@anim/fadein_scalein</item>
+        <item name="android:windowExitAnimation">@anim/fadeout_scaleout</item>
+    </style>
+
+
 </resources>

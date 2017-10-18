@@ -181,29 +181,13 @@ public class GamePlayActivity extends AppCompatActivity implements TableFragment
                 gameDone = true;
 
 
-                /*AlertDialog alertDialog = new AlertDialog.Builder(GamePlayActivity.this).create();
-                alertDialog.setTitle("Alert");
-                if(result>=50) {
-                    alertDialog.setMessage("YOU WIN");
-                } else {
-                    alertDialog.setMessage("YOU LOSE");
-                }
-                alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.dismiss();
-                                saveSharedPreferences();
-                                finish();
-                            }
-                        });
-                alertDialog.show();*/
-                //musicPlayer.twiceNoteDuration();
                 musicPlayer.setMeasure(2);
                 musicPlayer.setEndSong();
 
-                endDialog = new Dialog(GamePlayActivity.this);
+                endDialog = new Dialog(GamePlayActivity.this, R.style.EndDialog);
                 endDialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
                 endDialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+                endDialog.setCanceledOnTouchOutside(false);
 
 
                 if(result<=0){
@@ -240,7 +224,24 @@ public class GamePlayActivity extends AppCompatActivity implements TableFragment
                     public void run() {
                         endDialog.show();
                     }
-                }, 800);  // 1500 seconds
+                }, 300);
+
+                Handler handler2 = new Handler();
+                handler2.postDelayed(new Runnable() {
+                    public void run() {
+                        endDialog.dismiss();
+                        finish();
+                    }
+                }, 9000);
+
+                /*Handler handler3 = new Handler();
+                handler3.postDelayed(new Runnable() {
+                    public void run() {
+                        finish();
+                    }
+                }, 7500);*/
+
+
                 //endDialog.show();
 
                 /*endImageButton = (ImageButton) findViewById(R.id.endButton);
