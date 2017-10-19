@@ -22,7 +22,7 @@ public class FullscreenDialog extends Dialog {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        /*getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
         if(android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT)// && hasFocus)
         {
@@ -33,7 +33,7 @@ public class FullscreenDialog extends Dialog {
                             | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
                             | View.SYSTEM_UI_FLAG_FULLSCREEN
                             | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
-        }
+        }*/
 
 
 
