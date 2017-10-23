@@ -9,7 +9,7 @@
         android:right="20dp">
         <bitmap
             android:gravity="center"
-            android:src="@drawable/pin40"/>
+            android:src="@drawable/gumb"/>
     </item>
 
 </layer-list>

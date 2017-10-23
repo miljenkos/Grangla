@@ -14,15 +14,21 @@
         android:src="@drawable/splash">
     </ImageView>
 
-    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="bottom|center_horizontal">
 
+        <LinearLayout
+            android:id="@+id/upperButtons"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
         <Button
             android:id="@+id/enterButton"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight="1"
             android:layout_height="wrap_content"
             android:background="#00000000"
             android:text="@string/button_enter"
@@ -36,10 +42,16 @@
             android:shadowDy="0"
             android:shadowRadius="20"
 
-            android:layout_margin="20dp"/>
+            android:layout_marginRight="20dp"
+
+
+            android:layout_centerHorizontal="true"
+            android:gravity="center"
+            android:layout_gravity="center"/>
         <Button
             android:id="@+id/exitButton"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight="1"
             android:layout_height="wrap_content"
             android:background="#00000000"
             android:text="@string/button_exit"
@@ -53,8 +65,43 @@
             android:shadowDy="0"
             android:shadowRadius="20"
 
-            android:layout_margin="20dp"
-            android:layout_toRightOf="@id/enterButton"/>
+            android:layout_marginLeft="20dp"
+            android:layout_toRightOf="@id/enterButton"
 
-    </RelativeLayout>
+
+            android:layout_centerHorizontal="true"
+            android:gravity="center"
+            android:layout_gravity="center"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/upperButtons">
+
+        <Button
+            android:id="@+id/helpButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#00000000"
+            android:text="@string/button_help"
+            android:textColor="#D9D9D9"
+            android:textStyle="bold"
+            android:onClick="help"
+            android:textSize="30sp"
+
+            android:shadowColor="#000000"
+            android:shadowDx="0"
+            android:shadowDy="0"
+            android:shadowRadius="20"
+
+            android:layout_margin="20dp"
+            android:layout_centerHorizontal="true"
+            android:gravity="center"
+            android:layout_gravity="center"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
 </RelativeLayout>

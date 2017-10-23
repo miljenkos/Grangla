@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="0dp"
+    android:paddingTop="0dp"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="com.example.miljac.myapplication.MainActivity"
+    tools:showIn="@layout/activity_main"
+    android:background="@drawable/background">
+
+
+    <ImageButton
+        android:id="@+id/discard_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="0dp"
+        android:layout_marginRight="0dp"
+        android:onClick="exit"
+        android:src="@drawable/exit"
+        android:layout_gravity="right|top"
+        android:gravity="right|top"
+        android:background="@null"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"/>
+
+
+    <TextView
+        android:id="@+id/title_help"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:textColor="@android:color/white"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingTop="@dimen/activity_vertical_margin"
+        android:textStyle="bold"
+        android:textSize="30dp"
+        android:text="Upute" />
+
+
+
+    <TextView
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:textColor="@android:color/white"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingTop="@dimen/activity_vertical_margin"
+        android:layout_marginTop="10dp"
+        android:textSize="18dp"
+        android:text="Pokušaj skupiti četiri znaka u nizu prije svog suparnika. Pobjedio si kad dovoljno puta to postigneš. Na svaki sljedeći potez imaš pravo nakon što prođe određeno vrijeme od prethodnog. Igra se ubrzava kako se približava kraju. Nemoj nepromišljeno stavljati figure, jer ako ih imaš previše na ploči, ostaješ bez njih."
+        android:layout_below="@id/title_help"/>
+
+
+</RelativeLayout>

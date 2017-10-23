@@ -13,33 +13,19 @@ import java.util.concurrent.locks.LockSupport;
  * Created by miljac on 4.10.2017..
  */
 
-public class SplashActivity extends AppCompatActivity {
+public class HelpActivity extends AppCompatActivity {
     private int currentApiVersion;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         currentApiVersion = android.os.Build.VERSION.SDK_INT;
-        setContentView(R.layout.splash_layout);
+        setContentView(R.layout.help);
 
 
-        /*LockSupport.parkNanos(2_000_000_000);
-
-        Intent intent = new Intent(this, MainActivity.class);
-        startActivity(intent);
-        finish();*/
     }
 
-    public void enter(View view) {
-        Intent intent = new Intent(this, MainActivity.class);
-        startActivity(intent);
-        //finish();
-    }
 
-    public void help(View view) {
-        Intent intent = new Intent(this, HelpActivity.class);
-        startActivity(intent);
-    }
 
     public void exit(View view) {
         finish();

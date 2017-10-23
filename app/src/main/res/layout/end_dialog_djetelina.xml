@@ -8,7 +8,7 @@
         android:id="@+id/endButton"
         android:layout_width="300dp"
         android:layout_height="300dp"
-        android:src="@drawable/pin42"
+        android:src="@drawable/djetelina"
         android:background="@null"
         android:scaleType="fitCenter"/>
 
