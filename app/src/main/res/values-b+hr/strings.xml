@@ -1,0 +1,28 @@
+<resources>
+    <string name="app_name">Grangla</string>
+    <string name="action_settings">Opcije</string>
+    <string name="button_start">Igraj</string>
+    <string name="button_enter">Ulaz</string>
+    <string name="button_exit">Izlaz</string>
+    <string name="button_help">Upute</string>
+
+    <string name="me">Ja: </string>
+    <string name="him">   On: </string>
+    <string name="level">Razina:</string>
+    <string name="help_text">Pokušaj skupiti četiri znaka u nizu. Za pobjedu je potrebno to uspijevati češće od suparnika. Na svaki sljedeći potez imaš pravo nakon što prođe određeno vrijeme od prethodnog. Igra se ubrzava kako se približava kraju. Nemoj raditi nepromišljene poteze, jer ako imaš previše figura na ploči, ostaješ bez njih.</string>
+
+
+
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <integer-array name="player1">
+
+        <item>@drawable/pin40</item>
+
+        <item>@drawable/pin39</item>
+
+    </integer-array>
+
+</resources>

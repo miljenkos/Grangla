@@ -34,7 +34,7 @@
         android:textColor="@android:color/white"
         android:paddingTop="@dimen/activity_vertical_margin"
         android:textSize="18dp"
-        android:text="Ja: "/>
+        android:text="@string/me"/>
 
     <Spinner
         android:id="@+id/spinner_player1"
@@ -54,8 +54,9 @@
         android:layout_height="wrap_content"
         android:layout_width="wrap_content"
         android:layout_marginTop="35dp"
+        android:layout_marginLeft="25dp"
         android:textColor="@android:color/white"
-        android:text="   On: "
+        android:text="@string/him"
         android:layout_toRightOf="@id/spinner_player1"
         android:paddingTop="@dimen/activity_vertical_margin"
         android:textSize="18dp"/>
@@ -95,9 +96,10 @@
         android:id="@+id/level"
         android:layout_height="wrap_content"
         android:layout_width="wrap_content"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="60dp"
+        android:layout_marginRight="5dp"
         android:textColor="@android:color/white"
-        android:text="Razina: "
+        android:text="@string/level"
         android:textSize="18dp"
         android:layout_below="@id/player1"
         />
@@ -106,7 +108,7 @@
         android:id="@+id/level_text"
         android:layout_height="wrap_content"
         android:layout_width="wrap_content"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="60dp"
         android:text="20"
         android:textColor="@android:color/white"
         android:layout_toRightOf="@id/level"
@@ -132,7 +134,7 @@
         android:layout_height="wrap_content"
         android:text="@string/button_start"
         android:onClick="sendMessage"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="40dp"
         android:layout_below="@id/levelSeekBar"/>
 
 </RelativeLayout>

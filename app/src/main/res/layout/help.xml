@@ -38,7 +38,7 @@
         android:paddingTop="@dimen/activity_vertical_margin"
         android:textStyle="bold"
         android:textSize="30dp"
-        android:text="Upute" />
+        android:text="@string/button_help" />
 
 
 
@@ -50,7 +50,7 @@
         android:paddingTop="@dimen/activity_vertical_margin"
         android:layout_marginTop="10dp"
         android:textSize="18dp"
-        android:text="Pokušaj skupiti četiri znaka u nizu prije svog suparnika. Pobjedio si kad dovoljno puta to postigneš. Na svaki sljedeći potez imaš pravo nakon što prođe određeno vrijeme od prethodnog. Igra se ubrzava kako se približava kraju. Nemoj nepromišljeno stavljati figure, jer ako ih imaš previše na ploči, ostaješ bez njih."
+        android:text="@string/help_text"
         android:layout_below="@id/title_help"/>
 
 
