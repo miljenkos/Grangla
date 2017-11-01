@@ -7,7 +7,7 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.example.miljac.myapplication.GamePlayActivity">
+    tools:context="com.boardgame.miljac.grangla.GamePlayActivity">
 
 </RelativeLayout>
 -->
@@ -28,7 +28,7 @@
     <!--
         <fragment
             android:id="@+id/Table"
-            android:name="com.example.miljac.myapplication.TableFragment"
+            android:name="com.boardgame.miljac.grangla.TableFragment"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="left"
@@ -36,7 +36,7 @@
 
         <fragment
             android:id="@+id/Result"
-            android:name="com.example.miljac.myapplication.ResultFragment"
+            android:name="com.boardgame.miljac.grangla.ResultFragment"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="right"
@@ -47,7 +47,7 @@
 
     <fragment
         android:id="@+id/Table"
-        android:name="com.example.miljac.myapplication.TableFragment"
+        android:name="com.boardgame.miljac.grangla.TableFragment"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="4dp"
@@ -71,7 +71,7 @@
 
     <fragment
         android:id="@+id/Result"
-        android:name="com.example.miljac.myapplication.ResultFragment"
+        android:name="com.boardgame.miljac.grangla.ResultFragment"
         android:layout_width="match_parent"
         android:layout_height="8dp"
         android:layout_marginTop="5dp"
@@ -86,7 +86,7 @@
 
         <fragment
             android:id="@+id/CircleTime"
-            android:name="com.example.miljac.myapplication.CircleTimeFragment"
+            android:name="com.boardgame.miljac.grangla.CircleTimeFragment"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="2"/>
@@ -131,7 +131,7 @@
 
         <fragment
             android:id="@+id/CrossTime"
-            android:name="com.example.miljac.myapplication.CrossTimeFragment"
+            android:name="com.boardgame.miljac.grangla.CrossTimeFragment"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="2"
@@ -155,14 +155,14 @@
 
         <fragment
             android:id="@+id/Table"
-            android:name="com.example.miljac.myapplication.TableFragment"
+            android:name="com.boardgame.miljac.grangla.TableFragment"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1" />
 
         <fragment
             android:id="@+id/Result"
-            android:name="com.example.miljac.myapplication.ResultFragment"
+            android:name="com.boardgame.miljac.grangla.ResultFragment"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="5"
@@ -171,7 +171,7 @@
 
         <fragment
             android:id="@+id/CrossTime"
-            android:name="com.example.miljac.myapplication.CrossTimeFragment"
+            android:name="com.boardgame.miljac.grangla.CrossTimeFragment"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="5"
@@ -180,7 +180,7 @@
 
         <fragment
             android:id="@+id/CircleTime"
-            android:name="com.example.miljac.myapplication.CrossTimeFragment"
+            android:name="com.boardgame.miljac.grangla.CrossTimeFragment"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="5"

@@ -1,9 +1,9 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/com.example.miljac.myapplication.TableView"
+    xmlns:app="http://schemas.android.com/apk/com.boardgame.miljac.grangla.TableView"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content">
 
-    <!--com.example.miljac.myapplication.TableView
+    <!--com.boardgame.miljac.grangla.TableView
         android:layout_width="300dp"
         android:layout_height="300dp"
         android:background="#ccc"
@@ -15,7 +15,7 @@
         app:exampleString="Hello, TableView" /-->
 
 
-    <com.example.miljac.myapplication.TableView
+    <com.boardgame.miljac.grangla.TableView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
 </FrameLayout>

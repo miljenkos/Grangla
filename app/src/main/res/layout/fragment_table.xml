@@ -2,9 +2,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    tools:context="com.example.miljac.myapplication.TableFragment">
+    tools:context="com.boardgame.miljac.grangla.TableFragment">
 
-    <com.example.miljac.myapplication.TableView
+    <com.boardgame.miljac.grangla.TableView
         android:id="@+id/Table"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

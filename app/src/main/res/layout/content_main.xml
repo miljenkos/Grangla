@@ -9,7 +9,7 @@
     android:paddingRight="0dp"
     android:paddingTop="0dp"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="com.example.miljac.myapplication.MainActivity"
+    tools:context="com.boardgame.miljac.grangla.MainActivity"
     tools:showIn="@layout/activity_main"
     android:background="@drawable/background">
 
