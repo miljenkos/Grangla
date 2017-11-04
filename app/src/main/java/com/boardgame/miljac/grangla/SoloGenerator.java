@@ -168,6 +168,9 @@ public class SoloGenerator {
             } else {
                 Note a = new Note(lastNote.getIndex());
                 a.setVolume(lastNote.getVolume()/2);
+                a.setSoloFrBendFr(lastNote.getSoloFrBendFr());
+                a.setSoloFrBendFactor(lastNote.getSoloFrBendFactor());
+
                 lastNote.setVolume(lastNote.getVolume());
                 return a;
             }
@@ -184,8 +187,9 @@ public class SoloGenerator {
         }
 
         nextNote = new Note(lastNote.getIndex());
-
         nextNote.setVolume(currentSolo[soloIndex].getVolume());
+        nextNote.setSoloFrBendFr(currentSolo[soloIndex].getSoloFrBendFr());
+        nextNote.setSoloFrBendFactor(currentSolo[soloIndex].getSoloFrBendFactor());
 
         if (currentSolo[soloIndex].getIndex() > 0){
             for (int x=0; x<currentSolo[soloIndex].getIndex(); x++){
@@ -204,6 +208,8 @@ public class SoloGenerator {
 
         lastNote = new Note(nextNote.getIndex());
         lastNote.setVolume(nextNote.getVolume());
+        lastNote.setSoloFrBendFr(nextNote.getSoloFrBendFr());
+        lastNote.setSoloFrBendFactor(nextNote.getSoloFrBendFactor());
 
         return nextNote;
     }

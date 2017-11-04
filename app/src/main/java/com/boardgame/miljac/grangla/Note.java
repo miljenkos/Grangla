@@ -15,6 +15,14 @@ public class Note {
         return soloFrBendFactor;
     }
 
+    public void setSoloFrBendFactor(double soloFrBendFactor) {
+        this.soloFrBendFactor = soloFrBendFactor;
+    }
+
+    public void setSoloFrBendFr(double soloFrBendFr) {
+        this.soloFrBendFr = soloFrBendFr;
+    }
+
     double soloFrBendFactor;
 
     public double getSoloFrBendFr() {
@@ -29,10 +37,10 @@ public class Note {
         this.relativeIndex = i;
 
         rnd = rand.nextDouble();
-        this.soloFrBendFactor = (((18.0/17.0) - 1.0) / 14) * rnd*rnd*rnd*rnd;
+        this.soloFrBendFactor = (((18.0/17.0) - 1.0) / 14) * rnd*rnd*rnd*1.9;
 
         rnd = rand.nextDouble();
-        this.soloFrBendFr = 0.2 + rnd*rnd*rnd*14;
+        this.soloFrBendFr = 0.5 + rnd*rnd*30;
 
     }
 

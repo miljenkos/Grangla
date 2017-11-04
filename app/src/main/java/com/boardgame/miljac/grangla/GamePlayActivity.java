@@ -641,6 +641,8 @@ public class GamePlayActivity extends AppCompatActivity implements TableFragment
     protected void onDestroy(){
         super.onDestroy();
 
+        saveSharedPreferences();
+
         if (endDialog!=null)
             endDialog.dismiss();
 

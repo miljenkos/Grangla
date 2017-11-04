@@ -59,7 +59,7 @@ class MusicPlayer implements Runnable {
 
     AudioTrack audioTrack;
     short samples[];
-    short samplesChords1[], samplesChords2[], samplesChords3[], samplesChordsBass1[], samplesOct[], samplesBassBase[];
+    short samplesChords1[], samplesChords2[], samplesChords3[], samplesBassBase[];
     short samplesSolo[];
     double soloFrBendFactor;
     int buffsize;
@@ -108,8 +108,8 @@ class MusicPlayer implements Runnable {
         samplesChords1 = new short[20000];
         samplesChords2 = new short[20000];
         samplesChords3 = new short[20000];
-        samplesChordsBass1 = new short[20000];
-        samplesOct = new short[20000];
+        //samplesChordsBass1 = new short[20000];
+        //samplesOct = new short[20000];
         samplesSolo = new short[20000];
         samplesBassBase = new short[20000];
         // start audio
@@ -147,7 +147,7 @@ class MusicPlayer implements Runnable {
             }
 
             amp = n.getVolume();
-            if (n.isKeyChange()) chordAmp = 1600;
+            if (n.isKeyChange()) chordAmp = 1100;
             //System.out.println(n.isKeyChange());
 
             //frequency calculations
@@ -212,13 +212,13 @@ class MusicPlayer implements Runnable {
                 if (ph < 0) ph += twopi;
 
                 //fade out i fade in zbog krcanja
-                if(i < 60) {
+                if(i < 80) {
                     pom = samples[i] * i;
-                    samples[i] = (short)(pom / 60);
+                    samples[i] = (short)(pom / 80.0);
                 }
-                if(i > (2*buffsize - 60)) {
+                if(i > (2*buffsize - 80)) {
                     pom = samples[i] * (2*buffsize-i);
-                    samples[i] = (short)(pom / 60);
+                    samples[i] = (short)(pom / 80.0);
                 }
 
                 //switch to second bass note
@@ -231,148 +231,186 @@ class MusicPlayer implements Runnable {
                     phaseStepSlideOct = phaseStepOct;
                 }
 
+                /*if(samples[i]<0){
+                    samples[i] -= 35;
+                } else {
+                    samples[i] += 35;
+                }*/
+
+
+
 
 //BASS octave
-                index = (int) (phaseFactor * phOct);//speed up sin calculating
-                if (sinArray[index] == 0.0d) {
-                    sinArray[index] = Math.sin(phOct);
-                }
-                samplesOct[i] = (short) (amp/55 * (
-                        (sinArray[index] > 0) ? 1 : -1
-                                                        )* (buffsize*2-i) / buffsize  + amp/55/2);
+                /*if(false) {
+                    index = (int) (phaseFactor * phOct);//speed up sin calculating
+                    if (sinArray[index] == 0.0d) {
+                        sinArray[index] = Math.sin(phOct);
+                    }
+                    samplesOct[i] = (short) (amp / 55 * (
+                            (sinArray[index] > 0) ? 1 : -1
+                    ) * (buffsize * 2 - i) / buffsize + amp / 55 / 2);
 
-                if(i<buffsize) {//first bass note
-                    phOct += (phaseStepOct - phaseStepSlideOct)*((double)i/(double)buffsize) + phaseStepSlideOct;
-                } else {//second bass note
-                    phOct += phaseStepOct;
-                }
+                    if (i < buffsize) {//first bass note
+                        phOct += (phaseStepOct - phaseStepSlideOct) * ((double) i / (double) buffsize) + phaseStepSlideOct;
+                    } else {//second bass note
+                        phOct += phaseStepOct;
+                    }
 
-                if (phOct > twopi) phOct -= twopi;
-                if (phOct < 0) phOct += twopi;
+                    if (phOct > twopi) phOct -= twopi;
+                    if (phOct < 0) phOct += twopi;
 
-                //fade out i fade in zbog krcanja
-                if(i < 60) {
-                    pom = samplesOct[i] * i;
-                    samplesOct[i] = (short)(pom / 60);
-                }
-                if(i > (2*buffsize - 60)) {
-                    pom = samplesOct[i] * (2*buffsize-i);
-                    samplesOct[i] = (short)(pom / 60);
-                }
+                    //fade out i fade in zbog krcanja
+                    if (i < 60) {
+                        pom = samplesOct[i] * i;
+                        samplesOct[i] = (short) (pom / 60);
+                    }
+                    if (i > (2 * buffsize - 60)) {
+                        pom = samplesOct[i] * (2 * buffsize - i);
+                        samplesOct[i] = (short) (pom / 60);
+                    }
 
-                samplesBassBase[i] = samples[i];
-                samples[i] += samplesOct[i];
+                    samplesBassBase[i] = samples[i];
+                    samples[i] += samplesOct[i];
+                }*/
 
 
 //CHORDS
-
-
-                frBassCh = new Note(major?
-                        bassGenerator.getKey()+3-12:
-                        bassGenerator.getKey()-12).getFrequency();
-                fr2 = new Note(key1).getFrequency();
-                fr3 = new Note(key2).getFrequency();
-                fr4 = new Note(key3).getFrequency();
+                /*frBassCh = indexToFrequency(major ?
+                        bassGenerator.getKey() + 3 - 12 :
+                        bassGenerator.getKey() - 12
+                );
 
                 //bass part of the chord
                 index = (int) (phaseFactor * phBassCh);
                 if (sinArray[index] == 0.0d) {
                     sinArray[index] = Math.sin(phBassCh);
                 }
-                samplesChordsBass1[i] = (short) ( chordAmp * sinArray[index] );
+                samplesChordsBass1[i] = (short) (chordAmp * sinArray[index]);
                 phBassCh += twopi * frBassCh / sr;
-                if(phBassCh > twopi) phBassCh -= twopi;
+                if (phBassCh > twopi) phBassCh -= twopi;*/
 
 
-                index = (int) (phaseFactor * phBassCh2);
-                if (sinArray[index] == 0.0d) {
-                    sinArray[index] = Math.sin(phBassCh2);
-                }
-                samplesChordsBass1[i] += (short) ( chordAmp / 3 * sinArray[index] );
-                phBassCh2 += twopi * frBassCh * 1.5001 / sr;
-                if(phBassCh2 > twopi) phBassCh2 -= twopi;
 
-                if(samplesChordsBass1[i] > 0){
-                    samplesChordsBass1[i] = (short) (230);
-                } else {
-                    samplesChordsBass1[i] = (short) (-230);
-
-                }
-                //System.out.println("GETKEYYYYYYY::  " + bassGenerator.getKey());
+                if(true) {
 
 
-                //first tone in a chord
-                index = (int) (phaseFactor * ph2);
-                if (sinArray[index] == 0.0d) {
-                    sinArray[index] = Math.sin(ph2);
-                }
-                samplesChords1[i] = (short) ( chordAmp * sinArray[index]);
-                ph2 += twopi * fr2 / sr;
-                if(ph2 > twopi) ph2 -= twopi;
+                    fr2 = indexToFrequency(key1);
+                    fr3 = indexToFrequency(key2);
+                    fr4 = indexToFrequency(key3);
 
-                //second tone in a chord
-                index = (int) (phaseFactor * ph3);
-                if (sinArray[index] == 0.0d) {
-                    sinArray[index] = Math.sin(ph3);
-                }
 
-                samplesChords2[i] = (short) ( chordAmp * sinArray[index]);
 
-                ph3 += twopi * fr3 / sr;
-                if(ph3 > twopi) ph3 -= twopi;
+/*
+                    index = (int) (phaseFactor * phBassCh2);
+                    if (sinArray[index] == 0.0d) {
+                        sinArray[index] = Math.sin(phBassCh2);
+                    }
+                    samplesChordsBass1[i] += (short) (chordAmp * sinArray[index]);
+                    phBassCh2 += twopi * frBassCh * 1.5001 / sr;
+                    if (phBassCh2 > twopi) phBassCh2 -= twopi;
 
-                //third note in a chord
-                index = (int) (phaseFactor * ph4);
-                if (sinArray[index] == 0.0d) {
-                    sinArray[index] = Math.sin(ph4);
-                }
+                    if (samplesChordsBass1[i] > 0) {
+                        samplesChordsBass1[i] = (short) (230);
+                    } else {
+                        samplesChordsBass1[i] = (short) (-230);
 
-                samplesChords3[i] = (short) ( chordAmp * sinArray[index]);
-                ph4 += twopi * fr4 / sr;
-                if(ph4 > twopi) ph4 -= twopi;
+                    }*/
+                    //System.out.println("GETKEYYYYYYY::  " + bassGenerator.getKey());
 
-                //long fading out
-                if (chordAmp>10) {
-                    if ((i%70)==0)
-                        chordAmp*= 0.99;
 
-                } else chordAmp = 0;
+                    //first tone in a chord
+                    index = (int) (phaseFactor * ph2);
+                    if (sinArray[index] == 0.0d) {
+                        sinArray[index] = Math.sin(ph2);
+                    }
+                    samplesChords1[i] = (short) (chordAmp * sinArray[index]);
+                    ph2 += twopi * fr2 / sr;
+                    if (ph2 > twopi) ph2 -= twopi;
 
-                //fade in
-                if((i < 100) && (n.isKeyChange() || endSong)) {
-                    pom = samplesChords1[i] * i;
-                    samplesChords1[i] = (short)(pom / 100);
-                }
-                //second tone is moved later a bit
-                if((i < 200) && (n.isKeyChange() || endSong)) {
-                    pom = samplesChords2[i] * (i-100);
-                    if (i>100)
-                        samplesChords2[i] = (short)(pom / 100);
-                    else
+                    //second tone in a chord
+                    index = (int) (phaseFactor * ph3);
+                    if (sinArray[index] == 0.0d) {
+                        sinArray[index] = Math.sin(ph3);
+                    }
+
+                    samplesChords2[i] = (short) (chordAmp * sinArray[index]);
+
+                    ph3 += twopi * fr3 / sr;
+                    if (ph3 > twopi) ph3 -= twopi;
+
+                    //third note in a chord
+                    index = (int) (phaseFactor * ph4);
+                    if (sinArray[index] == 0.0d) {
+                        sinArray[index] = Math.sin(ph4);
+                    }
+
+                    samplesChords3[i] = (short) (chordAmp * sinArray[index]);
+                    ph4 += twopi * fr4 / sr;
+                    if (ph4 > twopi) ph4 -= twopi;
+
+                    //long fading out
+                    if (chordAmp > 10) {
+                        if ((i % 70) == 0)
+                            chordAmp *= 0.99;
+
+                    } else chordAmp = 0;
+
+                    //fade in
+                    if ((i < 100) && (n.isKeyChange() || endSong)) {
+                        pom = samplesChords1[i] * i;
+                        samplesChords1[i] = (short) (pom / 100);
+                    }
+                    //second tone is moved later a bit
+                    if ((i < 200) && (n.isKeyChange() || endSong)) {
+                        pom = samplesChords2[i] * (i - 100);
+                        if (i > 100)
+                            samplesChords2[i] = (short) (pom / 100);
+                        else
+                            samplesChords2[i] = 0;
+                    }
+                    //third note is moved a little more
+                    if ((i < 300) && (n.isKeyChange() || endSong)) {
+                        pom = samplesChords3[i] * (i - 200);
+                        if (i > 200)
+                            samplesChords3[i] = (short) (pom / 100);
+                        else
+                            samplesChords3[i] = 0;
+                    }
+
+//DDDDDDDD
+                    /*if(i > (2*buffsize - 80)) {
+                        pom = samplesChords1[i] * (2*buffsize-i);
+                        samplesChords1[i] = (short)(pom / 80.0);
+                    }
+                    if(i > (2*buffsize - 80)) {
+                        pom = samplesChords2[i] * (2*buffsize-i);
+                        samplesChords2[i] = (short)(pom / 80.0);
+                    }
+                    if(i > (2*buffsize - 80)) {
+                        pom = samplesChords3[i] * (2*buffsize-i);
+                        samplesChords3[i] = (short)(pom / 80.0);
+                    }
+                    if(i > (2*buffsize - 80)) {
+                        pom = samplesChordsBass1[i] * (2*buffsize-i);
+                        samplesChordsBass1[i] = (short)(pom / 80.0);
+                    }*/
+
+
+
+
+                    if (endSong && n.isKeyChange()) {
+                        samplesChords1[i] = 0;
                         samplesChords2[i] = 0;
-                }
-                //third note is moved a little more
-                if((i < 300) &&(n.isKeyChange() || endSong)) {
-                    pom = samplesChords3[i] * (i-200);
-                    if (i>200)
-                        samplesChords3[i] = (short)(pom / 100);
-                    else
                         samplesChords3[i] = 0;
-                }
-
-                if(endSong && n.isKeyChange()){
-                    samplesChords1[i] = 0;
-                    samplesChords2[i] = 0;
-                    samplesChords3[i] = 0;
-                    samplesBassBase[i] *= 3;
-                }
-                if(endSong && !n.isKeyChange()){
-                    samplesChordsBass1[i] = 0;
-                    samplesBassBase[i] = 0;
-                }
+                        samplesBassBase[i] *= 3;
+                    }
+                    if (endSong && !n.isKeyChange()) {
+                        //samplesChordsBass1[i] = 0;
+                        samplesBassBase[i] = 0;
+                    }
 
 
-                if((countBars == 1) || (countBars == 2) || (countBars == 3) || (countBars == 4)){
+                    if ((countBars == 1) || (countBars == 2) || (countBars == 3) || (countBars == 4)) {
 
                 /*} else if (
                         (countBars == 5) ||
@@ -383,19 +421,25 @@ class MusicPlayer implements Runnable {
                             + samplesChordsBass1[i]
                             + samplesBassBase[i] / 3) > 0) ?
                             170 : -170;
-                */} else {
-                    samples[i] += samplesChords1[i];
-                    samples[i] += samplesChords2[i];
-                    samples[i] += samplesChords3[i];
-                    samples[i] += samplesChordsBass1[i];
+                */
+                    } else {
+                        samples[i] += samplesChords1[i];
+                        samples[i] += samplesChords2[i];
+                        samples[i] += samplesChords3[i];
+                        //samples[i] += samplesChordsBass1[i];
 
-                    samples[i] += ((samplesChords1[i]
-                            + samplesChords2[i]
-                            + samplesChords3[i]
-                            + samplesChordsBass1[i]
-                            + samplesBassBase[i] / 3) > 0) ?
-                            170 : -170;
-                }
+                        /*samples[i] += ((samplesChords1[i]
+                                + samplesChords2[i]
+                                + samplesChords3[i]
+                                + samplesChordsBass1[i]
+                                + samplesBassBase[i] / 3) > 0) ?
+                                170 : -170;*/
+                    }
+                } /*else {
+                    if (!((countBars == 1) || (countBars == 2) || (countBars == 3) || (countBars == 4))) {
+                        samples[i] += (short) (samplesChordsBass1[i] * 2.5);
+                    }
+                }*/
 
 
 //SOLO
@@ -433,12 +477,25 @@ class MusicPlayer implements Runnable {
                 if (sinArray[index] == 0.0d) {
                     sinArray[index] = Math.sin(phSolo);
                 }
-                samplesSolo[i] = (short) ( s.getVolume() * (
-                        (sinArray[index] > 0.3) ? 0.5 : sinArray[index]
-                        //sinArray[index]
+                samplesSolo[i] = (short) ( s.getVolume() * (/*
+                        (sinArray[index] > 0.3) ? 0.5 : sinArray[index]*/
+                        sinArray[index]
                 ));
                 phSolo += twopi * soloFr / sr * soloFrBendFactor;
                 if(phSolo > twopi) phSolo -= twopi;
+
+
+//DDDDD
+                /*if(i < 80) {
+                    pom = samplesSolo[i] * i;
+                    samplesSolo[i] = (short)(pom / 80.0);
+                }
+                if(i > (2*buffsize - 80)) {
+                    pom = samplesSolo[i] * (2*buffsize-i);
+                    samplesSolo[i] = (short)(pom / 80.0);
+                }*/
+
+                samplesSolo[i] *= 0.7;
 
                 if(endSong){
                     samplesSolo[i] *= 0.8;
@@ -469,8 +526,8 @@ class MusicPlayer implements Runnable {
 
             long start55  = System.currentTimeMillis();
 
-            if (! firstTime) {
-                while (System.currentTimeMillis() < (noteEndTime - 6)) {
+            if (/*!firstTime*/ false) {
+                while (System.currentTimeMillis() < (noteEndTime +200)) {
                     LockSupport.parkNanos(20_000_000);
                 /*try {
                     Thread.sleep(2);
@@ -517,6 +574,12 @@ class MusicPlayer implements Runnable {
 
     public void getMeasure(int measure){
         bassGenerator.getMeasure();
+    }
+
+    private double indexToFrequency(int x) {
+        if (x == 1) return 32.7;
+        if (x > 12) return (2 * indexToFrequency(x-12));
+        return 1.059463094359 * indexToFrequency(x-1);
     }
 
 }
