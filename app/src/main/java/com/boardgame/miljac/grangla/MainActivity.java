@@ -10,6 +10,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.DisplayMetrics;
 import android.view.MotionEvent;
 import android.view.TextureView;
 import android.view.View;
@@ -48,6 +49,9 @@ public class MainActivity extends AppCompatActivity {
         itemZvijezda.setData("ZVIJEZDA", "U tunelu usred mraka", R.drawable.pin43);
 
         levelSeekBar = (SeekBar)findViewById(R.id.levelSeekBar);
+        levelSeekBar.setThumbOffset(convertDipToPixels(8f));
+
+
         levelSeekBar.setProgress(20);
         levelTextView = (TextView) findViewById(R.id.level_text);
         levelSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
@@ -352,5 +356,12 @@ public class MainActivity extends AppCompatActivity {
                             | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
         }
 
+    }
+
+    private int convertDipToPixels(float dip) {
+        DisplayMetrics metrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(metrics);
+        float density = metrics.density;
+        return (int)(dip * density);
     }
 }

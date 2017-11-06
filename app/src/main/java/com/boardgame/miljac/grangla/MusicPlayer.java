@@ -147,7 +147,7 @@ class MusicPlayer implements Runnable {
             }
 
             amp = n.getVolume();
-            if (n.isKeyChange()) chordAmp = 1100;
+            if (n.isKeyChange()) chordAmp = 1350;
             //System.out.println(n.isKeyChange());
 
             //frequency calculations
@@ -191,7 +191,7 @@ class MusicPlayer implements Runnable {
             soloFr = s.getFrequency();
 
             rnd = rand.nextDouble();
-            soloTimeFrameDeviation = (int)(rnd*450) - 225;
+            soloTimeFrameDeviation = s.getSoloTimeFrameDeviation();
 
             //sample generation
             for (int i = 0; i < buffsize*2; i++) {
@@ -207,6 +207,14 @@ class MusicPlayer implements Runnable {
                 } else {//second bass note
                     ph += phaseStep;
                 }
+
+                if(samples[i]<0){
+                    samples[i] -= 35 * ((buffsize*2-i) / buffsize) * ((buffsize*2-i) / buffsize) * ((buffsize*2-i) / buffsize);
+                } else {
+                    samples[i] += 35 * ((buffsize*2-i) / buffsize) * ((buffsize*2-i) / buffsize) * ((buffsize*2-i) / buffsize);
+                }
+
+
 
                 if (ph > twopi) ph -= twopi;
                 if (ph < 0) ph += twopi;
@@ -231,11 +239,7 @@ class MusicPlayer implements Runnable {
                     phaseStepSlideOct = phaseStepOct;
                 }
 
-                /*if(samples[i]<0){
-                    samples[i] -= 35;
-                } else {
-                    samples[i] += 35;
-                }*/
+
 
 
 
@@ -498,7 +502,7 @@ class MusicPlayer implements Runnable {
                 samplesSolo[i] *= 0.7;
 
                 if(endSong){
-                    samplesSolo[i] *= 0.8;
+                    samplesSolo[i] *= 0.7;
                 }
 
                 if(!((countBars == 1) ||
@@ -508,7 +512,7 @@ class MusicPlayer implements Runnable {
                 }
 
 
-                samples[i] *= 2;
+                samples[i] *= 2.2;
 
 
                 if (mute) {

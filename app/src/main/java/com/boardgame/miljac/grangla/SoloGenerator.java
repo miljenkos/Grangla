@@ -42,7 +42,7 @@ public class SoloGenerator {
     public void setKey(int key){currentKey = key;}
 
     private Note[] generateSolo(){
-        int length = 14 + (int)(rand.nextDouble() * 11);
+        int length = 12 + (int)(rand.nextDouble() * 10);
         Note[] solo = new Note[length];
 
         int up = (int)(rand.nextDouble() * 3) + 1;
@@ -92,7 +92,7 @@ public class SoloGenerator {
     }
 
     private Note[] generateSolo2(){
-        int length = 5 + (int)(rand.nextDouble() * 10);
+        int length = 5 + (int)(rand.nextDouble() * 9);
         Note[] solo = new Note[length];
 
         int up = (int)(rand.nextDouble() * 3) + 1;
@@ -170,6 +170,7 @@ public class SoloGenerator {
                 a.setVolume(lastNote.getVolume()/2);
                 a.setSoloFrBendFr(lastNote.getSoloFrBendFr());
                 a.setSoloFrBendFactor(lastNote.getSoloFrBendFactor());
+                a.setSoloTimeFrameDeviation(lastNote.getSoloTimeFrameDeviation());
 
                 lastNote.setVolume(lastNote.getVolume());
                 return a;
@@ -190,6 +191,7 @@ public class SoloGenerator {
         nextNote.setVolume(currentSolo[soloIndex].getVolume());
         nextNote.setSoloFrBendFr(currentSolo[soloIndex].getSoloFrBendFr());
         nextNote.setSoloFrBendFactor(currentSolo[soloIndex].getSoloFrBendFactor());
+        nextNote.setSoloTimeFrameDeviation(currentSolo[soloIndex].getSoloTimeFrameDeviation());
 
         if (currentSolo[soloIndex].getIndex() > 0){
             for (int x=0; x<currentSolo[soloIndex].getIndex(); x++){
@@ -210,6 +212,7 @@ public class SoloGenerator {
         lastNote.setVolume(nextNote.getVolume());
         lastNote.setSoloFrBendFr(nextNote.getSoloFrBendFr());
         lastNote.setSoloFrBendFactor(nextNote.getSoloFrBendFactor());
+        lastNote.setSoloTimeFrameDeviation(nextNote.getSoloTimeFrameDeviation());
 
         return nextNote;
     }

@@ -119,11 +119,15 @@
         android:id="@+id/levelSeekBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="15dp"
+        android:layout_marginTop="0dp"
         android:max="100"
         android:layout_below="@id/level"
         android:paddingRight="@dimen/activity_horizontal_margin"
         android:layout_marginRight="@dimen/activity_horizontal_margin"
+        android:progressBackgroundTint="#FFFFFF"
+
+        android:paddingTop="15dp"
+        android:paddingBottom="15dp"
         />
 
 
@@ -134,7 +138,7 @@
         android:layout_height="wrap_content"
         android:text="@string/button_start"
         android:onClick="sendMessage"
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="25dp"
         android:layout_below="@id/levelSeekBar"/>
 
 </RelativeLayout>

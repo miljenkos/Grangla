@@ -31,16 +31,29 @@ public class Note {
 
     double soloFrBendFr;
 
+    public int getSoloTimeFrameDeviation() {
+        return soloTimeFrameDeviation;
+    }
+
+    public void setSoloTimeFrameDeviation(int soloTimeFrameDeviation) {
+        this.soloTimeFrameDeviation = soloTimeFrameDeviation;
+    }
+
+    int soloTimeFrameDeviation;
+
     public Note(int i){
 
         this.noteIndex = i;
         this.relativeIndex = i;
 
         rnd = rand.nextDouble();
-        this.soloFrBendFactor = (((18.0/17.0) - 1.0) / 14) * rnd*rnd*rnd*1.9;
+        this.soloFrBendFactor = (((18.0/17.0) - 1.0) / 14) * rnd*rnd*rnd*2.8;
+
+        this.soloFrBendFr = 0.4 + rnd*rnd*rnd*11;
 
         rnd = rand.nextDouble();
-        this.soloFrBendFr = 0.5 + rnd*rnd*30;
+        double rnd2 = rand.nextDouble();
+        this.soloTimeFrameDeviation = (int)(((rnd*900) - 450)*rnd2*1.5);
 
     }
 
