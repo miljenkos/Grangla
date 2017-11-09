@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "764608851890",
+    "firebase_url": "https://grangla-b6b26.firebaseio.com",
+    "project_id": "grangla-b6b26",
+    "storage_bucket": "grangla-b6b26.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:764608851890:android:126b74c1029fb81c",
+        "android_client_info": {
+          "package_name": "com.boardgame.miljac.grangla"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "764608851890-hs9gqgnjlfo82r2mddf9o94uv6sjh3ei.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.boardgame.miljac.grangla",
+            "certificate_hash": "2bac03d5884bc2425506f5481246a909895af32c"
+          }
+        },
+        {
+          "client_id": "764608851890-qpj2f00bm32n3q4fpke4ti21ea0qsk16.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAfle61xO3aK6ZlUhuuUWcT44etPA-Arjg"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "764608851890-qpj2f00bm32n3q4fpke4ti21ea0qsk16.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

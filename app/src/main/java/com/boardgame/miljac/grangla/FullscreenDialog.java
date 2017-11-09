@@ -2,14 +2,9 @@ package com.boardgame.miljac.grangla;
 
 import android.app.Dialog;
 import android.content.Context;
-import android.os.Build;
 import android.os.Bundle;
-import android.view.View;
-import android.view.WindowManager;
 
-/**
- * Created by miljac on 18.10.2017..
- */
+
 
 public class FullscreenDialog extends Dialog {
     public FullscreenDialog(Context context, int i)

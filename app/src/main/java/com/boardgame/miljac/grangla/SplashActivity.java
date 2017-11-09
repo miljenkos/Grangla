@@ -41,6 +41,11 @@ public class SplashActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    public void multiplayer(View view) {
+        Intent intent = new Intent(this, MultiplayerActivity.class);
+        startActivity(intent);
+    }
+
     public void exit(View view) {
         finish();
     }
