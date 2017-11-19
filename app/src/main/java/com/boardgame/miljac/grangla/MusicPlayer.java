@@ -169,7 +169,7 @@ class MusicPlayer implements Runnable {
 
 
             double rnd = rand.nextDouble();
-            if (rnd<0.25) {
+            if (rnd<0.28) {
                 //key1 += 10;
                 //if (key1 > (TableConfig.BASS_NOTE_UPPER_BOUNDARY + 15)) key1 -= 12;
                 key1-=2;
@@ -180,6 +180,7 @@ class MusicPlayer implements Runnable {
             }
 
             soloGenerator.setKey(key2-3);
+            soloGenerator.setMajor(major);
 
             if (n.isKeyChange()){
                 //System.out.println("KEYCHANGE");
@@ -192,6 +193,7 @@ class MusicPlayer implements Runnable {
 
             rnd = rand.nextDouble();
             soloTimeFrameDeviation = s.getSoloTimeFrameDeviation();
+
 
             //sample generation
             for (int i = 0; i < buffsize*2; i++) {
@@ -509,6 +511,8 @@ class MusicPlayer implements Runnable {
                         (countBars == 2)
                         )) {
                     samples[i] += samplesSolo[i] * 2.9;
+                } else {
+                    soloGenerator.setBeginning(false);
                 }
 
 

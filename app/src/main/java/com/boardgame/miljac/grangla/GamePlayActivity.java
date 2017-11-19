@@ -420,11 +420,13 @@ public class GamePlayActivity extends AppCompatActivity implements TableFragment
         super.onPause();
         musicPlayer.mute();
         gamePaused = true;
+        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
     }
 
     @Override
     protected void onResume(){
         super.onResume();
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
         if(musicPlayer == null){
             musicPlayer = new MusicPlayer();

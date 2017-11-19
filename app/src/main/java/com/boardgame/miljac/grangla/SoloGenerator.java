@@ -23,6 +23,18 @@ public class SoloGenerator {
     double rnd;
     boolean keyChange = false;
 
+    public void setBeginning(boolean beginning) {
+        this.beginning = beginning;
+    }
+
+    boolean beginning = true;
+
+    public void setMajor(boolean major) {
+        this.major = major;
+    }
+
+    boolean major = false;
+
 
     public void setKeyChange(boolean keyChange) {
         this.keyChange = keyChange;
@@ -42,11 +54,11 @@ public class SoloGenerator {
     public void setKey(int key){currentKey = key;}
 
     private Note[] generateSolo(){
-        int length = 12 + (int)(rand.nextDouble() * 10);
+        int length = 14 + (int)(rand.nextDouble() * 11);
         Note[] solo = new Note[length];
 
-        int up = (int)(rand.nextDouble() * 3) + 1;
-        int down = 0 - (int)(rand.nextDouble() * 3) - 1;
+        int up = (int)(rand.nextDouble() * 6) -2;
+        int down = -(int)(rand.nextDouble() * 6) +2;
 
 
         for(int x=0; x<length; x++){
@@ -92,11 +104,11 @@ public class SoloGenerator {
     }
 
     private Note[] generateSolo2(){
-        int length = 5 + (int)(rand.nextDouble() * 9);
+        int length = 5 + (int)(rand.nextDouble() * 10);
         Note[] solo = new Note[length];
 
-        int up = (int)(rand.nextDouble() * 3) + 1;
-        int down = 0 - (int)(rand.nextDouble() * 3) - 1;
+        int up = (int)(rand.nextDouble() * 6) -2;
+        int down = -(int)(rand.nextDouble() * 6) +2;
 
 
         for(int x=0; x<length; x++){
@@ -147,7 +159,6 @@ public class SoloGenerator {
         soloIndex++;
         if (soloIndex >= (currentSolo.length)){
             if(keyChange) {
-
                 soloIndex = 0;
 
                 int f = (int) (Math.ceil(3 - rand.nextDouble() * 3.7));
@@ -177,7 +188,7 @@ public class SoloGenerator {
             }
         }
 
-        keyChange = false;
+
 
         for(int x=0; x<solo1.length; x++){
             //System.out.print(solo1[x] + " ");
@@ -203,6 +214,24 @@ public class SoloGenerator {
             }
         }
 
+        if  ((soloIndex == 0) || beginning){
+            if(!major) {
+                nextNote.setIndex(currentKey);
+            } else {
+                nextNote.setIndex(currentKey+3);
+            }
+
+            if(!beginning) {
+                if ((lastNote.getIndex() - nextNote.getIndex()) > 6) {
+                    nextNote.setIndex(nextNote.getIndex() + 12);
+                }
+                if ((lastNote.getIndex() - nextNote.getIndex()) > 6) {
+                    nextNote.setIndex(nextNote.getIndex() + 12);
+                }
+            }
+        }
+
+
         if (nextNote.getIndex() > TableConfig.SOLO_NOTE_UPPER_BOUNDARY)
             nextNote.setIndex(nextNote.getIndex()-12);
         if (nextNote.getIndex() < TableConfig.SOLO_NOTE_LOWER_BOUNDARY)
@@ -213,6 +242,8 @@ public class SoloGenerator {
         lastNote.setSoloFrBendFr(nextNote.getSoloFrBendFr());
         lastNote.setSoloFrBendFactor(nextNote.getSoloFrBendFactor());
         lastNote.setSoloTimeFrameDeviation(nextNote.getSoloTimeFrameDeviation());
+
+        keyChange = false;
 
         return nextNote;
     }

@@ -109,7 +109,7 @@
             android:layout_height="wrap_content"
             android:background="#00000000"
             android:text="@string/button_multiplayer"
-            android:textColor="#D9D9D9"
+            android:textColor="#00D9D9D9"
             android:textStyle="bold"
             android:onClick="multiplayer"
             android:textSize="30sp"
