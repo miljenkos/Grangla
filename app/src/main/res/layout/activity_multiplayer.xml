@@ -22,9 +22,9 @@
         <TextView style="@style/GameTitle" />
         <TextView style="@style/GameBlurb" />
 
-        <!--Button android:id="@+id/button_single_player"
+        <Button android:id="@+id/button_single_player"
             style="@style/MainScreenButton"
-            android:text="@string/single_player" /-->
+            android:text="@string/single_player" />
         <com.google.android.gms.common.SignInButton android:id="@+id/button_sign_in"
             style="@style/SignInButton" />
     </LinearLayout>
@@ -32,15 +32,15 @@
     <!-- MAIN SCREEN -->
     <LinearLayout android:id="@+id/screen_main" style="@style/LLScreen">
         <TextView style="@style/GameTitle" />
-        <!--Button android:id="@+id/button_single_player_2"
+        <Button android:id="@+id/button_single_player_2"
             style="@style/MainScreenButton"
             android:text="@string/single_player" />
         <TextView style="@style/MainScreenButtonBlurb"
-            android:text="@string/single_player_explanation" /-->
+            android:text="@string/single_player_explanation" />
         <Button android:id="@+id/button_quick_game"
             style="@style/MainScreenButton"
             android:text="@string/quick_game" />
-        <!--TextView style="@style/MainScreenButtonBlurb"
+        <TextView style="@style/MainScreenButtonBlurb"
             android:text="@string/quick_game_explanation" />
         <Button android:id="@+id/button_invite_players"
             style="@style/MainScreenButton"
@@ -51,7 +51,7 @@
             style="@style/MainScreenButton"
             android:text="@string/see_invitations" />
         <TextView style="@style/MainScreenButtonBlurb"
-            android:text="@string/see_invitations_explanation" /-->
+            android:text="@string/see_invitations_explanation" />
         <Button android:id="@+id/button_sign_out"
             style="@style/SignOutButton"
             android:text="@string/sign_out" />
@@ -69,6 +69,93 @@
     <LinearLayout android:id="@+id/screen_wait" style="@style/LLScreen">
         <TextView style="@style/Blurb" android:text="@string/please_wait" />
     </LinearLayout>
+
+
+    <RelativeLayout android:id="@+id/screen_game2" style="@style/LLScreen"
+        android:scaleType="centerCrop"
+        android:background="@drawable/background">
+
+        <fragment
+            android:id="@+id/Table"
+            android:name="com.boardgame.miljac.grangla.TableFragment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="4dp"
+            android:gravity="center_horizontal"
+            />
+
+        <fragment
+            android:id="@+id/Result"
+            android:name="com.boardgame.miljac.grangla.ResultFragment"
+            android:layout_width="match_parent"
+            android:layout_height="8dp"
+            android:layout_marginTop="5dp"
+            android:layout_below="@id/Table" />
+
+        <LinearLayout
+            android:layout_height="match_parent"
+            android:layout_width="match_parent"
+            android:orientation="horizontal"
+            android:layout_below="@+id/Result">
+
+
+            <fragment
+                android:id="@+id/CircleTime"
+                android:name="com.boardgame.miljac.grangla.CircleTimeFragment"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="2"/>
+
+            <LinearLayout
+                android:layout_height="match_parent"
+                android:layout_width="match_parent"
+
+                android:background="@null"
+                android:orientation="vertical"
+                android:layout_weight="2">
+
+                <ToggleButton
+                    android:id="@+id/toggle_sound_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+
+                    android:layout_margin="0dp"
+
+                    android:drawableBottom="@drawable/toggle_sound"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    android:background="@null"
+
+                    android:textOn="@null"
+                    android:textOff="@null"
+                    android:textSize="0dp"
+                    />
+
+                <ImageButton
+                    android:id="@+id/discard_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="0dp"
+
+                    android:src="@drawable/exit"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    android:background="@null"/>
+
+            </LinearLayout>
+
+            <fragment
+                android:id="@+id/CrossTime"
+                android:name="com.boardgame.miljac.grangla.CrossTimeFragment"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="2"
+                />
+        </LinearLayout>
+    </RelativeLayout>
+
+
+
 
     <!-- GAMEPLAY SCREEN -->
     <LinearLayout android:id="@+id/screen_game" style="@style/LLScreen">

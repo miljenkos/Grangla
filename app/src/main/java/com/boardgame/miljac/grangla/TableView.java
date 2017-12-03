@@ -121,8 +121,8 @@ public class TableView extends ViewGroup  {
 
 
     public void  changePinColor(int x, int y, int color, float alpha) {
-        int row = getRow(y);
-        int col = getColumn(x);
+        /*int row = getRow(y);
+        int col = getColumn(x);*/
 
         FieldImageView pinImg = (FieldImageView) getChildAt(x + (y*numCol));
 
