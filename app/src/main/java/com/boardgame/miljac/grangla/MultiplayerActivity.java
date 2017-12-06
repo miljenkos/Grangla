@@ -66,6 +66,9 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 public class MultiplayerActivity extends AppCompatActivity implements
         View.OnClickListener, TableFragment.OnFieldSelectedListener {
 
+
+    private boolean isServer = true;
+
     /*
      * API INTEGRATION SECTION. This section contains the code that integrates
      * the game with the Google Play game services API.
@@ -514,6 +517,7 @@ public class MultiplayerActivity extends AppCompatActivity implements
                 //System.out.println(System.currentTimeMillis());
                 runOnUiThread(uIPutThread);
 
+                sendTableInfo();
             }
         }
     }
@@ -1203,6 +1207,24 @@ public class MultiplayerActivity extends AppCompatActivity implements
             //get participants and my ID:
             mParticipants = room.getParticipants();
             mMyId = room.getParticipantId(mPlayerId);
+            Log.d(TAG, "MY ID" + mMyId);
+
+            for (Participant p : mParticipants) {
+
+                Log.d(TAG, " ID" + p.getParticipantId());
+                if ((p.getParticipantId().compareTo(mMyId)) > 0) {
+                    isServer = false;
+                }
+
+            }
+
+            if(isServer) {
+                Log.d(TAG, "JESAM SERVER");
+            } else {
+                Log.d(TAG, "NISAM SERVER");
+            }
+
+            table.setServer(isServer);
 
             // save room ID if its not initialized in onRoomCreated() so we can leave cleanly before the game starts.
             if (mRoomId == null) {
@@ -1390,6 +1412,22 @@ public class MultiplayerActivity extends AppCompatActivity implements
 
 
         this.table = new Table(level);
+        for (Participant p : mParticipants) {
+
+            Log.d(TAG, " ID" + p.getParticipantId());
+            if ((p.getParticipantId().compareTo(mMyId)) > 0) {
+                isServer = false;
+            }
+
+        }
+
+        if(isServer) {
+            Log.d(TAG, "JESAM SERVER");
+        } else {
+            Log.d(TAG, "NISAM SERVER");
+        }
+
+        table.setServer(isServer);
 
 
         if(player1Image == R.drawable.pin39) {
@@ -1591,7 +1629,11 @@ public class MultiplayerActivity extends AppCompatActivity implements
             String sender = realTimeMessage.getSenderParticipantId();
             Log.d(TAG, "Message received: " + (char) buf[0] + "/" + (int) buf[1]);
 
-            if (buf[0] == 'F' || buf[0] == 'U') {
+            synchronized (table) {
+                table.applyMsgBuff(buf);
+            }
+
+            /*if (buf[0] == 'F' || buf[0] == 'U') {
                 // score update.
                 int existingScore = mParticipantScore.containsKey(sender) ?
                         mParticipantScore.get(sender) : 0;
@@ -1615,9 +1657,33 @@ public class MultiplayerActivity extends AppCompatActivity implements
                 if ((char) buf[0] == 'F') {
                     mFinishedParticipants.add(realTimeMessage.getSenderParticipantId());
                 }
-            }
+            }*/
         }
     };
+
+
+    void sendTableInfo(){
+        byte[] msgBuff = new byte[64];
+
+        synchronized (table) {
+            msgBuff = table.getMsgBuff();
+        }
+
+            // Send to every other participant.
+            for (Participant p : mParticipants) {
+                if (p.getParticipantId().equals(mMyId)) {
+                    continue;
+                }
+                if (p.getStatus() != Participant.STATUS_JOINED) {
+                    continue;
+                }
+                // it's an interim score notification, so we can use unreliable
+                mRealTimeMultiplayerClient.sendUnreliableMessage(msgBuff, mRoomId,
+                        p.getParticipantId());
+            }
+
+    }
+
 
     // Broadcast my score to everybody else.
     void broadcastScore(boolean finalScore) {
@@ -1640,7 +1706,7 @@ public class MultiplayerActivity extends AppCompatActivity implements
             if (p.getStatus() != Participant.STATUS_JOINED) {
                 continue;
             }
-            if (finalScore) {
+            /*if (finalScore) {
                 // final score notification must be sent via reliable message
                 mRealTimeMultiplayerClient.sendReliableMessage(mMsgBuf,
                         mRoomId, p.getParticipantId(), new RealTimeMultiplayerClient.ReliableMessageSentCallback() {
@@ -1662,7 +1728,7 @@ public class MultiplayerActivity extends AppCompatActivity implements
                 // it's an interim score notification, so we can use unreliable
                 mRealTimeMultiplayerClient.sendUnreliableMessage(mMsgBuf, mRoomId,
                         p.getParticipantId());
-            }
+            }*/
         }
     }
 
