@@ -5,8 +5,6 @@ package com.boardgame.miljac.grangla;
  */
 
 //import java.util.List;
-import android.util.Log;
-
 import java.util.Random;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.concurrent.locks.Lock;
@@ -56,32 +54,6 @@ public class Table // igraca tabla
 
     Random rn = new Random();
 
-    private boolean isServer = true;
-
-    public boolean isServer() {
-        return isServer;
-    }
-
-    public void setServer(boolean server) {
-        isServer = server;
-        if (!isServer) return;
-
-        Boolean rockPut;
-        for (int i = 0; i < (TableConfig.NO_OF_ROCKS); i++) {
-            rockPut = false;
-            while (!rockPut) {
-                int x = (int) (rn.nextDouble() * TableConfig.TABLE_SIZE);
-                int y = (int) (rn.nextDouble() * TableConfig.TABLE_SIZE);
-                if (get(x, y) == State.empty) {
-                    put(State.rock, x, y);
-                    rockPut = true;
-                }
-            }
-
-        }
-    }
-
-
 
     /**
      * The default constructor. Initializes an empty board.
@@ -105,10 +77,10 @@ public class Table // igraca tabla
             }
         }
 
-        /*Boolean rockPut;
-        for (int i = 0; i < (TableConfig.NO_OF_ROCKS); i++) {
+        Boolean rockPut;
+        for (int i=0; i<(TableConfig.NO_OF_ROCKS); i++){
             rockPut = false;
-            while (!rockPut) {
+            while(!rockPut) {
                 int x = (int) (rn.nextDouble() * TableConfig.TABLE_SIZE);
                 int y = (int) (rn.nextDouble() * TableConfig.TABLE_SIZE);
                 if (get(x, y) == State.empty) {
@@ -117,8 +89,7 @@ public class Table // igraca tabla
                 }
             }
 
-        }*/
-
+        }
     }
 
     /**
@@ -489,10 +460,6 @@ public class Table // igraca tabla
     }
 
     void moveRock(){
-        if  (!isServer) {
-            return;
-        }
-
         int rockNo = (int) (Math.ceil(rn.nextDouble() * TableConfig.NO_OF_ROCKS) -1);
         int c = 0;
         for (int i=0; i<TableConfig.TABLE_SIZE; i++) {
@@ -609,92 +576,6 @@ public class Table // igraca tabla
     public void setLevel(int l){
         this.level = l;
         //System.out.println("Stavio sam nivo: " + l + "     " + this.level);
-    }
-
-
-    public byte[] getMsgBuff() {
-        byte[] msgBuff = new byte[64];
-        int c = 0;
-        for (int i = 0; i < TableConfig.TABLE_SIZE; i++) {
-            for (int j = 0; j < TableConfig.TABLE_SIZE; j++) {
-                if (this.get(i, j) == State.rock) {
-                    msgBuff[c] = 5;
-                } else if (this.get(i, j) == State.empty) {
-                    msgBuff[c] = 0;
-                } else if (this.get(i, j) == State.circle) {
-                    msgBuff[c] = 1;
-                } else if (this.get(i, j) == State.cross) {
-                    msgBuff[c] = 2;
-                }
-                //Log.d("ButtonClickerrrrr", "getMsgBuff: " + msgBuff[c]);
-                c++;
-            }
-        }
-        Log.d("ButtonClickerrrrr", "getMsgBuff:   " + new String(msgBuff));
-        return msgBuff;
-    }
-
-    public void applyMsgBuff(byte[] msgBuff) {
-        if(isServer) {
-            Log.d("ButtonClickerrrrr", "JESAM SERVER");
-        } else {
-            Log.d("ButtonClickerrrrr", "NISAM SERVER");
-        }
-
-
-        int c = 0;
-        for (int i = 0; i < TableConfig.TABLE_SIZE; i++) {
-            for (int j = 0; j < TableConfig.TABLE_SIZE; j++) {
-
-                if ((msgBuff[c] == 5) && (!isServer)) { //server postavlja rockove
-                    this.put(State.rock, i, j);
-                }
-
-                if (this.get(i, j) == State.rock) {//na rock on smije stavit svog ili ga ispraznit samo ako je server
-                    //msgBuff[c] = 5;
-                    if (!isServer) {
-                        if(msgBuff[c] == 1) {
-                            this.put(State.cross, i, j);
-                        }
-                        if(msgBuff[c] == 0) {
-                            this.put(State.empty, i, j);
-                        }
-                    }
-
-
-                } else if (this.get(i, j) == State.empty) {//na prazno polje on smije stavit svoga
-                    //msgBuff[c] = 0;
-                    if(msgBuff[c] == 1) {
-                        this.put(State.cross, i, j);
-                    }
-
-
-                } else if (this.get(i, j) == State.circle) {//na zauzeto polje stavlja - konflikt!
-                    //msgBuff[c] = 1;
-                    if(( ((i+j) % 2) == 0) ^ isServer) {//ko ima prednost na ovom polju?
-                        if (msgBuff[c] == 1) {
-                            this.put(State.cross, i, j);
-                        }
-                    }
-
-
-
-                } else if (this.get(i, j) == State.cross) {//on smije micat svoje
-                    //msgBuff[c] = 2;
-                    if(msgBuff[c] == 0) {
-                        this.put(State.empty, i, j);
-                    }
-
-
-                }
-
-
-                //Log.d("ButtonClickerrrrr", "applyMsgBuff: " + msgBuff[c]);
-                c++;
-            }
-        }
-        Log.d("ButtonClickerrrrr", "applyMsgBuff: " + new String(msgBuff));
-
     }
 
 }

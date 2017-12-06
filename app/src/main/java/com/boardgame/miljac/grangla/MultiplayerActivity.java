@@ -135,7 +135,7 @@ public class MultiplayerActivity extends AppCompatActivity implements
     //private MultiplayerGamePlayActivity.OtherPlayer otherPlayer = new MultiplayerGamePlayActivity.OtherPlayer();
     private MultiplayerActivity.TableViewRefreshing tableViewRefreshing = new MultiplayerActivity.TableViewRefreshing();
     private MultiplayerActivity.UIPut uIPut = new MultiplayerActivity.UIPut();
-    private Table table = new Table(3);
+    private MultiplayerTable table = new MultiplayerTable(3);
     private TableFragment tableFragment;
     private Boolean gameDone = false;
     private Boolean gamePaused = false;
@@ -1411,7 +1411,7 @@ public class MultiplayerActivity extends AppCompatActivity implements
         player2Image = intent.getIntExtra("PLAYER2_IMG", R.drawable.pin40);
 
 
-        this.table = new Table(level);
+        this.table = new MultiplayerTable(level);
         for (Participant p : mParticipants) {
 
             Log.d(TAG, " ID" + p.getParticipantId());
