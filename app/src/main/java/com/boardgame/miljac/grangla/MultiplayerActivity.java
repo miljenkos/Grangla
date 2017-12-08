@@ -147,6 +147,8 @@ public class MultiplayerActivity extends AppCompatActivity implements
     private Coordinates lastMoveO;
     private Coordinates lastMoveX;
     private double result = 50;
+    private double myResult = 0;
+    private double hisResult = 0;
     private long waitingTimeCircle = 3000;
     private long waitingMomentCircle = 0;
     private boolean allowCircle = true;
@@ -245,13 +247,13 @@ public class MultiplayerActivity extends AppCompatActivity implements
             if (lastMoveO != null) {
                 double r = 0;
                 r = table.end2(lastMoveO.x, lastMoveO.y, lastEventTime);
-                result += r * TableConfig.RESULT_FACTOR;
+                myResult += r * TableConfig.RESULT_FACTOR;
                 if (r == 0){
                     if(movesO.size() >= TableConfig.MAX_PIECES) {
                         Coordinates c = (Coordinates) movesO.remove(TableConfig.MAX_PIECES - 1);
                         table.publicEmpty(c.x, c.y);
                         tableView.removeImediately(c.x, c.y);
-                        result -= 3 * TableConfig.RESULT_FACTOR;
+                        myResult -= 3 * TableConfig.RESULT_FACTOR;
                     }
                 } else {
                     lastEventTime = System.currentTimeMillis();
@@ -263,13 +265,13 @@ public class MultiplayerActivity extends AppCompatActivity implements
             if (lastMoveX != null) {
                 double r = 0;
                 r = table.end2(lastMoveX.x, lastMoveX.y, lastEventTime);
-                result -= r * TableConfig.RESULT_FACTOR;
+                //result -= r * TableConfig.RESULT_FACTOR;
                 if (r == 0){
                     if(movesX.size() >= TableConfig.MAX_PIECES) {
                         Coordinates c = (Coordinates) movesX.remove(TableConfig.MAX_PIECES - 1);
                         table.publicEmpty(c.x, c.y);
                         tableView.removeImediately(c.x, c.y);
-                        result += 3 * TableConfig.RESULT_FACTOR;
+                        //result += 3 * TableConfig.RESULT_FACTOR;
                     } else {
                         lastEventTime = System.currentTimeMillis();
                     }
@@ -278,11 +280,13 @@ public class MultiplayerActivity extends AppCompatActivity implements
             }
 
 
+            result = 50 + myResult - hisResult;
+
 
             currentTime = System.currentTimeMillis();
 
-            if ((result<0) ||
-                    (result >100) /*||
+            if ((result <= 0) ||
+                    (result  >= 100) /*||
                     ((currentTime - gameStartTime) >= TableConfig.GAME_DURATION)*/){
 
                 gameDone = true;
@@ -1630,8 +1634,27 @@ public class MultiplayerActivity extends AppCompatActivity implements
             Log.d(TAG, "Message received: " + (char) buf[0] + "/" + (int) buf[1]);
 
             synchronized (table) {
-                table.applyMsgBuff(buf);
+                Coordinates c = table.applyMsgBuff(buf);
+                if(c != null) {
+
+                    lastMoveX = c;
+                    waitingMomentCross = System.currentTimeMillis() + waitingTimeCross;
+                    startCrossTime = true;
+                    movesX.add(0, lastMoveX);
+                }
+
+
+
+
+
+
             }
+
+
+            hisResult = buf[64] * 128 +
+                    buf[65];
+
+
 
             /*if (buf[0] == 'F' || buf[0] == 'U') {
                 // score update.
@@ -1663,24 +1686,28 @@ public class MultiplayerActivity extends AppCompatActivity implements
 
 
     void sendTableInfo(){
-        byte[] msgBuff = new byte[64];
+        byte[] msgBuff = new byte[66];
 
         synchronized (table) {
             msgBuff = table.getMsgBuff();
         }
 
-            // Send to every other participant.
-            for (Participant p : mParticipants) {
-                if (p.getParticipantId().equals(mMyId)) {
-                    continue;
-                }
-                if (p.getStatus() != Participant.STATUS_JOINED) {
-                    continue;
-                }
-                // it's an interim score notification, so we can use unreliable
-                mRealTimeMultiplayerClient.sendUnreliableMessage(msgBuff, mRoomId,
-                        p.getParticipantId());
+
+        msgBuff[64] = (byte)(((int)myResult) / 128);
+        msgBuff[65] = (byte)((int)myResult % 128);
+
+        // Send to every other participant.
+        for (Participant p : mParticipants) {
+            if (p.getParticipantId().equals(mMyId)) {
+                continue;
             }
+            if (p.getStatus() != Participant.STATUS_JOINED) {
+                continue;
+            }
+            // it's an interim score notification, so we can use unreliable
+            mRealTimeMultiplayerClient.sendUnreliableMessage(msgBuff, mRoomId,
+                    p.getParticipantId());
+        }
 
     }
 

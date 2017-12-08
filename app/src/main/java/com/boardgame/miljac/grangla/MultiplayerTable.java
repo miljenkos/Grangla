@@ -615,7 +615,7 @@ public class MultiplayerTable // igraca tabla
 
 
     public byte[] getMsgBuff() {
-        byte[] msgBuff = new byte[64];
+        byte[] msgBuff = new byte[66];
         int c = 0;
         for (int i = 0; i < TableConfig.TABLE_SIZE; i++) {
             for (int j = 0; j < TableConfig.TABLE_SIZE; j++) {
@@ -636,7 +636,7 @@ public class MultiplayerTable // igraca tabla
         return msgBuff;
     }
 
-    public void applyMsgBuff(byte[] msgBuff) {
+    public Coordinates applyMsgBuff(byte[] msgBuff) {//vraca koordinate ako je protivnik stavio svog
         if(isServer) {
             Log.d("ButtonClickerrrrr", "JESAM SERVER");
         } else {
@@ -668,6 +668,7 @@ public class MultiplayerTable // igraca tabla
                     //msgBuff[c] = 0;
                     if(msgBuff[c] == 1) {
                         this.put(State.cross, i, j);
+                        return new Coordinates(i, j);
                     }
 
 
@@ -676,6 +677,7 @@ public class MultiplayerTable // igraca tabla
                     if(( ((i+j) % 2) == 0) ^ isServer) {//ko ima prednost na ovom polju?
                         if (msgBuff[c] == 1) {
                             this.put(State.cross, i, j);
+                            return new Coordinates(i, j);
                         }
                     }
 
@@ -696,6 +698,8 @@ public class MultiplayerTable // igraca tabla
             }
         }
         Log.d("ButtonClickerrrrr", "applyMsgBuff: " + new String(msgBuff));
+
+        return null;
 
     }
 
