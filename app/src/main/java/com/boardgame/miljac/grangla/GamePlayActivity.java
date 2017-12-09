@@ -96,11 +96,11 @@ public class GamePlayActivity extends AppCompatActivity implements TableFragment
                     if (table.publicGet(i, j) == State.circle) {
                         if ((movesO.size() >= (TableConfig.MAX_PIECES-1)) &&
                                 (new Coordinates(i,j).equals(movesO.get(TableConfig.MAX_PIECES - 2)))) {
-                            tableView.changePinColor(i/* * tableFragment.pinSize + 1*/, j/* * tableFragment.pinSize + 1*/, player1Image, 0.33f);
+                            tableView.changePinColor(i/* * tableFragment.pinSize + 1*/, j/* * tableFragment.pinSize + 1*/, player1Image, 0.32f);
                         }
                         else if ((movesO.size() >= (TableConfig.MAX_PIECES-2)) &&
                                    (new Coordinates(i,j).equals(movesO.get(TableConfig.MAX_PIECES - 3)))) {
-                            tableView.changePinColor(i/* * tableFragment.pinSize + 1*/, j/* * tableFragment.pinSize + 1*/, player1Image, 0.65f);
+                            tableView.changePinColor(i/* * tableFragment.pinSize + 1*/, j/* * tableFragment.pinSize + 1*/, player1Image, 0.6f);
                         }
                         else {
                             tableView.changePinColor(i/* * tableFragment.pinSize + 1*/, j/* * tableFragment.pinSize + 1*/, player1Image, 1f);
@@ -109,11 +109,11 @@ public class GamePlayActivity extends AppCompatActivity implements TableFragment
                     if (table.publicGet(i, j) == State.cross){
                         if ((movesX.size() >= (TableConfig.MAX_PIECES-1)) &&
                                 (new Coordinates(i,j).equals(movesX.get(TableConfig.MAX_PIECES - 2)))) {
-                            tableView.changePinColor(i/* * tableFragment.pinSize + 1*/, j/* * tableFragment.pinSize + 1*/, player2Image, 0.33f);
+                            tableView.changePinColor(i/* * tableFragment.pinSize + 1*/, j/* * tableFragment.pinSize + 1*/, player2Image, 0.32f);
                         }
                         else if ((movesX.size() >= (TableConfig.MAX_PIECES-2)) &&
                                 (new Coordinates(i,j)).equals(movesX.get(TableConfig.MAX_PIECES - 3))) {
-                            tableView.changePinColor(i/* * tableFragment.pinSize + 1*/, j/* * tableFragment.pinSize + 1*/, player2Image, 0.65f);
+                            tableView.changePinColor(i/* * tableFragment.pinSize + 1*/, j/* * tableFragment.pinSize + 1*/, player2Image, 0.6f);
                         }
                         else {
                             tableView.changePinColor(i/* * tableFragment.pinSize + 1*/, j/* * tableFragment.pinSize + 1*/, player2Image, 1f);
@@ -535,13 +535,13 @@ public class GamePlayActivity extends AppCompatActivity implements TableFragment
 
 
         circleBar = (ProgressBar)findViewById(R.id.circle_time_bar);
-        circleBar.setProgress(0);
+        circleBar.setProgress(100);
         circleBar.invalidate();
         circleBar.getProgressDrawable().setColorFilter(
                 player1Color & 0xA0FFFFFF,
                 android.graphics.PorterDuff.Mode.SRC_IN);
         crossBar = (ProgressBar)findViewById(R.id.cross_time_bar);
-        crossBar.setProgress(0);
+        crossBar.setProgress(100);
         crossBar.invalidate();
         crossBar.getProgressDrawable().setColorFilter(
                 player2Color & 0xA0FFFFFF,

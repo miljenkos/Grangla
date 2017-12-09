@@ -180,7 +180,7 @@ public class MultiplayerTable // igraca tabla
      * @param j y-coordinate of a field (space)
      * @return a mark on the field with given coordinates
      */
-    private State get(int i,int j)
+    public State get(int i,int j)
     {
         /*System.out.println(i);
         System.out.println(j);*/
@@ -615,7 +615,7 @@ public class MultiplayerTable // igraca tabla
 
 
     public byte[] getMsgBuff() {
-        byte[] msgBuff = new byte[66];
+        byte[] msgBuff = new byte[TableConfig.TABLE_SIZE * TableConfig.TABLE_SIZE + 6];
         int c = 0;
         for (int i = 0; i < TableConfig.TABLE_SIZE; i++) {
             for (int j = 0; j < TableConfig.TABLE_SIZE; j++) {

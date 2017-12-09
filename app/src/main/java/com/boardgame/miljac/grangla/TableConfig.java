@@ -10,14 +10,14 @@ import android.view.animation.AnimationUtils;
 
 
 public class TableConfig {
-    public static int TABLE_SIZE = 8;
+    public static int TABLE_SIZE = 6;
     public static int MAX_WAITING_TIME = 2200;
     public static int MIN_WAITING_TIME = 750;
     public static int MAX_PIECES = 9;
     public static double RESULT_FACTOR = 1.2;
     public static int HALF_LIFE = 240000;
-    public static int NO_OF_ROCKS = 9;
-    public static int ROCK_MOVEMENT_PROBABILITY = 8000;
+    public static int NO_OF_ROCKS = 6;
+    public static int ROCK_MOVEMENT_PROBABILITY = 10000;//8000;
     public static int THINKING_TIME_MIN_LEVEL = 6400;
     public static int THINKING_TIME_MAX_LEVEL = 200;
     public static float NOTE_DURATION_FACTOR = 0.12F;

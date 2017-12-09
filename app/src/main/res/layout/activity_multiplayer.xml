@@ -15,16 +15,17 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+    android:layout_height="match_parent"
+    android:background="@drawable/background">
 
     <!-- SIGN-IN SCREEN -->
     <LinearLayout android:id="@+id/screen_sign_in" style="@style/LLScreen">
         <TextView style="@style/GameTitle" />
         <TextView style="@style/GameBlurb" />
 
-        <Button android:id="@+id/button_single_player"
+        <!--Button android:id="@+id/button_single_player"
             style="@style/MainScreenButton"
-            android:text="@string/single_player" />
+            android:text="@string/single_player" /-->
         <com.google.android.gms.common.SignInButton android:id="@+id/button_sign_in"
             style="@style/SignInButton" />
     </LinearLayout>
@@ -32,9 +33,9 @@
     <!-- MAIN SCREEN -->
     <LinearLayout android:id="@+id/screen_main" style="@style/LLScreen">
         <TextView style="@style/GameTitle" />
-        <Button android:id="@+id/button_single_player_2"
+        <!--Button android:id="@+id/button_single_player_2"
             style="@style/MainScreenButton"
-            android:text="@string/single_player" />
+            android:text="@string/single_player" /-->
         <TextView style="@style/MainScreenButtonBlurb"
             android:text="@string/single_player_explanation" />
         <Button android:id="@+id/button_quick_game"
@@ -90,11 +91,13 @@
             android:layout_width="match_parent"
             android:layout_height="8dp"
             android:layout_marginTop="5dp"
+            android:layout_marginBottom="2dp"
             android:layout_below="@id/Table" />
 
         <LinearLayout
             android:layout_height="match_parent"
             android:layout_width="match_parent"
+
             android:orientation="horizontal"
             android:layout_below="@+id/Result">
 
@@ -104,6 +107,7 @@
                 android:name="com.boardgame.miljac.grangla.CircleTimeFragment"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_margin="5dp"
                 android:layout_weight="2"/>
 
             <LinearLayout
@@ -149,6 +153,7 @@
                 android:name="com.boardgame.miljac.grangla.CrossTimeFragment"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_margin="5dp"
                 android:layout_weight="2"
                 />
         </LinearLayout>

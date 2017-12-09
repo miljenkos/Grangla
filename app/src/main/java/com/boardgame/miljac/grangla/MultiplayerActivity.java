@@ -189,6 +189,9 @@ public class MultiplayerActivity extends AppCompatActivity implements
     Thread musicPlayerThread;
     MusicPlayer musicPlayer;
 
+    private Coordinates lastXmultiplayer1;
+    private Coordinates lastXmultiplayer2;
+
 
 
 
@@ -204,24 +207,22 @@ public class MultiplayerActivity extends AppCompatActivity implements
                     if (table.publicGet(i, j) == State.circle) {
                         if ((movesO.size() >= (TableConfig.MAX_PIECES-1)) &&
                                 (new Coordinates(i,j).equals(movesO.get(TableConfig.MAX_PIECES - 2)))) {
-                            tableView.changePinColor(i/* * tableFragment.pinSize + 1*/, j/* * tableFragment.pinSize + 1*/, player1Image, 0.33f);
+                            tableView.changePinColor(i/* * tableFragment.pinSize + 1*/, j/* * tableFragment.pinSize + 1*/, player1Image, 0.32f);
                         }
                         else if ((movesO.size() >= (TableConfig.MAX_PIECES-2)) &&
                                 (new Coordinates(i,j).equals(movesO.get(TableConfig.MAX_PIECES - 3)))) {
-                            tableView.changePinColor(i/* * tableFragment.pinSize + 1*/, j/* * tableFragment.pinSize + 1*/, player1Image, 0.65f);
+                            tableView.changePinColor(i/* * tableFragment.pinSize + 1*/, j/* * tableFragment.pinSize + 1*/, player1Image, 0.6f);
                         }
                         else {
                             tableView.changePinColor(i/* * tableFragment.pinSize + 1*/, j/* * tableFragment.pinSize + 1*/, player1Image, 1f);
                         }
                     }
                     if (table.publicGet(i, j) == State.cross){
-                        if ((movesX.size() >= (TableConfig.MAX_PIECES-1)) &&
-                                (new Coordinates(i,j).equals(movesX.get(TableConfig.MAX_PIECES - 2)))) {
-                            tableView.changePinColor(i/* * tableFragment.pinSize + 1*/, j/* * tableFragment.pinSize + 1*/, player2Image, 0.33f);
+                        if (new Coordinates(i,j).equals(lastXmultiplayer1)) {
+                            tableView.changePinColor(i/* * tableFragment.pinSize + 1*/, j/* * tableFragment.pinSize + 1*/, player2Image, 0.32f);
                         }
-                        else if ((movesX.size() >= (TableConfig.MAX_PIECES-2)) &&
-                                (new Coordinates(i,j)).equals(movesX.get(TableConfig.MAX_PIECES - 3))) {
-                            tableView.changePinColor(i/* * tableFragment.pinSize + 1*/, j/* * tableFragment.pinSize + 1*/, player2Image, 0.65f);
+                        else if (new Coordinates(i,j).equals(lastXmultiplayer2)) {
+                            tableView.changePinColor(i/* * tableFragment.pinSize + 1*/, j/* * tableFragment.pinSize + 1*/, player2Image, 0.6f);
                         }
                         else {
                             tableView.changePinColor(i/* * tableFragment.pinSize + 1*/, j/* * tableFragment.pinSize + 1*/, player2Image, 1f);
@@ -658,7 +659,10 @@ public class MultiplayerActivity extends AppCompatActivity implements
         //GRANGLA
 
 
+
         switchToMainScreen();
+
+        signInSilently();
     }
 
     @Override
@@ -709,12 +713,12 @@ public class MultiplayerActivity extends AppCompatActivity implements
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.button_single_player:
+            /*case R.id.button_single_player:
             case R.id.button_single_player_2:
                 // play a single-player game
                 resetGameVars();
                 startGame(false);
-                break;
+                break;*/
             case R.id.button_sign_in:
                 // user wants to sign in
                 // Check to see the developer who's running this sample code read the instructions :-)
@@ -1482,13 +1486,13 @@ public class MultiplayerActivity extends AppCompatActivity implements
 
 
         circleBar = (ProgressBar)findViewById(R.id.circle_time_bar);
-        circleBar.setProgress(0);
+        circleBar.setProgress(100);
         circleBar.invalidate();
         circleBar.getProgressDrawable().setColorFilter(
                 player1Color & 0xA0FFFFFF,
                 android.graphics.PorterDuff.Mode.SRC_IN);
         crossBar = (ProgressBar)findViewById(R.id.cross_time_bar);
-        crossBar.setProgress(0);
+        crossBar.setProgress(100);
         crossBar.invalidate();
         crossBar.getProgressDrawable().setColorFilter(
                 player2Color & 0xA0FFFFFF,
@@ -1637,10 +1641,10 @@ public class MultiplayerActivity extends AppCompatActivity implements
                 Coordinates c = table.applyMsgBuff(buf);
                 if(c != null) {
 
-                    lastMoveX = c;
+                    //lastMoveX = c;
                     waitingMomentCross = System.currentTimeMillis() + waitingTimeCross;
                     startCrossTime = true;
-                    movesX.add(0, lastMoveX);
+                    //movesX.add(0, lastMoveX);
                 }
 
 
@@ -1651,9 +1655,13 @@ public class MultiplayerActivity extends AppCompatActivity implements
             }
 
 
-            hisResult = buf[64] * 128 +
-                    buf[65];
+            hisResult = buf[TableConfig.TABLE_SIZE * TableConfig.TABLE_SIZE] * 128 +
+                    buf[TableConfig.TABLE_SIZE * TableConfig.TABLE_SIZE + 1];
 
+            lastXmultiplayer1 = new Coordinates(buf[TableConfig.TABLE_SIZE*TableConfig.TABLE_SIZE + 2],
+                    buf[TableConfig.TABLE_SIZE*TableConfig.TABLE_SIZE + 3]);
+            lastXmultiplayer2 = new Coordinates(buf[TableConfig.TABLE_SIZE*TableConfig.TABLE_SIZE + 4],
+                    buf[TableConfig.TABLE_SIZE*TableConfig.TABLE_SIZE + 5]);
 
 
             /*if (buf[0] == 'F' || buf[0] == 'U') {
@@ -1686,15 +1694,37 @@ public class MultiplayerActivity extends AppCompatActivity implements
 
 
     void sendTableInfo(){
-        byte[] msgBuff = new byte[66];
+        byte[] msgBuff;
 
         synchronized (table) {
             msgBuff = table.getMsgBuff();
+
+
+            msgBuff[TableConfig.TABLE_SIZE * TableConfig.TABLE_SIZE] = (byte) (((int) myResult) / 128);
+            msgBuff[TableConfig.TABLE_SIZE * TableConfig.TABLE_SIZE + 1] = (byte) ((int) myResult % 128);
+
+
+            for (int i = 0; i < TableConfig.TABLE_SIZE; i++) {
+                for (int j = 0; j < TableConfig.TABLE_SIZE; j++) {
+                    if (table.publicGet(i, j) == State.circle) {
+                        if ((movesO.size() >= (TableConfig.MAX_PIECES - 1)) &&
+                                (new Coordinates(i, j).equals(movesO.get(TableConfig.MAX_PIECES - 2)))) {
+
+                            msgBuff[TableConfig.TABLE_SIZE * TableConfig.TABLE_SIZE + 2] = (byte) i;
+                            msgBuff[TableConfig.TABLE_SIZE * TableConfig.TABLE_SIZE + 3] = (byte) j;
+
+                        } else if ((movesO.size() >= (TableConfig.MAX_PIECES - 2)) &&
+                                (new Coordinates(i, j).equals(movesO.get(TableConfig.MAX_PIECES - 3)))) {
+
+                            msgBuff[TableConfig.TABLE_SIZE * TableConfig.TABLE_SIZE + 4] = (byte) i;
+                            msgBuff[TableConfig.TABLE_SIZE * TableConfig.TABLE_SIZE + 5] = (byte) j;
+
+                        }
+                    }
+                }
+            }
         }
 
-
-        msgBuff[64] = (byte)(((int)myResult) / 128);
-        msgBuff[65] = (byte)((int)myResult % 128);
 
         // Send to every other participant.
         for (Participant p : mParticipants) {
@@ -1768,8 +1798,8 @@ public class MultiplayerActivity extends AppCompatActivity implements
     final static int[] CLICKABLES = {
             R.id.button_accept_popup_invitation, R.id.button_invite_players,
             R.id.button_quick_game, R.id.button_see_invitations, R.id.button_sign_in,
-            R.id.button_sign_out, R.id.button_click_me, R.id.button_single_player,
-            R.id.button_single_player_2
+            R.id.button_sign_out, R.id.button_click_me, /*R.id.button_single_player,
+            R.id.button_single_player_2*/
     };
 
     // This array lists all the individual screens our game has.

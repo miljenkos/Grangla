@@ -49,6 +49,7 @@ public class ProgressBarAnimation extends Animation {
         super.applyTransformation(interpolatedTime, t);
 
         float value = from + (to - from) * interpolatedTime;
+        value = 100 - value;
         progressBar.setProgress((int) value);
 
         if(value < 65) {

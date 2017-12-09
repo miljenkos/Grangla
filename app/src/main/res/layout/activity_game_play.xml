@@ -75,6 +75,7 @@
         android:layout_width="match_parent"
         android:layout_height="8dp"
         android:layout_marginTop="5dp"
+        android:layout_marginBottom="2dp"
         android:layout_below="@id/Table" />
 
     <LinearLayout
@@ -89,6 +90,7 @@
             android:name="com.boardgame.miljac.grangla.CircleTimeFragment"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_margin="5dp"
             android:layout_weight="2"/>
 
         <LinearLayout
@@ -134,6 +136,7 @@
             android:name="com.boardgame.miljac.grangla.CrossTimeFragment"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_margin="5dp"
             android:layout_weight="2"
             />
 
