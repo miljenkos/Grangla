@@ -10,6 +10,7 @@ public class Coordinates {
 
     public int x;
     public int y;
+    public boolean conflict = false;
 
     public Coordinates(int ix, int iy) {
         int i2 = (ix + TableConfig.TABLE_SIZE*2) % TableConfig.TABLE_SIZE;

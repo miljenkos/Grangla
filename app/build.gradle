@@ -15,8 +15,8 @@ android {
         applicationId "com.boardgame.miljac.grangla"
         minSdkVersion 15
         targetSdkVersion 23
-        versionCode 59
-        versionName "59.0"
+        versionCode 67
+        versionName "67.0"
     }
     buildTypes {
         release {

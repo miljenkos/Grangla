@@ -591,7 +591,9 @@ public class MultiplayerActivity extends AppCompatActivity implements
         opThread = null;*/
 
         try {
-            refreshThread.join();
+            if(refreshThread != null) {
+                refreshThread.join();
+            }
         } catch (InterruptedException e) {
             //e.printStackTrace();
         }
@@ -659,10 +661,13 @@ public class MultiplayerActivity extends AppCompatActivity implements
         //GRANGLA
 
 
-
         switchToMainScreen();
 
         signInSilently();
+        startSignInIntent();
+
+
+
     }
 
     @Override
@@ -737,7 +742,8 @@ public class MultiplayerActivity extends AppCompatActivity implements
                 // sign out.
                 Log.d(TAG, "Sign-out button clicked");
                 signOut();
-                switchToScreen(R.id.screen_sign_in);
+                finish();
+                //switchToScreen(R.id.screen_sign_in);
                 break;
             case R.id.button_invite_players:
                 switchToScreen(R.id.screen_wait);
@@ -1635,16 +1641,35 @@ public class MultiplayerActivity extends AppCompatActivity implements
         public void onRealTimeMessageReceived(@NonNull RealTimeMessage realTimeMessage) {
             byte[] buf = realTimeMessage.getMessageData();
             String sender = realTimeMessage.getSenderParticipantId();
+
+            if(buf[0] == 77){
+                myResult -= 50;
+                return;
+            }
+
             Log.d(TAG, "Message received: " + (char) buf[0] + "/" + (int) buf[1]);
 
             synchronized (table) {
                 Coordinates c = table.applyMsgBuff(buf);
                 if(c != null) {
 
-                    //lastMoveX = c;
+                    lastMoveX = c;
                     waitingMomentCross = System.currentTimeMillis() + waitingTimeCross;
                     startCrossTime = true;
-                    //movesX.add(0, lastMoveX);
+
+                    if (c.conflict) {
+                        startCircleTime = false;
+                        circleBar.clearAnimation();
+                        circleBar.setProgress(100);
+                        circleBar.getProgressDrawable().setColorFilter(
+                                player1Color & 0xA0FFFFFF,
+                                android.graphics.PorterDuff.Mode.SRC_IN);
+                        waitingMomentCircle = System.currentTimeMillis();
+
+                        movesO.remove(c);
+                        //tu bi jos trebalo vratit kruzic ako je maknut jer je bio visak
+                        //za sada ostavljam to kao mali bag
+                    }
                 }
 
 
@@ -1658,10 +1683,19 @@ public class MultiplayerActivity extends AppCompatActivity implements
             hisResult = buf[TableConfig.TABLE_SIZE * TableConfig.TABLE_SIZE] * 128 +
                     buf[TableConfig.TABLE_SIZE * TableConfig.TABLE_SIZE + 1];
 
-            lastXmultiplayer1 = new Coordinates(buf[TableConfig.TABLE_SIZE*TableConfig.TABLE_SIZE + 2],
-                    buf[TableConfig.TABLE_SIZE*TableConfig.TABLE_SIZE + 3]);
-            lastXmultiplayer2 = new Coordinates(buf[TableConfig.TABLE_SIZE*TableConfig.TABLE_SIZE + 4],
-                    buf[TableConfig.TABLE_SIZE*TableConfig.TABLE_SIZE + 5]);
+            if(buf[TableConfig.TABLE_SIZE*TableConfig.TABLE_SIZE + 2] == 30){
+                lastXmultiplayer1 = null;
+            } else {
+                lastXmultiplayer1 = new Coordinates(buf[TableConfig.TABLE_SIZE * TableConfig.TABLE_SIZE + 2],
+                        buf[TableConfig.TABLE_SIZE * TableConfig.TABLE_SIZE + 3]);
+            }
+
+            if(buf[TableConfig.TABLE_SIZE*TableConfig.TABLE_SIZE + 4] == 30){
+                lastXmultiplayer2 = null;
+            } else {
+                lastXmultiplayer2 = new Coordinates(buf[TableConfig.TABLE_SIZE * TableConfig.TABLE_SIZE + 4],
+                        buf[TableConfig.TABLE_SIZE * TableConfig.TABLE_SIZE + 5]);
+            }
 
 
             /*if (buf[0] == 'F' || buf[0] == 'U') {
@@ -1696,17 +1730,54 @@ public class MultiplayerActivity extends AppCompatActivity implements
     void sendTableInfo(){
         byte[] msgBuff;
 
+        if(gameDone && (result>70) ){
+            msgBuff = new byte[1];
+            msgBuff[0] = 77;
+
+            // Send to every other participant.
+            for (Participant p : mParticipants) {
+                if (p.getParticipantId().equals(mMyId)) {
+                    continue;
+                }
+                if (p.getStatus() != Participant.STATUS_JOINED) {
+                    continue;
+                }
+
+
+                // final score notification must be sent via reliable message
+                mRealTimeMultiplayerClient.sendReliableMessage(msgBuff,
+                        mRoomId, p.getParticipantId(), new RealTimeMultiplayerClient.ReliableMessageSentCallback() {
+                            @Override
+                            public void onRealTimeMessageSent(int statusCode, int tokenId, String recipientParticipantId) {
+                                Log.d(TAG, "Pobijedio sam! i poslao poruku o tome");
+                            }
+                        })
+                        .addOnSuccessListener(new OnSuccessListener<Integer>() {
+                            @Override
+                            public void onSuccess(Integer tokenId) {
+                                Log.d(TAG, "Napravio sam poruku o svojoj pobjedi: " + tokenId);
+                            }
+                        });
+            }
+
+
+            return;
+        }
+
         synchronized (table) {
             msgBuff = table.getMsgBuff();
-
 
             msgBuff[TableConfig.TABLE_SIZE * TableConfig.TABLE_SIZE] = (byte) (((int) myResult) / 128);
             msgBuff[TableConfig.TABLE_SIZE * TableConfig.TABLE_SIZE + 1] = (byte) ((int) myResult % 128);
 
 
+            msgBuff[TableConfig.TABLE_SIZE * TableConfig.TABLE_SIZE + 2] = 30;
+            msgBuff[TableConfig.TABLE_SIZE * TableConfig.TABLE_SIZE + 3] = 30;
+            msgBuff[TableConfig.TABLE_SIZE * TableConfig.TABLE_SIZE + 4] = 30;
+            msgBuff[TableConfig.TABLE_SIZE * TableConfig.TABLE_SIZE + 5] = 30;
             for (int i = 0; i < TableConfig.TABLE_SIZE; i++) {
                 for (int j = 0; j < TableConfig.TABLE_SIZE; j++) {
-                    if (table.publicGet(i, j) == State.circle) {
+                    if (table.get(i, j) == State.circle) {
                         if ((movesO.size() >= (TableConfig.MAX_PIECES - 1)) &&
                                 (new Coordinates(i, j).equals(movesO.get(TableConfig.MAX_PIECES - 2)))) {
 

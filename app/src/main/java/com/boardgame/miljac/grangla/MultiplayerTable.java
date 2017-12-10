@@ -677,7 +677,9 @@ public class MultiplayerTable // igraca tabla
                     if(( ((i+j) % 2) == 0) ^ isServer) {//ko ima prednost na ovom polju?
                         if (msgBuff[c] == 1) {
                             this.put(State.cross, i, j);
-                            return new Coordinates(i, j);
+                            Coordinates co = new Coordinates(i, j);
+                            co.conflict = true;
+                            return co;
                         }
                     }
 
