@@ -191,6 +191,7 @@ public class MultiplayerActivity extends AppCompatActivity implements
 
     private Coordinates lastXmultiplayer1;
     private Coordinates lastXmultiplayer2;
+    private Coordinates lastRemovedO = null;
 
 
 
@@ -254,6 +255,7 @@ public class MultiplayerActivity extends AppCompatActivity implements
                         Coordinates c = (Coordinates) movesO.remove(TableConfig.MAX_PIECES - 1);
                         table.publicEmpty(c.x, c.y);
                         tableView.removeImediately(c.x, c.y);
+                        lastRemovedO = c;
                         myResult -= 3 * TableConfig.RESULT_FACTOR;
                     }
                 } else {
@@ -606,6 +608,17 @@ public class MultiplayerActivity extends AppCompatActivity implements
             //e.printStackTrace();
         }
         musicPlayerThread = null;
+
+
+
+
+        // if we're in a room, leave it.
+        leaveRoom();
+
+        // stop trying to keep the screen on
+        stopKeepingScreenOn();
+
+        switchToMainScreen();
 
     }
 
@@ -1050,13 +1063,16 @@ public class MultiplayerActivity extends AppCompatActivity implements
     public void onStop() {
         Log.d(TAG, "**** got onStop");
 
+
+        //OVO SELIM U ONDESTROJ JER OCU MOC PAuzirat igrui
+        /*
         // if we're in a room, leave it.
         leaveRoom();
 
         // stop trying to keep the screen on
         stopKeepingScreenOn();
 
-        switchToMainScreen();
+        switchToMainScreen();*/
 
         super.onStop();
     }
@@ -1652,7 +1668,6 @@ public class MultiplayerActivity extends AppCompatActivity implements
             synchronized (table) {
                 Coordinates c = table.applyMsgBuff(buf);
                 if(c != null) {
-
                     lastMoveX = c;
                     waitingMomentCross = System.currentTimeMillis() + waitingTimeCross;
                     startCrossTime = true;
@@ -1667,6 +1682,11 @@ public class MultiplayerActivity extends AppCompatActivity implements
                         waitingMomentCircle = System.currentTimeMillis();
 
                         movesO.remove(c);
+                        if(movesO.size() >= (TableConfig.MAX_PIECES-1)) {
+                            movesO.add(lastRemovedO);
+                            table.put(State.circle, lastRemovedO.x, lastRemovedO.y);
+                        }
+
                         //tu bi jos trebalo vratit kruzic ako je maknut jer je bio visak
                         //za sada ostavljam to kao mali bag
                     }

@@ -130,7 +130,7 @@ public class MultiplayerTable // igraca tabla
      * @param j y-coordinate of a field (space)
      */
 
-    private void put(State givenState, int i, int j)  // stavlja stanje givenState na polje koordinata (i,j)
+    public void put(State givenState, int i, int j)  // stavlja stanje givenState na polje koordinata (i,j)
     {
         i = (i + TableConfig.TABLE_SIZE*2) % TableConfig.TABLE_SIZE;
         j = (j + TableConfig.TABLE_SIZE*2) % TableConfig.TABLE_SIZE;
