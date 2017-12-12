@@ -64,6 +64,8 @@ public class MultiplayerTable // igraca tabla
         return isServer;
     }
 
+    private int connCounter = 0;
+
     public void setServer(boolean server) {
         isServer = server;
         if (!isServer) return;
@@ -633,10 +635,16 @@ public class MultiplayerTable // igraca tabla
             }
         }
         Log.d("ButtonClickerrrrr", "getMsgBuff:   " + new String(msgBuff));
+
+        /*connCounter++;
+        if(connCounter>4) msgBuff[0]=98;*/
+
         return msgBuff;
     }
 
     public Coordinates applyMsgBuff(byte[] msgBuff) {//vraca koordinate ako je protivnik stavio svog
+        //connCounter = 0;
+
         if(isServer) {
             Log.d("ButtonClickerrrrr", "JESAM SERVER");
         } else {

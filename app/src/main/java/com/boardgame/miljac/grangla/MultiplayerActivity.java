@@ -359,7 +359,7 @@ public class MultiplayerActivity extends AppCompatActivity implements
                 handler2.postDelayed(new Runnable() {
                     public void run() {
                         endDialog.dismiss();
-                        finish();
+                        recreate();//finish();
                     }
                 }, 9000);
 
@@ -610,15 +610,13 @@ public class MultiplayerActivity extends AppCompatActivity implements
         musicPlayerThread = null;
 
 
-
-
         // if we're in a room, leave it.
-        leaveRoom();
+        //leaveRoom();
 
         // stop trying to keep the screen on
-        stopKeepingScreenOn();
 
-        switchToMainScreen();
+
+        //switchToMainScreen();
 
     }
 
@@ -674,7 +672,7 @@ public class MultiplayerActivity extends AppCompatActivity implements
         //GRANGLA
 
 
-        switchToMainScreen();
+        //switchToMainScreen();
 
         signInSilently();
         startSignInIntent();
@@ -762,7 +760,7 @@ public class MultiplayerActivity extends AppCompatActivity implements
                 switchToScreen(R.id.screen_wait);
 
                 // show list of invitable players
-                mRealTimeMultiplayerClient.getSelectOpponentsIntent(1, 3).addOnSuccessListener(
+                mRealTimeMultiplayerClient.getSelectOpponentsIntent(1, 1).addOnSuccessListener(
                         new OnSuccessListener<Intent>() {
                             @Override
                             public void onSuccess(Intent intent) {
@@ -1080,7 +1078,7 @@ public class MultiplayerActivity extends AppCompatActivity implements
     // Handle back key to make sure we cleanly leave a game if we are in the middle of one
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent e) {
-        if (keyCode == KeyEvent.KEYCODE_BACK && mCurScreen == R.id.screen_game) {
+        if (keyCode == KeyEvent.KEYCODE_BACK && mCurScreen == R.id.screen_game2) {
             leaveRoom();
             return true;
         }
@@ -1089,6 +1087,8 @@ public class MultiplayerActivity extends AppCompatActivity implements
 
     // Leave the room.
     void leaveRoom() {
+
+
         Log.d(TAG, "Leaving room.");
         mSecondsLeft = 0;
         stopKeepingScreenOn();
@@ -1105,6 +1105,8 @@ public class MultiplayerActivity extends AppCompatActivity implements
         } else {
             switchToMainScreen();
         }
+
+        recreate();
     }
 
     // Show the waiting room UI to track the progress of other players as they enter the
@@ -1270,9 +1272,11 @@ public class MultiplayerActivity extends AppCompatActivity implements
         // Called when we get disconnected from the room. We return to the main screen.
         @Override
         public void onDisconnectedFromRoom(Room room) {
-            mRoomId = null;
+            Log.d(TAG, "onDisconnectedFromRoom");
+            /*mRoomId = null;
             mRoomConfig = null;
-            showGameError();
+            recreate();//leaveRoom();//showGameError();*/
+            leaveRoom();
         }
 
 
@@ -1282,29 +1286,35 @@ public class MultiplayerActivity extends AppCompatActivity implements
         // etc.
         @Override
         public void onPeerDeclined(Room room, @NonNull List<String> arg1) {
+            Log.d(TAG, "onPeerDeclined");
             updateRoom(room);
         }
 
         @Override
         public void onPeerInvitedToRoom(Room room, @NonNull List<String> arg1) {
+            Log.d(TAG, "onPeerInvitedToRoom");
             updateRoom(room);
         }
 
         @Override
         public void onP2PDisconnected(@NonNull String participant) {
+            Log.d(TAG, "onP2PDisconnected");
         }
 
         @Override
         public void onP2PConnected(@NonNull String participant) {
+            Log.d(TAG, "onPeerDeclined");
         }
 
         @Override
         public void onPeerJoined(Room room, @NonNull List<String> arg1) {
+            Log.d(TAG, "onPeerJoined");
             updateRoom(room);
         }
 
         @Override
         public void onPeerLeft(Room room, @NonNull List<String> peersWhoLeft) {
+            Log.d(TAG, "onPeerLeft");
             updateRoom(room);
         }
 
@@ -1325,6 +1335,7 @@ public class MultiplayerActivity extends AppCompatActivity implements
 
         @Override
         public void onPeersDisconnected(Room room, @NonNull List<String> peers) {
+            Log.d(TAG, "onPeersDisconnected");
             updateRoom(room);
         }
     };
@@ -1568,7 +1579,7 @@ public class MultiplayerActivity extends AppCompatActivity implements
             public void onClick(View arg0) {
                 saveSharedPreferences();
                 leaveRoom();
-                finish();
+                //finish();
 
             }
         });
@@ -1786,6 +1797,9 @@ public class MultiplayerActivity extends AppCompatActivity implements
 
         synchronized (table) {
             msgBuff = table.getMsgBuff();
+
+            //if(msgBuff[0] == 98) leaveRoom();
+
 
             msgBuff[TableConfig.TABLE_SIZE * TableConfig.TABLE_SIZE] = (byte) (((int) myResult) / 128);
             msgBuff[TableConfig.TABLE_SIZE * TableConfig.TABLE_SIZE + 1] = (byte) ((int) myResult % 128);
