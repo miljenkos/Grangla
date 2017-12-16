@@ -3,8 +3,10 @@ package com.boardgame.miljac.grangla;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
@@ -13,12 +15,16 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.AdapterView;
 import android.widget.CompoundButton;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
+import android.widget.SeekBar;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
@@ -65,6 +71,15 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 public class MultiplayerActivity extends AppCompatActivity implements
         View.OnClickListener, TableFragment.OnFieldSelectedListener {
+    Handler handler2 = null;
+    Runnable hb = null;
+
+    Spinner spinnerPlayer1;
+    Spinner spinnerPlayer2;
+    ListItem itemOko = new ListItem();
+    ListItem itemGumb = new ListItem();
+    ListItem itemDjetelina = new ListItem();
+    ListItem itemZvijezda = new ListItem();
 
 
     private boolean isServer = true;
@@ -355,13 +370,16 @@ public class MultiplayerActivity extends AppCompatActivity implements
                     }
                 }, 300);
 
-                Handler handler2 = new Handler();
-                handler2.postDelayed(new Runnable() {
+                handler2 = new Handler();
+                hb = new Runnable() {
                     public void run() {
                         endDialog.dismiss();
-                        recreate();//finish();
+                        saveInstanceState();
+                        leaveRoom();//recreate();//finish();
                     }
-                }, 9000);
+                };
+
+                handler2.postDelayed(hb, 9000);
 
                 /*Handler handler3 = new Handler();
                 handler3.postDelayed(new Runnable() {
@@ -497,10 +515,10 @@ public class MultiplayerActivity extends AppCompatActivity implements
 
     }
 
-    public void exitGame(View v) {
+    public void exit(View v) {
         //endDialog.cancel();
 
-        saveSharedPreferences();
+        //saveSharedPreferences();
         //System.out.println("EXITEXITEXITEXIT\n\n");
 
         finish();
@@ -530,31 +548,35 @@ public class MultiplayerActivity extends AppCompatActivity implements
     }
 
 
-    private void saveSharedPreferences(){
-        if (!multiplayerGameStarted) return;
+    public void saveInstanceState(){
+        if((soundToggle == null) ||
+                (spinnerPlayer1 == null) ||
+                (spinnerPlayer1 == null)
+                ){
+            return;
+        }
 
         if(mPrefs == null) {
             mPrefs = getSharedPreferences("mrm", MODE_PRIVATE);
         }
+
         SharedPreferences.Editor ed = mPrefs.edit();
         ed.putBoolean("mrm_SOUND", soundToggle.isChecked());
-        ed.commit();
+        ed.putInt("mrm_PLAYER_1_IMG_MLTPL",spinnerPlayer1.getSelectedItemPosition());
+        ed.putInt("mrm_PLAYER_2_IMG_MLTPL",spinnerPlayer2.getSelectedItemPosition());
+        ed.commit();        
     }
+
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-
-        saveSharedPreferences();
-
+        saveInstanceState();
         super.onSaveInstanceState(outState);
-        //finish();
     }
 
     @Override
     public void onRestoreInstanceState(Bundle inState){
         super.onRestoreInstanceState(inState);
-        //System.out.println("  JAHA JAHAJA!");
-
     }
 
     @Override
@@ -577,7 +599,7 @@ public class MultiplayerActivity extends AppCompatActivity implements
     protected void onDestroy(){
         super.onDestroy();
 
-        saveSharedPreferences();
+        saveInstanceState();
 
         if (endDialog!=null)
             endDialog.dismiss();
@@ -653,8 +675,169 @@ public class MultiplayerActivity extends AppCompatActivity implements
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+
+
         currentApiVersion = Build.VERSION.SDK_INT;
         setContentView(R.layout.activity_multiplayer);
+
+        //STVARI IZ MAINACTIVITY
+
+
+        itemOko.setData("OKO", R.drawable.pin39);
+        itemGumb.setData("GUMB",R.drawable.pin40);
+        itemDjetelina.setData("DJETELINA", R.drawable.pin42);
+        itemZvijezda.setData("ZVIJEZDA", R.drawable.pin43);
+
+
+        spinnerPlayer1 = (Spinner) findViewById(R.id.spinner_player1);
+        spinnerPlayer1.setAdapter(new MyAdapter(this, R.layout.row, getAllList()));
+        spinnerPlayer1.setBackgroundColor(Color.TRANSPARENT);
+        spinnerPlayer1.setDrawingCacheBackgroundColor(Color.TRANSPARENT);
+
+
+
+        spinnerPlayer1.setOnTouchListener(
+
+
+                (new View.OnTouchListener() {
+
+                    @Override
+                    public boolean onTouch(View v, MotionEvent m) {
+                        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT)// && hasFocus)
+                        {
+                            getWindow().getDecorView().setSystemUiVisibility(
+                                    View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                                            | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                                            | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                                            | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                                            | View.SYSTEM_UI_FLAG_FULLSCREEN
+                                            | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
+                        }
+                        return false;
+                    }
+                }));
+
+        spinnerPlayer1.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT)// && hasFocus)
+                {
+                    getWindow().getDecorView().setSystemUiVisibility(
+                            View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                                    | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                                    | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                                    | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                                    | View.SYSTEM_UI_FLAG_FULLSCREEN
+                                    | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
+                }
+            }
+        });
+
+        spinnerPlayer2 = (Spinner) findViewById(R.id.spinner_player2);
+        final MyAdapter adapterSpinner2 = new MyAdapter(this, R.layout.row, new ArrayList<ListItem>());
+        spinnerPlayer2.setAdapter(adapterSpinner2);
+
+
+
+        if(mPrefs == null) {
+            mPrefs = getSharedPreferences("mrm", MODE_PRIVATE);
+        }
+        spinnerPlayer1.setSelection(mPrefs.getInt("mrm_PLAYER_1_IMG_MLTPL", 0));
+
+
+
+        //System.out.println("        get    mrm_PLAYER_1_IMG_MLTPL  " + mPrefs.getInt("mrm_PLAYER_1_IMG_MLTPL", 0));
+
+        ListItem selected2;
+        selected2 = (ListItem) spinnerPlayer2.getSelectedItem();
+
+        adapterSpinner2.clear();
+        //System.out.println("SELECT ITEM: " + (mPrefs.getInt("mrm_PLAYER_1_IMG_MLTPL", 0)));
+
+        if (!((mPrefs.getInt("mrm_PLAYER_1_IMG_MLTPL", 0)==0))) {
+            adapterSpinner2.add(itemOko);
+        }
+
+        if (!((mPrefs.getInt("mrm_PLAYER_1_IMG_MLTPL", 0)==1))) {
+            adapterSpinner2.add(itemGumb);
+        }
+
+        if (!((mPrefs.getInt("mrm_PLAYER_1_IMG_MLTPL", 0)==2))) {
+            adapterSpinner2.add(itemDjetelina);
+        }
+
+        if (!((mPrefs.getInt("mrm_PLAYER_1_IMG_MLTPL", 0)==3))) {
+            adapterSpinner2.add(itemZvijezda);
+        }
+
+        spinnerPlayer2.setSelection(mPrefs.getInt("mrm_PLAYER_2_IMG_MLTPL", 0));
+
+
+        //System.out.println("        get    mrm_PLAYER_2_IMG_MLTPL  " + mPrefs.getInt("mrm_PLAYER_2_IMG_MLTPL", 0));
+
+
+
+
+
+
+        spinnerPlayer1.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+
+            @Override
+            public void onItemSelected(AdapterView<?> arg0, View arg1,
+                                       int arg2, long arg3) {
+
+//                spinnerPlayer2.getse
+                ListItem selected2;
+                selected2 = (ListItem) spinnerPlayer2.getSelectedItem();
+
+                adapterSpinner2.clear();
+                //System.out.println("SELECT ITEM: " + arg2);
+
+                if (!(arg2==0)) {
+                    adapterSpinner2.add(itemOko);
+                }
+
+                if (!(arg2==1)) {
+                    adapterSpinner2.add(itemGumb);
+                }
+
+                if (!(arg2==2)) {
+                    adapterSpinner2.add(itemDjetelina);
+                }
+
+                if (!(arg2==3)) {
+                    adapterSpinner2.add(itemZvijezda);
+                }
+
+                spinnerPlayer2.setSelection(adapterSpinner2.getPosition(selected2));
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> arg0) {
+                adapterSpinner2.clear();
+
+                adapterSpinner2.add(itemOko);
+                adapterSpinner2.add(itemGumb);
+                adapterSpinner2.add(itemDjetelina);
+                adapterSpinner2.add(itemZvijezda);
+            }
+        });
+
+        /*if(savedInstanceState != null){
+            spinnerPlayer1.setSelection(savedInstanceState.getInt("mrm_PLAYER_1_IMG_MLTPL"));
+            spinnerPlayer2.setSelection(savedInstanceState.getInt("mrm_PLAYER_2_IMG_MLTPL"));
+        }*/
+
+
+
+
+
+
+
+
 
 
         //BATNKLIKER
@@ -674,11 +857,33 @@ public class MultiplayerActivity extends AppCompatActivity implements
 
         //switchToMainScreen();
 
-        signInSilently();
-        startSignInIntent();
+
+        //signInSilently();
+
+        if(!(mPrefs.getString("mrm_MULTPL_ACTIVITY_MESSAGE", "").equals(""))) {
+
+            new AlertDialog.Builder(MultiplayerActivity.this)
+                    .setMessage(mPrefs.getString("mrm_MULTPL_ACTIVITY_MESSAGE", ""))
+                    .setNeutralButton(android.R.string.ok, null)
+                    .show();
+
+            SharedPreferences.Editor ed = mPrefs.edit();
+            ed.putString("mrm_MULTPL_ACTIVITY_MESSAGE", "");
+
+            ed.commit();
+        }
 
 
 
+        if(!(mPrefs.getString("mrm_MULTPL_ACTIVITY_MESSAGE_RECREATED", "").equals("YES"))){
+            startSignInIntent();
+        } else {
+            signInSilently();
+        }
+
+        SharedPreferences.Editor ed = mPrefs.edit();
+        ed.putString("mrm_MULTPL_ACTIVITY_MESSAGE_RECREATED", "NO");
+        ed.commit();
     }
 
     @Override
@@ -735,7 +940,7 @@ public class MultiplayerActivity extends AppCompatActivity implements
                 resetGameVars();
                 startGame(false);
                 break;*/
-            case R.id.button_sign_in:
+            /*case R.id.button_sign_in:
                 // user wants to sign in
                 // Check to see the developer who's running this sample code read the instructions :-)
                 // NOTE: this check is here only because this is a sample! Don't include this
@@ -747,7 +952,7 @@ public class MultiplayerActivity extends AppCompatActivity implements
                 // start the sign-in flow
                 Log.d(TAG, "Sign-in button clicked");
                 startSignInIntent();
-                break;
+                break;*/
             case R.id.button_sign_out:
                 // user wants to sign out
                 // sign out.
@@ -934,16 +1139,22 @@ public class MultiplayerActivity extends AppCompatActivity implements
                 onConnected(account);
             } catch (ApiException apiException) {
                 String message = apiException.getMessage();
-                if (message == null || message.isEmpty()) {
+                //if (message == null || message.isEmpty()) {
                     message = getString(R.string.signin_other_error);
-                }
+                //}
 
                 onDisconnected();
 
                 new AlertDialog.Builder(this)
                         .setMessage(message)
-                        .setNeutralButton(android.R.string.ok, null)
+                        .setNeutralButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface d, int i) {
+                                MultiplayerActivity.this.finish();
+                                finish();
+                            }
+                        })
                         .show();
+                //finish();//AKO NE USPIJE SIGN IN TREIZAC IZ ;ULTIPLEJER; NADAM SE DA JE TO JEDINI SLUCAJ KAD SE OVO DESAVA
             }
         } else if (requestCode == RC_SELECT_PLAYERS) {
             // we got the result from the "select players" UI -- ready to create the room
@@ -1105,6 +1316,14 @@ public class MultiplayerActivity extends AppCompatActivity implements
         } else {
             switchToMainScreen();
         }
+
+
+        if (mPrefs == null) {
+            mPrefs = getSharedPreferences("mrm", MODE_PRIVATE);
+        }
+        SharedPreferences.Editor ed = mPrefs.edit();
+        ed.putString("mrm_MULTPL_ACTIVITY_MESSAGE_RECREATED", "YES");
+        ed.commit();
 
         recreate();
     }
@@ -1276,8 +1495,29 @@ public class MultiplayerActivity extends AppCompatActivity implements
             /*mRoomId = null;
             mRoomConfig = null;
             recreate();//leaveRoom();//showGameError();*/
-            leaveRoom();
+
+            if (mPrefs == null) {
+                mPrefs = getSharedPreferences("mrm", MODE_PRIVATE);
+            }
+            SharedPreferences.Editor ed = mPrefs.edit();
+            ed.putString("mrm_MULTPL_ACTIVITY_MESSAGE_RECREATED", "YES");
+
+            if(!gameDone) {
+                ed.putString("mrm_MULTPL_ACTIVITY_MESSAGE", getString(R.string.opponent_left));
+            }
+
+            ed.commit();
+
+            if(handler2 != null) {
+                handler2.removeCallbacks(hb);
+            }
+
+
+            recreate();//leaveRoom();
+
+
         }
+
 
 
         // We treat most of the room update callbacks in the same way: we update our list of
@@ -1342,7 +1582,16 @@ public class MultiplayerActivity extends AppCompatActivity implements
 
     // Show error message about game being cancelled and return to main screen.
     void showGameError() {
-        BaseGameUtils.makeSimpleDialog(this, getString(R.string.game_problem));
+        ///BaseGameUtils.makeSimpleDialog(this, getString(R.string.game_problem));
+        new AlertDialog.Builder(this)
+                .setMessage(R.string.game_problem)
+                .setNeutralButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface d, int i) {
+                        MultiplayerActivity.this.finish();
+                        finish();
+                    }
+                })
+                .show();
         switchToMainScreen();
     }
 
@@ -1381,7 +1630,7 @@ public class MultiplayerActivity extends AppCompatActivity implements
         public void onJoinedRoom(int statusCode, Room room) {
             Log.d(TAG, "onJoinedRoom(" + statusCode + ", " + room + ")");
             if (statusCode != GamesCallbackStatusCodes.OK) {
-                Log.e(TAG, "*** Error: onRoomConnected, status " + statusCode);
+                Log.e(TAG, "*** Error: onJoinedRoom, status " + statusCode);
                 showGameError();
                 return;
             }
@@ -1428,6 +1677,9 @@ public class MultiplayerActivity extends AppCompatActivity implements
 
     // Start the gameplay phase of the game.
     void startGame(boolean multiplayer) {
+        player1Image = ((ListItem) spinnerPlayer1.getSelectedItem()).logo;
+        player2Image = ((ListItem) spinnerPlayer2.getSelectedItem()).logo;
+
         multiplayerGameStarted = true;
 
         /*Intent intent = new Intent(this, GamePlayActivity.class);
@@ -1446,10 +1698,6 @@ public class MultiplayerActivity extends AppCompatActivity implements
         currentApiVersion = Build.VERSION.SDK_INT;
         //setContentView(R.layout.activity_game_play);
 
-        Intent intent = getIntent();
-        level = intent.getIntExtra("LEVEL", 50);
-        player1Image = intent.getIntExtra("PLAYER1_IMG", R.drawable.pin39);
-        player2Image = intent.getIntExtra("PLAYER2_IMG", R.drawable.pin40);
 
 
         this.table = new MultiplayerTable(level);
@@ -1577,8 +1825,9 @@ public class MultiplayerActivity extends AppCompatActivity implements
 
             @Override
             public void onClick(View arg0) {
-                saveSharedPreferences();
+                //saveSharedPreferences();
                 leaveRoom();
+                saveInstanceState();
                 //finish();
 
             }
@@ -1694,8 +1943,10 @@ public class MultiplayerActivity extends AppCompatActivity implements
 
                         movesO.remove(c);
                         if(movesO.size() >= (TableConfig.MAX_PIECES-1)) {
-                            movesO.add(lastRemovedO);
-                            table.put(State.circle, lastRemovedO.x, lastRemovedO.y);
+                            if (lastRemovedO != null) {
+                                movesO.add(lastRemovedO);
+                                table.put(State.circle, lastRemovedO.x, lastRemovedO.y);
+                            }
                         }
 
                         //tu bi jos trebalo vratit kruzic ako je maknut jer je bio visak
@@ -1902,7 +2153,7 @@ public class MultiplayerActivity extends AppCompatActivity implements
     // event handlers.
     final static int[] CLICKABLES = {
             R.id.button_accept_popup_invitation, R.id.button_invite_players,
-            R.id.button_quick_game, R.id.button_see_invitations, R.id.button_sign_in,
+            R.id.button_quick_game, R.id.button_see_invitations,/* R.id.button_sign_in,*/
             R.id.button_sign_out, R.id.button_click_me, /*R.id.button_single_player,
             R.id.button_single_player_2*/
     };
@@ -2006,5 +2257,18 @@ public class MultiplayerActivity extends AppCompatActivity implements
     // Clears the flag that keeps the screen on.
     void stopKeepingScreenOn() {
         getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+    }
+
+
+    public ArrayList<ListItem> getAllList() {
+
+        ArrayList<ListItem> allList = new ArrayList<ListItem>();
+
+        allList.add(itemOko);
+        allList.add(itemGumb);
+        allList.add(itemDjetelina);
+        allList.add(itemZvijezda);
+
+        return allList;
     }
 }

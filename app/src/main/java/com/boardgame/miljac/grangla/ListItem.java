@@ -5,12 +5,11 @@ package com.boardgame.miljac.grangla;
  */
 
 public class ListItem {
-    String name, place;
+    String name;
     int logo;
 
-    public void setData(String name, String place, int logo) {
+    public void setData(String name, int logo) {
         this.name = name;
-        this.place = place;
         this.logo = logo;
     }
 }

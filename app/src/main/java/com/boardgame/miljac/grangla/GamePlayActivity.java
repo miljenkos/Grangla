@@ -384,16 +384,6 @@ public class GamePlayActivity extends AppCompatActivity implements TableFragment
 
     }
 
-    public void exitGame(View v) {
-        //endDialog.cancel();
-
-        saveSharedPreferences();
-        //System.out.println("EXITEXITEXITEXIT\n\n");
-
-    finish();
-
-
-    }
 
     private class TableViewRefreshing implements Runnable {
         public void run() {

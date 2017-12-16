@@ -43,10 +43,10 @@ public class MainActivity extends AppCompatActivity {
         //Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         //setSupportActionBar(toolbar);
 
-        itemOko.setData("OKO", "Onaj koji vidi sve,pa i tebe", R.drawable.pin39);
-        itemGumb.setData("GUMB", "Statican, ali pouzdan", R.drawable.pin40);
-        itemDjetelina.setData("DJETELINA", "I to s cetiri lista", R.drawable.pin42);
-        itemZvijezda.setData("ZVIJEZDA", "U tunelu usred mraka", R.drawable.pin43);
+        itemOko.setData("OKO", R.drawable.pin39);
+        itemGumb.setData("GUMB", R.drawable.pin40);
+        itemDjetelina.setData("DJETELINA", R.drawable.pin42);
+        itemZvijezda.setData("ZVIJEZDA", R.drawable.pin43);
 
         levelSeekBar = (SeekBar)findViewById(R.id.levelSeekBar);
         levelSeekBar.setThumbOffset(convertDipToPixels(8f));

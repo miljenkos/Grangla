@@ -33,14 +33,9 @@
             android:background="#00000000"
             android:text="@string/button_enter"
             android:textColor="#D9D9D9"
-            android:textStyle="bold"
             android:onClick="enter"
-            android:textSize="30sp"
+            android:textSize="25sp"
 
-            android:shadowColor="#000000"
-            android:shadowDx="0"
-            android:shadowDy="0"
-            android:shadowRadius="20"
 
             android:layout_marginRight="20dp"
 
@@ -56,14 +51,10 @@
             android:background="#00000000"
             android:text="@string/button_exit"
             android:textColor="#D9D9D9"
-            android:textStyle="bold"
-            android:onClick="exit"
-            android:textSize="30sp"
 
-            android:shadowColor="#000000"
-            android:shadowDx="0"
-            android:shadowDy="0"
-            android:shadowRadius="20"
+            android:onClick="exit"
+            android:textSize="25sp"
+
 
             android:layout_marginLeft="20dp"
             android:layout_toRightOf="@id/enterButton"
@@ -88,14 +79,9 @@
             android:background="#00000000"
             android:text="@string/button_help"
             android:textColor="#D9D9D9"
-            android:textStyle="bold"
             android:onClick="help"
-            android:textSize="30sp"
+            android:textSize="25sp"
 
-            android:shadowColor="#000000"
-            android:shadowDx="0"
-            android:shadowDy="0"
-            android:shadowRadius="20"
 
             android:layout_margin="20dp"
             android:layout_centerHorizontal="true"
@@ -109,15 +95,10 @@
             android:layout_height="wrap_content"
             android:background="#00000000"
             android:text="@string/button_multiplayer"
-            android:textColor="#00D9D9D9"
-            android:textStyle="bold"
+            android:textColor="#D9D9D9"
             android:onClick="multiplayer"
-            android:textSize="30sp"
+            android:textSize="25sp"
 
-            android:shadowColor="#000000"
-            android:shadowDx="0"
-            android:shadowDy="0"
-            android:shadowRadius="20"
 
             android:layout_margin="20dp"
             android:layout_centerHorizontal="true"
