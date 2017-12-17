@@ -895,7 +895,7 @@ public class MultiplayerActivity extends AppCompatActivity implements
         // it is recommended to try and sign in silently from when the app resumes.
         //signInSilently();
 
-        //getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
         if(musicPlayer == null){
             musicPlayer = new MusicPlayer();
@@ -924,7 +924,7 @@ public class MultiplayerActivity extends AppCompatActivity implements
 
         musicPlayer.mute();
         gamePaused = true;
-        //getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
     }
 
 

@@ -364,4 +364,33 @@ public class MainActivity extends AppCompatActivity {
         float density = metrics.density;
         return (int)(dip * density);
     }
+
+
+    public void decreaseLevel(View view) {
+        int level = levelSeekBar.getProgress();
+
+        level--;
+
+        if((level<0) || (level >100)){
+            return;
+        }
+
+        levelTextView.setText(String.valueOf(level));
+        levelSeekBar.setProgress(level);
+    }
+
+
+    public void increaseLevel(View view) {
+        int level = levelSeekBar.getProgress();
+
+        level++;
+
+        if((level<0) || (level >100)){
+            return;
+        }
+
+        levelTextView.setText(String.valueOf(level));
+        levelSeekBar.setProgress(level);
+    }
+
 }
