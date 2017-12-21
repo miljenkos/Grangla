@@ -20,7 +20,11 @@ public class SplashActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         currentApiVersion = android.os.Build.VERSION.SDK_INT;
-        setContentView(R.layout.splash_layout);
+        if (currentApiVersion >= Build.VERSION_CODES.KITKAT) {
+            setContentView(R.layout.splash_layout);
+        } else {
+            setContentView(R.layout.splash_layout_old_android);
+        }
 
 
         /*LockSupport.parkNanos(2_000_000_000);
@@ -47,7 +51,10 @@ public class SplashActivity extends AppCompatActivity {
     }
 
     public void exit(View view) {
-        finish();
+
+        //this.finishAndRemoveTask();
+        this.finish();
+
     }
 
     @Override

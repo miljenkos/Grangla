@@ -3,14 +3,14 @@
     <string name="action_settings">Opcije</string>
     <string name="button_start">Igraj</string>
     <string name="button_enter">Ulaz</string>
-    <string name="button_multiplayer">Play Online</string>
+    <string name="button_multiplayer">Igraj Online</string>
     <string name="button_exit">Izlaz</string>
     <string name="button_help">Upute</string>
 
     <string name="me">Ja: </string>
-    <string name="him">   On: </string>
+    <string name="him"> Protivnik: </string>
     <string name="level">Razina:</string>
-    <string name="help_text">Pokušaj skupiti četiri znaka u nizu. Za pobjedu je potrebno to uspijevati češće od suparnika. Na svaki sljedeći potez imaš pravo nakon što prođe određeno vrijeme od prethodnog. Igra se ubrzava kako se približava kraju. Nemoj raditi nepromišljene poteze, jer ako imaš previše figura na ploči, ostaješ bez njih.</string>
+    <string name="help_text">Pokušaj skupiti četiri znaka u nizu. Za pobjedu je potrebno to uspijevati češće od protivnika. Na svaki sljedeći potez imaš pravo nakon što prođe određeno vrijeme od prethodnog. Igra se ubrzava kako se približava kraju. Nemoj raditi nepromišljene poteze, jer ako imaš previše figura na ploči, ostaješ bez njih.</string>
 
 
 
@@ -27,11 +27,11 @@
     </integer-array>
 
 
-    <string name="sign_in_other_error">There was an issue with sign-in, please try again later.</string>
-    <string name="sign_in_failed">Failed to sign in. Please check your network connection and try again.</string>
+    <string name="sign_in_other_error">Došlo je do problema sa prijavom, probaj kasnije.</string>
+    <string name="sign_in_failed">Neuspjela prijava.. Provjeri svoju vezu s internetom i pokušaj ponovo.</string>
     <string name="app_misconfigured">The application is incorrectly configured. Check that the package name and signing certificate match the client ID created in Developer Console. Also, if the application is not yet published, check that the account you are trying to sign in with is listed as a tester account. See logs for more information.</string>
     <string name="license_failed">License check failed.</string>
-    <string name="unknown_error">Unknown error.</string>
+    <string name="unknown_error">Nepoznata pogreška.</string>
 
 
     <string name="app_id">690601868948</string>
@@ -43,35 +43,44 @@
 
 
     <string name="game_title">Grangla</string>
-    <string name="game_blurb">A sample game that tests your ability to click a button. Can you click faster than your friends? Only one way to find out! To play this game with friends, you must sign in with Google.</string>
-    <string name="single_player">Single Player</string>
-    <string name="single_player_explanation">Get some practice!</string>
-    <string name="quick_game">Quick game</string>
-    <string name="invite_players">Invite friends</string>
-    <string name="see_invitations">See invitations</string>
-    <string name="quick_game_explanation">Challenge a random opponent.</string>
-    <string name="invite_players_explanation">Invite friends to play a game.</string>
-    <string name="see_invitations_explanation">See who is inviting you right now.</string>
-    <string name="inv_popup_text">Incoming invitation!</string>
-    <string name="accept_popup_invite">Accept!</string>
-    <string name="sign_out">Sign Out</string>
-    <string name="please_wait">Please wait&#8230;</string>
-    <string name="instructions">Click the button as fast as you can!</string>
-    <string name="game_problem">An error occurred while starting the game. Please try again.</string>
-    <string name="click_me">Click me!</string>
-    <string name="is_inviting_you">is challenging you to a game!</string>
-    <string name="signin_other_error">There was an issue with sign in. Please try again later.</string>
+    <string name="quick_game">Igra sa slučajnim igračem</string>
+    <string name="invite_players">Pozovi prijatelja</string>
+    <string name="see_invitations">Vidi pozive</string>
+    <string name="inv_popup_text">Dolazi poziv na igru!</string>
+    <string name="accept_popup_invite">Prihvaćam!</string>
+    <string name="sign_out">Odjava</string>
+    <string name="please_wait">Pričekaj molim..&#8230;</string>
+    <string name="game_problem">Došlo je do problema pri pokretanju igre, molim pokušaj ponovo.</string>
+    <string name="is_inviting_you">te izaziva na igru!</string>
+    <string name="signin_other_error">Došlo je do problema s prijavom. Molim pokušaj kasnije.</string>
     <string name="status_exception_error">%1$s (status %2$d). %3$s.</string>
 
     <string name="status_multiplayer_error_not_trusted_tester">Anyone you invite must be a trusted tester</string>
-    <string name="match_error_already_rematched">This rematch has already been started!</string>
-    <string name="client_reconnect_required">Games client reconnect required</string>
-    <string name="network_error_operation_failed">Network error: Operation failed</string>
-    <string name="internal_error">Internal error</string>
-    <string name="unexpected_status">Unexpected status: %1$s</string>
-    <string name="match_error_inactive_match">This match is inactive.</string>
-    <string name='match_error_locally_modified'>This match has locally-modified data.  This operation cannot be performed until the match is sent to the server.</string>
-    <string name="score_label">%1$s - Me</string>
+    <string name="match_error_already_rematched">Ova igra je već počela!</string>
+    <string name="client_reconnect_required">Potrebno je ponovno spajanje s Games Clientom</string>
+    <string name="network_error_operation_failed">Mrežna greška: Neuspjela operacija!</string>
+    <string name="internal_error">Unutarnja greška</string>
+    <string name="unexpected_status">Neočeikvani status: %1$s</string>
+    <string name="match_error_inactive_match">Ova igra je neaktivna.</string>
+    <string name='match_error_locally_modified'>Ova igra ima lokalno mijenjane podatke. Ova operacija ne može biti izvršena dok igra nije poslana serveru.</string>
 
     <string name="opponent_left">Tvoj suparnik je napustio igru!</string>
+
+
+
+
+
+
+
+
+
+        <string name="game_blurb">A sample game that tests your ability to click a button. Can you click faster than your friends? Only one way to find out! To play this game with friends, you must sign in with Google.</string>
+        <string name="single_player">Single Player</string>
+        <string name="single_player_explanation">Get some practice!</string>
+        <string name="quick_game_explanation">Challenge a random opponent.</string>
+        <string name="invite_players_explanation">Invite friends to play a game.</string>
+        <string name="see_invitations_explanation">See who is inviting you right now.</string>
+        <string name="instructions">Click the button as fast as you can!</string>
+        <string name="click_me">Click me!</string>
+        <string name="score_label">%1$s - Me</string>
 </resources>

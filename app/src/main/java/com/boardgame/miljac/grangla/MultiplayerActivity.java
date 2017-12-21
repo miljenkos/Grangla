@@ -56,7 +56,6 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-//import com.google.example.games.basegameutils.BaseGameUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -527,20 +526,21 @@ public class MultiplayerActivity extends AppCompatActivity implements
     }
 
     private class TableViewRefreshing implements Runnable {
+        boolean doUiput = false;
+
         public void run() {
 
             while (!gameDone) {
-                LockSupport.parkNanos(70_000_000);
-                /*try {
-                    Thread.sleep(50);
-                    //Thread.yield();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }*/
+                //LockSupport.parkNanos(70_000_000);
+                LockSupport.parkNanos(30_000_000);
 
-                uIPutThread = new Thread(uIPut);
-                //System.out.println(System.currentTimeMillis());
-                runOnUiThread(uIPutThread);
+                if(doUiput) {
+                    uIPutThread = new Thread(uIPut);
+                    runOnUiThread(uIPutThread);
+                    doUiput = false;
+                } else {
+                    doUiput = true;
+                }
 
                 sendTableInfo();
             }
@@ -639,6 +639,10 @@ public class MultiplayerActivity extends AppCompatActivity implements
 
 
         //switchToMainScreen();
+
+        if (mInvitationsClient != null) {
+            mInvitationsClient.unregisterInvitationCallback(mInvitationCallback);
+        }
 
     }
 
@@ -886,6 +890,12 @@ public class MultiplayerActivity extends AppCompatActivity implements
         ed.commit();
     }
 
+
+
+
+
+
+    
     @Override
     protected void onResume() {
         super.onResume();

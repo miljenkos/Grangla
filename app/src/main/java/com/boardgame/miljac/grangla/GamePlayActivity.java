@@ -588,6 +588,7 @@ public class GamePlayActivity extends AppCompatActivity implements TableFragment
         });
 
 
+
         imageButton = (ImageButton) findViewById(R.id.discard_button);
 
         imageButton.setOnClickListener(new View.OnClickListener() {

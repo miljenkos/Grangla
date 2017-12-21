@@ -13,10 +13,10 @@ android {
     buildToolsVersion '26.0.2'
     defaultConfig {
         applicationId "com.boardgame.miljac.grangla"
-        minSdkVersion 15
+        minSdkVersion 16
         targetSdkVersion 23
-        versionCode 97
-        versionName "97.0"
+        versionCode 104
+        versionName "104.0"
     }
     buildTypes {
         release {

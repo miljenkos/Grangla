@@ -11,7 +11,7 @@
         android:cropToPadding="false"
         android:scaleType="centerCrop"
         android:adjustViewBounds="true"
-        android:src="@drawable/splash">
+        android:src="@drawable/splash_old_android">
     </ImageView>
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"

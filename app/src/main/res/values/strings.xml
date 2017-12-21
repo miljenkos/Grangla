@@ -2,13 +2,13 @@
     <string name="app_name">Grangla</string>
     <string name="action_settings">Settings</string>
     <string name="button_start">Start</string>
-    <string name="button_enter">Enter</string>
+    <string name="button_enter">Play</string>
     <string name="button_multiplayer">Play Online</string>
     <string name="button_exit">Exit</string>
     <string name="button_help">How to play</string>
 
     <string name="me">Me: </string>
-    <string name="him">   He: </string>
+    <string name="him"> Opponent: </string>
     <string name="level">Level:</string>
 
     <string name="help_text">Try to collect four symbols in a row. To win you need to do that more often than your opponent. You get the right to do the next move after a certain amount of time since your last one has passed. The game gets faster as it approaches the end. Do not make excess moves because you lose your symbols if you put too many on the board.</string>
@@ -51,7 +51,7 @@
     <string name="game_blurb">A sample game that tests your ability to click a button. Can you click faster than your friends? Only one way to find out! To play this game with friends, you must sign in with Google.</string>
     <string name="single_player">Single Player</string>
     <string name="single_player_explanation">Get some practice!</string>
-    <string name="quick_game">Quick game</string>
+    <string name="quick_game">Game with a random opponent</string>
     <string name="invite_players">Invite friends</string>
     <string name="see_invitations">See invitations</string>
     <string name="quick_game_explanation">Challenge a random opponent.</string>
