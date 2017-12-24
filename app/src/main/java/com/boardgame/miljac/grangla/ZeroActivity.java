@@ -23,8 +23,9 @@ public class ZeroActivity extends AppCompatActivity {
         Intent intent = new Intent(this, SplashActivity.class);
         startActivity(intent);
         finish();
+
+
     }
 
 
-
-}
+    }

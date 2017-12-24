@@ -79,4 +79,9 @@ public class HelpActivity extends AppCompatActivity {
 
 
     }
+
+    public void legalNotices(View view) {
+        Intent intent = new Intent(this, LegalNoticesActivity.class);
+        startActivity(intent);
+    }
 }

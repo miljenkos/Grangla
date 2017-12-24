@@ -1,61 +1,31 @@
 package com.boardgame.miljac.grangla;
 
-import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
-import java.util.concurrent.locks.LockSupport;
-
 /**
  * Created by miljac on 4.10.2017..
  */
 
-public class SplashActivity extends AppCompatActivity {
+public class LegalNoticesActivity extends AppCompatActivity {
     private int currentApiVersion;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        currentApiVersion = android.os.Build.VERSION.SDK_INT;
-        if (currentApiVersion >= Build.VERSION_CODES.KITKAT) {
-            setContentView(R.layout.splash_layout);
-        } else {
-            setContentView(R.layout.splash_layout_old_android);
-        }
+        currentApiVersion = Build.VERSION.SDK_INT;
+        setContentView(R.layout.legal_notices);
 
 
-        /*LockSupport.parkNanos(2_000_000_000);
-
-        Intent intent = new Intent(this, MainActivity.class);
-        startActivity(intent);
-        finish();*/
     }
 
-    public void enter(View view) {
-        Intent intent = new Intent(this, MainActivity.class);
-        startActivity(intent);
-        //finish();
-    }
 
-    public void help(View view) {
-        Intent intent = new Intent(this, HelpActivity.class);
-        startActivity(intent);
-    }
-
-    public void multiplayer(View view) {
-        Intent intent = new Intent(this, MultiplayerActivity.class);
-        startActivity(intent);
-    }
 
     public void exit(View view) {
-
-        //this.finishAndRemoveTask();
-        this.finish();
-        //System.exit(0);
-
+        finish();
     }
 
     @Override

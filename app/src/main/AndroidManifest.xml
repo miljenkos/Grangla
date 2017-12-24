@@ -38,6 +38,10 @@
             android:name=".HelpActivity"
             android:screenOrientation="portrait">
         </activity>
+        <activity
+            android:name=".LegalNoticesActivity"
+            android:screenOrientation="portrait">
+        </activity>
 
         <activity
             android:name=".MultiplayerActivity"

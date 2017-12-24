@@ -90,7 +90,7 @@ public class MultiplayerActivity extends AppCompatActivity implements
      * DEKLARACIJE IZ BATNKLIKERA
      */
 
-    final static String TAG = "ButtonClicker2000";
+    final static String TAG = "grangla777";
 
     // Request codes for the UIs that we show with startActivityForResult:
     final static int RC_SELECT_PLAYERS = 10000;
