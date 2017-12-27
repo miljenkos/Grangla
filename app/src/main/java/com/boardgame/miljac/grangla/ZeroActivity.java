@@ -1,12 +1,9 @@
 package com.boardgame.miljac.grangla;
 
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
+import android.os.Process;
 import android.support.v7.app.AppCompatActivity;
-import android.view.View;
-
-import java.util.concurrent.locks.LockSupport;
 
 /**
  * Created by miljac on 4.10.2017..
@@ -20,10 +17,28 @@ public class ZeroActivity extends AppCompatActivity {
 
         //LockSupport.parkNanos(2_000_000_000);
 
-        Intent intent = new Intent(this, SplashActivity.class);
+        Intent intent = new Intent(ZeroActivity.this, SplashActivity.class);
         startActivity(intent);
+        //finish();
+
+
+    }
+
+    @Override
+    public void onRestart(){
+
+
+        super.onRestart();
         finish();
 
+    }
+
+    @Override
+    protected void onDestroy() {
+        //Process.killProcess(Process.myPid());
+
+        super.onDestroy();
+        System.exit(0);
 
     }
 

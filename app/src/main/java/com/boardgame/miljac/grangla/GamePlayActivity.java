@@ -1,13 +1,10 @@
 package com.boardgame.miljac.grangla;
 
-import android.app.Dialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Handler;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -565,7 +562,9 @@ public class GamePlayActivity extends AppCompatActivity implements TableFragment
         if((mPrefs.getBoolean("mrm_SOUND", true))) {
             soundToggle.setChecked(true);
         } else {
-            //musicPlayer.mute();
+            if(musicPlayer != null) {
+                musicPlayer.mute();
+            }
             musicPlayer = new MusicPlayer();
             musicPlayerThread = new Thread(musicPlayer);
             musicPlayer.setNoteDuration((long) (TableConfig.NOTE_DURATION_FACTOR * waitingTimeCross));
@@ -575,6 +574,9 @@ public class GamePlayActivity extends AppCompatActivity implements TableFragment
         soundToggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
+                    if(musicPlayer != null) {
+                        musicPlayer.mute();
+                    }
                     musicPlayer = new MusicPlayer();
                     musicPlayerThread = new Thread(musicPlayer);
                     musicPlayer.setNoteDuration((long)(TableConfig.NOTE_DURATION_FACTOR * waitingTimeCross));

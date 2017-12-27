@@ -11,6 +11,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Process;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -597,6 +598,7 @@ public class MultiplayerActivity extends AppCompatActivity implements
 
     @Override
     protected void onDestroy(){
+
         super.onDestroy();
 
         saveInstanceState();
@@ -607,12 +609,6 @@ public class MultiplayerActivity extends AppCompatActivity implements
         gameDone = true;
         musicPlayer.mute();
 
-        /*try {
-            opThread.join();
-        } catch (InterruptedException e) {
-            //e.printStackTrace();
-        }
-        opThread = null;*/
 
         try {
             if(refreshThread != null) {
@@ -643,6 +639,8 @@ public class MultiplayerActivity extends AppCompatActivity implements
         if (mInvitationsClient != null) {
             mInvitationsClient.unregisterInvitationCallback(mInvitationCallback);
         }
+
+        //Process.killProcess(Process.myPid());
 
     }
 
@@ -1806,7 +1804,9 @@ public class MultiplayerActivity extends AppCompatActivity implements
         if((mPrefs.getBoolean("mrm_SOUND", true))) {
             soundToggle.setChecked(true);
         } else {
-            //musicPlayer.mute();
+            if(musicPlayer != null) {
+                musicPlayer.mute();
+            }
             musicPlayer = new MusicPlayer();
             musicPlayerThread = new Thread(musicPlayer);
             musicPlayer.setNoteDuration((long) (TableConfig.NOTE_DURATION_FACTOR * waitingTimeCross));
@@ -1816,6 +1816,10 @@ public class MultiplayerActivity extends AppCompatActivity implements
         soundToggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
+                    if(musicPlayer != null) {
+                        musicPlayer.mute();
+                    }
+
                     musicPlayer = new MusicPlayer();
                     musicPlayerThread = new Thread(musicPlayer);
                     musicPlayer.setNoteDuration((long)(TableConfig.NOTE_DURATION_FACTOR * waitingTimeCross));
