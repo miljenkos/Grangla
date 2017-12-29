@@ -261,7 +261,7 @@ public class MultiplayerActivity extends AppCompatActivity implements
             //tableView.invalidate();
 
 
-            if (lastMoveO != null) {
+            if ((lastMoveO != null) && (table != null) && (movesO != null)) {
                 double r = 0;
                 r = table.end2(lastMoveO.x, lastMoveO.y, lastEventTime);
                 myResult += r * TableConfig.RESULT_FACTOR;
@@ -280,7 +280,7 @@ public class MultiplayerActivity extends AppCompatActivity implements
 
             }
 
-            if (lastMoveX != null) {
+            if ((lastMoveX != null) && (table != null) && (movesX != null)) {
                 double r = 0;
                 r = table.end2(lastMoveX.x, lastMoveX.y, lastEventTime);
                 //result -= r * TableConfig.RESULT_FACTOR;

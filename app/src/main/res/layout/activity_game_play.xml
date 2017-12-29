@@ -73,7 +73,7 @@
         android:id="@+id/Result"
         android:name="com.boardgame.miljac.grangla.ResultFragment"
         android:layout_width="match_parent"
-        android:layout_height="8dp"
+        android:layout_height="12dp"
         android:layout_marginTop="5dp"
         android:layout_marginBottom="2dp"
         android:layout_below="@id/Table" />

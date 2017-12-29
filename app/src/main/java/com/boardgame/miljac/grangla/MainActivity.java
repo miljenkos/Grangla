@@ -214,7 +214,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
         if(savedInstanceState != null){
-            levelSeekBar.setProgress(savedInstanceState.getInt("LEVEL"));
+            levelSeekBar.setProgress(savedInstanceState.getInt("mrm_LEVEL"));
             spinnerPlayer1.setSelection(savedInstanceState.getInt("PLAYER_1_IMG"));
             spinnerPlayer2.setSelection(savedInstanceState.getInt("PLAYER_2_IMG"));
         }
@@ -222,7 +222,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        outState.putInt("LEVEL", levelSeekBar.getProgress());
+        outState.putInt("mrm_LEVEL", levelSeekBar.getProgress());
         outState.putInt("PLAYER_1_IMG", spinnerPlayer1.getSelectedItemPosition());
         outState.putInt("PLAYER_2_IMG", spinnerPlayer2.getSelectedItemPosition());
 
@@ -246,6 +246,12 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onResume() {
         super.onResume();
+
+        if(mPrefs == null) {
+            mPrefs = getSharedPreferences("mrm", MODE_PRIVATE);
+        }
+        levelSeekBar.setProgress(mPrefs.getInt("mrm_LEVEL", 20));
+
 
         /*if(mPrefs == null) {
             mPrefs = getSharedPreferences("mrm", MODE_PRIVATE);
@@ -279,7 +285,7 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(this, GamePlayActivity.class);
         //EditText editText = (EditText) findViewById(R.id.edit_message);
         //String message = editText.getText().toString();
-        intent.putExtra("LEVEL", levelSeekBar.getProgress());
+        intent.putExtra("mrm_LEVEL", levelSeekBar.getProgress());
         intent.putExtra("PLAYER1_IMG", ((ListItem) spinnerPlayer1.getSelectedItem()).logo);
         intent.putExtra("PLAYER2_IMG", ((ListItem) spinnerPlayer2.getSelectedItem()).logo);
         startActivity(intent);

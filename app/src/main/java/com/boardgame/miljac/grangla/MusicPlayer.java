@@ -71,7 +71,7 @@ class MusicPlayer implements Runnable {
     public MusicPlayer() {
         audioTrack = new AudioTrack(AudioManager.STREAM_MUSIC,
                 sr, AudioFormat.CHANNEL_OUT_MONO,
-                AudioFormat.ENCODING_PCM_16BIT, 50000/*buffsize*/,
+                AudioFormat.ENCODING_PCM_16BIT, 100000/*buffsize*/,
                 AudioTrack.MODE_STREAM);
     }
 

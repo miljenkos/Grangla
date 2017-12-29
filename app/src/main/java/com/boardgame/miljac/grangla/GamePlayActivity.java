@@ -57,6 +57,9 @@ public class GamePlayActivity extends AppCompatActivity implements TableFragment
     private boolean startCircleTime = false;
     private boolean startCrossTime = false;
 
+    private boolean win = false;
+    private boolean lose = false;
+
     ToggleButton soundToggle;
     ImageButton imageButton;
     ImageButton endImageButton;
@@ -133,7 +136,7 @@ public class GamePlayActivity extends AppCompatActivity implements TableFragment
             //tableView.invalidate();
 
 
-            if (lastMoveO != null) {
+            if ((lastMoveO != null) && (table != null) && (movesO != null)) {
                 double r = 0;
                 r = table.end2(lastMoveO.x, lastMoveO.y, lastEventTime);
                 result += r * TableConfig.RESULT_FACTOR;
@@ -151,7 +154,7 @@ public class GamePlayActivity extends AppCompatActivity implements TableFragment
 
             }
 
-            if (lastMoveX != null) {
+            if ((lastMoveX != null) && (table != null) && (movesX != null)) {
                 double r = 0;
                 r = table.end2(lastMoveX.x, lastMoveX.y, lastEventTime);
                 result -= r * TableConfig.RESULT_FACTOR;
@@ -175,6 +178,7 @@ public class GamePlayActivity extends AppCompatActivity implements TableFragment
             if ((result<=0) ||
                     (result >=100) /*||
                     ((currentTime - gameStartTime) >= TableConfig.GAME_DURATION)*/){
+
 
                 gameDone = true;
 
@@ -243,6 +247,14 @@ public class GamePlayActivity extends AppCompatActivity implements TableFragment
                 handler2.postDelayed(new Runnable() {
                     public void run() {
                         endDialog.dismiss();
+
+                        if(result>=0){
+                            win = true;
+                        } else {
+                            lose = true;
+                        }
+                        //saveSharedPreferences();
+
                         finish();
                     }
                 }, 9000);
@@ -408,6 +420,7 @@ public class GamePlayActivity extends AppCompatActivity implements TableFragment
         musicPlayer.mute();
         gamePaused = true;
         getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        saveSharedPreferences();
     }
 
     @Override
@@ -436,6 +449,11 @@ public class GamePlayActivity extends AppCompatActivity implements TableFragment
         }
         SharedPreferences.Editor ed = mPrefs.edit();
         ed.putBoolean("mrm_SOUND", soundToggle.isChecked());
+        ed.putInt("mrm_LEVEL", level);
+
+        if (win) ed.putInt("mrm_LEVEL", level +5);
+        if (lose) ed.putInt("mrm_LEVEL", level -5);
+
         ed.commit();
     }
 
@@ -466,7 +484,7 @@ public class GamePlayActivity extends AppCompatActivity implements TableFragment
         setContentView(R.layout.activity_game_play);
 
         Intent intent = getIntent();
-        level = intent.getIntExtra("LEVEL", 50);
+        level = intent.getIntExtra("mrm_LEVEL", 50);
         player1Image = intent.getIntExtra("PLAYER1_IMG", R.drawable.pin39);
         player2Image = intent.getIntExtra("PLAYER2_IMG", R.drawable.pin40);
 
