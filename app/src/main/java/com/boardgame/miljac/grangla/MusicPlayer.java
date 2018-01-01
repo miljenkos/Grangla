@@ -46,11 +46,17 @@ class MusicPlayer implements Runnable {
     double ph4 = 0.0;
     double phSolo = 0.0;
     double phSoloFrBendFactor = 0.0;
+    double chord1FrBendFactorFr = 0.0;
+    double phChord1FrBendFactor = 0.0;
+    double chord2FrBendFactorFr = 0.0;
+    double phChord2FrBendFactor = 0.0;
+    double chord3FrBendFactorFr = 0.0;
+    double phChord3FrBendFactor = 0.0;
     double soloFrBendFactorFr = 0.0;
     double phBassCh = 0.0;
     double phBassCh2 = 0.0;
 
-
+    double chord1FrBendFr,chord2FrBendFr, chord3FrBendFr;
     double phaseFactor = 1000. / twopi;
     double phaseStep;
     double phaseStepSlide;
@@ -65,6 +71,7 @@ class MusicPlayer implements Runnable {
     short samplesChords1[], samplesChords2[], samplesChords3[], samplesBassBase[], samplesToWrite[];
     short samplesSolo[], samplesOct[];
     double soloFrBendFactor;
+    double chord1FrBendFactor, chord2FrBendFactor, chord3FrBendFactor;
     int buffsize, buffsize2, buffsizeToWrite;
     Random rand = new Random();
     volatile boolean mute = false;
@@ -282,8 +289,8 @@ class MusicPlayer implements Runnable {
                     phaseStepSlide = twopi * bassFrSlide / sr;
                     buffsize = (int) noteDuration * 8;
 
-                    phaseStepOct = twopi * bassFr * 1.5 / sr;
-                    phaseStepSlideOct = twopi * bassFrSlide * 1.5 / sr;
+                    phaseStepOct = twopi * bassFr *2.001 / sr;
+                    phaseStepSlideOct = twopi * bassFrSlide *2.001 / sr;
 
                     //get key and calculate other chord tones
                     int key1 = bassGenerator.getKey() + 12;
@@ -314,6 +321,22 @@ class MusicPlayer implements Runnable {
                         //System.out.println("KEYCHANGE: " + countBars);
                         soloGenerator.setKeyChange(true);
                         if (countBars < 10) countBars++;
+
+
+
+                        rnd = rand.nextDouble();
+                        chord1FrBendFr = (((18.0/17.0) - 1.0) / 14) * rnd*rnd*2.8;
+                        rnd = rand.nextDouble();
+                        chord1FrBendFactorFr = 2 + rnd*rnd*11;
+                        rnd = rand.nextDouble();
+                        chord2FrBendFr = (((18.0/17.0) - 1.0) / 14) * rnd*1.8;
+                        rnd = rand.nextDouble();
+                        chord2FrBendFactorFr = 0.4 + rnd*5;
+                        rnd = rand.nextDouble();
+                        chord3FrBendFr = (((18.0/17.0) - 1.0) / 14) * rnd*2;
+                        rnd = rand.nextDouble();
+                        chord3FrBendFactorFr = 0.5 + rnd*7;
+
                     }
                     Note s = soloGenerator.getNextSoloNote();
                     soloFr = s.getFrequency();
@@ -322,7 +345,9 @@ class MusicPlayer implements Runnable {
                     soloTimeFrameDeviation = s.getSoloTimeFrameDeviation();
 
 
-                    //sample generation
+
+
+                //sample generation
                     for (int i = 0; i < buffsize * 2; i++) {
 //BASS
                         index = (int) (phaseFactor * ph);//speed up sin calculating
@@ -364,7 +389,7 @@ class MusicPlayer implements Runnable {
                             phaseStep = twopi * bassFr / sr;
                             phaseStepSlide = phaseStep;
 
-                            phaseStepOct = twopi * bassFr * 1.5 / sr;
+                            phaseStepOct = twopi * bassFr * 2.001 / sr;
                             phaseStepSlideOct = phaseStepOct;
                         }
 
@@ -386,7 +411,7 @@ class MusicPlayer implements Runnable {
                     if (sinArray[index] == 0.0d) {
                         sinArray[index] = Math.sin(phOct);
                     }
-                    samplesOct[i] = (short)((amp * sinArray[index] * (buffsize * 2 - i) / buffsize + amp / 2)/15);
+                    samplesOct[i] = (short)((amp * sinArray[index] * (buffsize * 2 - i) / buffsize + amp / 2)/20);
 
                     if (i < buffsize) {//first bass note
                         phOct += (phaseStepOct - phaseStepSlideOct) * ((double) i / (double) buffsize) + phaseStepSlideOct;
@@ -455,14 +480,44 @@ class MusicPlayer implements Runnable {
                             //System.out.println("GETKEYYYYYYY::  " + bassGenerator.getKey());
 
 
+                            //bending of first tone in a chord
+                            index = (int) (phaseFactor * phChord1FrBendFactor);
+                            if (sinArray[index] == 0.0d) {
+                                sinArray[index] = Math.sin(phChord1FrBendFactor);
+                            }
+                            chord1FrBendFactor = 1 + chord1FrBendFr * sinArray[index];
+
+                            phChord1FrBendFactor += twopi * chord1FrBendFactorFr / sr;
+                            if (phChord1FrBendFactor > twopi) phChord1FrBendFactor -= twopi;
+
+
                             //first tone in a chord
                             index = (int) (phaseFactor * ph2);
                             if (sinArray[index] == 0.0d) {
                                 sinArray[index] = Math.sin(ph2);
                             }
                             samplesChords1[i] = (short) (chordAmp * sinArray[index]);
-                            ph2 += twopi * fr2 / sr;
+                            ph2 += twopi * fr2 / sr * chord1FrBendFactor;
                             if (ph2 > twopi) ph2 -= twopi;
+
+
+
+
+
+
+
+
+
+
+                            //bending of second tone in a chord
+                            index = (int) (phaseFactor * phChord2FrBendFactor);
+                            if (sinArray[index] == 0.0d) {
+                                sinArray[index] = Math.sin(phChord2FrBendFactor);
+                            }
+                            chord2FrBendFactor = 1 + chord2FrBendFr * sinArray[index];
+
+                            phChord2FrBendFactor += twopi * chord2FrBendFactorFr / sr;
+                            if (phChord2FrBendFactor > twopi) phChord2FrBendFactor -= twopi;
 
                             //second tone in a chord
                             index = (int) (phaseFactor * ph3);
@@ -472,9 +527,22 @@ class MusicPlayer implements Runnable {
 
                             samplesChords2[i] = (short) (chordAmp * sinArray[index]);
 
-                            ph3 += twopi * fr3 / sr;
+                            ph3 += twopi * fr3 / sr * chord2FrBendFactor;
                             if (ph3 > twopi) ph3 -= twopi;
 
+
+
+
+
+                            //bending of third tone in a chord
+                            index = (int) (phaseFactor * phChord3FrBendFactor);
+                            if (sinArray[index] == 0.0d) {
+                                sinArray[index] = Math.sin(phChord3FrBendFactor);
+                            }
+                            chord3FrBendFactor = 1 + chord3FrBendFr * sinArray[index];
+
+                            phChord3FrBendFactor += twopi * chord3FrBendFactorFr / sr;
+                            if (phChord3FrBendFactor > twopi) phChord3FrBendFactor -= twopi;
                             //third note in a chord
                             index = (int) (phaseFactor * ph4);
                             if (sinArray[index] == 0.0d) {
@@ -482,7 +550,7 @@ class MusicPlayer implements Runnable {
                             }
 
                             samplesChords3[i] = (short) (chordAmp * sinArray[index]);
-                            ph4 += twopi * fr4 / sr;
+                            ph4 += twopi * fr4 / sr * chord3FrBendFactor;;
                             if (ph4 > twopi) ph4 -= twopi;
 
                             //long fading out
@@ -611,7 +679,7 @@ class MusicPlayer implements Runnable {
                         }
                         samplesSolo[i] = (short) (s.getVolume() * (/*
                         (sinArray[index] > 0.3) ? 0.5 : sinArray[index]*/
-                                sinArray[index]
+                                (Math.sqrt(Math.abs(sinArray[index]))) * Math.signum(sinArray[index])// * sinArray[index]
                         ));
                         phSolo += twopi * soloFr / sr * soloFrBendFactor;
                         if (phSolo > twopi) phSolo -= twopi;
@@ -687,7 +755,7 @@ class MusicPlayer implements Runnable {
 
                     while (!synthFlag.get()) {
                         try {
-                            Thread.sleep(50);
+                            Thread.sleep(40);
                         } catch (InterruptedException e) {
                             e.printStackTrace();
                         }
