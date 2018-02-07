@@ -89,9 +89,18 @@ class MusicPlayer implements Runnable {
 
 
     public MusicPlayer() {
+        int minBuffSize;
+
+        minBuffSize = AudioTrack.getMinBufferSize(
+                sr, AudioFormat.CHANNEL_OUT_MONO, AudioFormat.ENCODING_PCM_16BIT);
+
+        if (minBuffSize < 20000){
+            minBuffSize = 20000;
+        }
+
         audioTrack = new AudioTrack(AudioManager.STREAM_MUSIC,
                 sr, AudioFormat.CHANNEL_OUT_MONO,
-                AudioFormat.ENCODING_PCM_16BIT, 100000/*buffsize*/,
+                AudioFormat.ENCODING_PCM_16BIT, minBuffSize,//100000/*buffsize*/,
                 AudioTrack.MODE_STREAM);
     }
 
@@ -679,7 +688,7 @@ class MusicPlayer implements Runnable {
                         }
                         samplesSolo[i] = (short) (s.getVolume() * (/*
                         (sinArray[index] > 0.3) ? 0.5 : sinArray[index]*/
-                                (Math.sqrt(Math.abs(sinArray[index]))) * Math.signum(sinArray[index])// * sinArray[index]
+                                sinArray[index]// * sinArray[index]
                         ));
                         phSolo += twopi * soloFr / sr * soloFrBendFactor;
                         if (phSolo > twopi) phSolo -= twopi;
