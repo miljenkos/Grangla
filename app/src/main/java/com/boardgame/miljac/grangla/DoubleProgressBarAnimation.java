@@ -2,7 +2,6 @@ package com.boardgame.miljac.grangla;
 
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.Animation;
-import android.view.animation.LinearInterpolator;
 import android.view.animation.Transformation;
 import android.widget.ProgressBar;
 

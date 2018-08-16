@@ -7,12 +7,6 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
-import java.util.concurrent.locks.LockSupport;
-
-/**
- * Created by miljac on 4.10.2017..
- */
-
 public class HelpActivity extends AppCompatActivity {
     private int currentApiVersion;
 
@@ -21,11 +15,7 @@ public class HelpActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         currentApiVersion = android.os.Build.VERSION.SDK_INT;
         setContentView(R.layout.help);
-
-
     }
-
-
 
     public void exit(View view) {
         finish();

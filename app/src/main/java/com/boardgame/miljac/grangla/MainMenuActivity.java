@@ -7,13 +7,8 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
-import java.util.concurrent.locks.LockSupport;
 
-/**
- * Created by miljac on 4.10.2017..
- */
-
-public class SplashActivity extends AppCompatActivity {
+public class MainMenuActivity extends AppCompatActivity {
     private int currentApiVersion;
 
     @Override
@@ -25,19 +20,11 @@ public class SplashActivity extends AppCompatActivity {
         } else {
             setContentView(R.layout.splash_layout_old_android);
         }
-
-
-        /*LockSupport.parkNanos(2_000_000_000);
-
-        Intent intent = new Intent(this, MainActivity.class);
-        startActivity(intent);
-        finish();*/
     }
 
     public void enter(View view) {
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
-        //finish();
     }
 
     public void help(View view) {
@@ -51,17 +38,13 @@ public class SplashActivity extends AppCompatActivity {
     }
 
     public void exit(View view) {
-
-        //this.finishAndRemoveTask();
         this.finish();
-        //System.exit(0);
-
     }
 
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
-        if (currentApiVersion >= Build.VERSION_CODES.KITKAT)// && hasFocus)
+        if (currentApiVersion >= Build.VERSION_CODES.KITKAT)
         {
             getWindow().getDecorView().setSystemUiVisibility(
                     View.SYSTEM_UI_FLAG_LAYOUT_STABLE
@@ -77,7 +60,7 @@ public class SplashActivity extends AppCompatActivity {
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
-        if (currentApiVersion >= Build.VERSION_CODES.KITKAT)// && hasFocus)
+        if (currentApiVersion >= Build.VERSION_CODES.KITKAT)
         {
             getWindow().getDecorView().setSystemUiVisibility(
                     View.SYSTEM_UI_FLAG_LAYOUT_STABLE
@@ -93,7 +76,7 @@ public class SplashActivity extends AppCompatActivity {
     @Override
     public void onResume() {
         super.onResume();
-        if (currentApiVersion >= Build.VERSION_CODES.KITKAT)// && hasFocus)
+        if (currentApiVersion >= Build.VERSION_CODES.KITKAT)
         {
             getWindow().getDecorView().setSystemUiVisibility(
                     View.SYSTEM_UI_FLAG_LAYOUT_STABLE

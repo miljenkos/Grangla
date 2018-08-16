@@ -2,10 +2,6 @@ package com.boardgame.miljac.grangla;
 
 import java.util.Random;
 
-/**
- * Created by miljac on 28.5.2017..
- */
-
 public class BassGenerator {
 
     private int lastNoteInRiff = -1;
@@ -18,8 +14,6 @@ public class BassGenerator {
     private int currentMeasure = 3;
     public int getKey(){return this.currentKey;}
     public void setMeasure (int m){this.measure = m;}
-    public int getMeasure (){return this.measure;}
-
 
     Note[] currentChordSet;
     Note[] currentRiff;
@@ -33,12 +27,19 @@ public class BassGenerator {
     Note[] riff3;
 
     private int currentKey;
-
     Random rand = new Random();
 
+    /**
+     * Generates a chord progression
+     * two random keys and their fourths and fifths,
+     * and their fourths and fifths,
+     * and their fourths and fifths.
+     * @return
+     */
     private Note[] generateChordset(){
         int numberOfChords = (int) (1.4 + Math.ceil(3* rand.nextDouble()));
         Note[] chordSet = new Note[numberOfChords];
+
         for (int x=0; x<chordSet.length; x++) {
             int r = (int)(Math.ceil(2* rand.nextDouble()));
             if (r<2)
@@ -46,6 +47,7 @@ public class BassGenerator {
             else
                 chordSet[x] = new Note(chordKey2);
         }
+
         for(int j =0; j<3; j++){
             for (int x = 0; x < numberOfChords; x++) {
                 int r = (int) (Math.ceil(2 * rand.nextDouble()));
@@ -58,17 +60,14 @@ public class BassGenerator {
             }
         }
 
-        //System.out.print("chordset: ");
-        for (int x=0; x<chordSet.length; x++) {
-            //System.out.print(chordSet[x].getIndex() + " ");
-        }
-        //System.out.println();
-
         return chordSet;
     }
 
 
-
+    /**
+     * Generates a bass riff. Mostly the main chord tones will be used, with the bigger chances for lower notes.
+     * @return
+     */
     private Note[] generateRiff() {
         Note[] riff = new Note[10];
         Note a2 = new Note(5);
@@ -82,10 +81,7 @@ public class BassGenerator {
             rnd = rand.nextDouble();
 
             if (rnd<0.25) {
-                a2 = new Note(a.getNextIndexInMinorKey(0));//key is 0 because these are relative values
-                //System.out.println("A   " +a.getIndex());
-                //System.out.println("A2  " +a2.getIndex());
-
+                a2 = new Note(a.getNextIndexInMinorKey(0));
             } else {
                 a2 = new Note(a.getIndex());
             }
@@ -100,10 +96,6 @@ public class BassGenerator {
                 a.setSlide(true);
                 a.setIndex(lastIndex);
                 a.setNextNoteIndex(a2.getIndex());
-
-                //System.out.println("LLL " + a2.getIndex());
-
-                //System.out.println("LASTINDEX "  + a.getIndex() + " NEXTINDEX " + a.getNextNoteIndex());
             }
 
 
@@ -117,15 +109,7 @@ public class BassGenerator {
             }
             riff[j] = a;
             riff[j + 1] = a2;
-
-            //System.out.println(a.);
         }
-
-        //System.out.print("riff: ");
-        for (int x=0; x<riff.length; x++) {
-            //System.out.print(riff[x].getIndex() + " ");
-        }
-       //System.out.println();
 
         return riff;
     }
@@ -136,9 +120,6 @@ public class BassGenerator {
         chordKey1 = (int)(Math.ceil(rand.nextDouble() * 12) + TableConfig.BASS_NOTE_LOWER_BOUNDARY);
         chordKey2 = (int)(Math.ceil(rand.nextDouble() * 12) + TableConfig.BASS_NOTE_LOWER_BOUNDARY);
 
-        //System.out.println(chordKey1);
-        //System.out.println(chordKey2);
-
         chordSet1 = generateChordset();
         chordSet2 = generateChordset();
         chordSet3 = generateChordset();
@@ -147,18 +128,15 @@ public class BassGenerator {
         riff2 = generateRiff();
         riff3 = generateRiff();
 
-
         currentChordSet = chordSet1;
         currentRiff = riff1;
         currentKey = getNextChord();
-
     }
 
     public int getNextChord(){
         lastChordNo++;
         if (lastChordNo >= (currentChordSet.length)){
             lastChordNo = 0;
-
 
             int f =(int)(Math.ceil(3 - rand.nextDouble() * 2.6));
             switch(f){
@@ -174,7 +152,6 @@ public class BassGenerator {
             }
         }
 
-        //System.out.println("next Chord " + currentChordSet[lastChordNo].getIndex());
         return currentChordSet[lastChordNo].getIndex();
     }
 
@@ -199,25 +176,22 @@ public class BassGenerator {
                     currentRiff = riff3;
                     break;
             }
-
-
         }
-
-        //System.out.println("next relative note: " + currentRiff[lastNoteInRiff].getIndex() + " on key " + currentKey);
 
         Note newNote = currentRiff[lastNoteInRiff];
         newNote.applyKeyOnRelativeNote(currentKey);
         newNote.setUpperBoundary(TableConfig.BASS_NOTE_UPPER_BOUNDARY);
 
-        //System.out.println("next note: " + newNote.getIndex());
-
         return newNote;
     }
 
+    /**
+     * Generates a note from a chord.
+     * @param rndFactor
+     * @return
+     */
     private Note mainBeatNoteGenerate(double rndFactor) {
         Note result;
-
-
         double r = rand.nextDouble();
 
         if (r > rndFactor) {
@@ -249,6 +223,5 @@ public class BassGenerator {
         result = new Note(2);
         result.setRelativetoKey(true);
         return result;
-
     }
 }

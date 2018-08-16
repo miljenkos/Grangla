@@ -20,16 +20,15 @@ import android.view.View.OnTouchListener;
  * Use the {link TableFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
+
 public class TableFragment extends Fragment implements OnTouchListener {
     OnFieldSelectedListener fieldSelectedListener;
 
     public TableView tableView;
-    private int currentFieldDraw = R.drawable.pin41;
     public int pinSize;
 
     public interface OnFieldSelectedListener {
-        public void
-        onFieldSelected(int x, int y);
+        public void onFieldSelected(int x, int y);
     }
 
 
@@ -37,10 +36,8 @@ public class TableFragment extends Fragment implements OnTouchListener {
     public void onAttach(Context context) {
         super.onAttach(context);
 
-
         try {
             fieldSelectedListener = (OnFieldSelectedListener) context;
-            //System.out.println("\n\nmislim da sam se ataciral\n\n");
         } catch (ClassCastException e) {
             throw new ClassCastException(context.toString() + " must implement OnFieldSelectedListener");
         }
@@ -61,24 +58,15 @@ public class TableFragment extends Fragment implements OnTouchListener {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-
-
         View v = inflater.inflate(R.layout.fragment_table, container, true);
         tableView = (TableView) v.findViewById(R.id.Table);
         tableView.setOnTouchListener(this);
-        //pinSize = tableView.getHeight()/TableConfig.TABLE_SIZE;
-
-        tableView.disposePins(pinSize);
-
-        tableView.setCurrentColor(currentFieldDraw);
-
+        tableView.disposePins();
 
         this.setRetainInstance(true);
 
         return v;
     }
-
-
 
 
     @Override
@@ -88,14 +76,9 @@ public class TableFragment extends Fragment implements OnTouchListener {
         int y = (int) event.getY() ;
 
         if (event.getAction() == MotionEvent.ACTION_DOWN) {
-            //Log.d("koordinate:",  "x:" + x + "  y:" + y + "\n");
             fieldSelectedListener.onFieldSelected(tableView.getColumn(x),tableView.getRow(y));
         }
 
         return false;
-
     }
-
-
-
 }

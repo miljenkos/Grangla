@@ -11,7 +11,6 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Process;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -24,7 +23,6 @@ import android.widget.AdapterView;
 import android.widget.CompoundButton;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
-import android.widget.SeekBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.ToggleButton;
@@ -693,7 +691,7 @@ public class MultiplayerActivity extends AppCompatActivity implements
 
 
         spinnerPlayer1 = (Spinner) findViewById(R.id.spinner_player1);
-        spinnerPlayer1.setAdapter(new MyAdapter(this, R.layout.row, getAllList()));
+        spinnerPlayer1.setAdapter(new MySpinnerAdapter(this, R.layout.row, getAllList()));
         spinnerPlayer1.setBackgroundColor(Color.TRANSPARENT);
         spinnerPlayer1.setDrawingCacheBackgroundColor(Color.TRANSPARENT);
 
@@ -738,7 +736,7 @@ public class MultiplayerActivity extends AppCompatActivity implements
         });
 
         spinnerPlayer2 = (Spinner) findViewById(R.id.spinner_player2);
-        final MyAdapter adapterSpinner2 = new MyAdapter(this, R.layout.row, new ArrayList<ListItem>());
+        final MySpinnerAdapter adapterSpinner2 = new MySpinnerAdapter(this, R.layout.row, new ArrayList<ListItem>());
         spinnerPlayer2.setAdapter(adapterSpinner2);
 
 

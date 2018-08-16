@@ -6,45 +6,25 @@ import android.view.ViewGroup;
 
 
 public class TableView extends ViewGroup  {
-
-    private int parentWidth;
-    private int parentHeight;
     private int dotSize;
-    private int currentColor;
     private int numRow;
     private int numCol;
 
-    private Context context;
-
-
-
     public TableView(Context context) {
         super(context);
-        this.context = context;
-
     }
 
     public TableView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
-        this.context = context;
-
     }
 
     public TableView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        this.context = context;
-
     }
 
-
-
-
-    public int[] disposePins(int dotSize) {
-        //this.dotSize = dotSize;
-
-        numRow = TableConfig.TABLE_SIZE;// height
-        numCol =  TableConfig.TABLE_SIZE;//width
-
+    public int[] disposePins() {
+        numRow = TableConfig.TABLE_SIZE;
+        numCol =  TableConfig.TABLE_SIZE;
 
         for (int r=0; r < numRow ; r++) {
             for (int c=0; c < numCol; c++) {
@@ -59,22 +39,10 @@ public class TableView extends ViewGroup  {
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-        /*int size = 0;
-        int width = getMeasuredWidth();
-        int height = getMeasuredHeight();
-
-        if (width > height) {
-            size = height;
-        } else {
-            size = width;
-        }
-        setMeasuredDimension(size*5/6, size*5/6);*/
 
         int size = 0;
         int width =  MeasureSpec.getSize(widthMeasureSpec) ;
         int height = MeasureSpec.getSize(heightMeasureSpec) ;
-
-
 
         if (width > height) {
             size = height;
@@ -89,8 +57,6 @@ public class TableView extends ViewGroup  {
         setMeasuredDimension(size, size);
 
         dotSize = size / TableConfig.TABLE_SIZE;
-
-        //this.setMeasuredDimension(parentWidth, parentHeight);
     }
 
     @Override
@@ -110,42 +76,20 @@ public class TableView extends ViewGroup  {
 
     }
 
-    public int getCurrentColor() {
-        return currentColor;
-    }
-
-    public void setCurrentColor(int currentColor) {
-        this.currentColor = currentColor;
-    }
-
-
-
     public void  changePinColor(int x, int y, int color, float alpha) {
-        /*int row = getRow(y);
-        int col = getColumn(x);*/
-
         FieldImageView pinImg = (FieldImageView) getChildAt(x + (y*numCol));
 
         if (pinImg != null) {
             pinImg.setPinColor(color);
-            //pinImg.invalidate();
             pinImg.setAlpha(alpha);
-
         }
     }
 
     public void removeImediately(int x, int y) {
-        //System.out.println("REMOVE IMEDIATELY");
-
-        int row = getRow(y);
-        int col = getColumn(x);
-
         FieldImageView pinImg = (FieldImageView) getChildAt(x + (y*numCol));
 
         if (pinImg != null) {
             pinImg.remove();
-            //pinImg.invalidate();
-
         }
     }
 

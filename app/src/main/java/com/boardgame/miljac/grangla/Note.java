@@ -2,14 +2,22 @@ package com.boardgame.miljac.grangla;
 
 import java.util.Random;
 
-/**
- * Created by miljac on 23.5.2017..
- */
-
 public class Note {
 
     Random rand = new Random();
     double rnd = rand.nextDouble();
+    double soloFrBendFactor;
+    double soloFrBendFr;
+    int soloTimeFrameDeviation;
+    private boolean keyChange = false;
+    private int noteIndex;
+    private int relativeIndex;
+    private boolean slide = false;
+    private int nextNoteIndex = -20;
+    private int volume = 100;
+    private boolean relativetoKey = false;
+    private boolean relativetoPrevious = false;
+
 
     public double getSoloFrBendFactor() {
         return soloFrBendFactor;
@@ -23,13 +31,9 @@ public class Note {
         this.soloFrBendFr = soloFrBendFr;
     }
 
-    double soloFrBendFactor;
-
     public double getSoloFrBendFr() {
         return soloFrBendFr;
     }
-
-    double soloFrBendFr;
 
     public int getSoloTimeFrameDeviation() {
         return soloTimeFrameDeviation;
@@ -38,8 +42,6 @@ public class Note {
     public void setSoloTimeFrameDeviation(int soloTimeFrameDeviation) {
         this.soloTimeFrameDeviation = soloTimeFrameDeviation;
     }
-
-    int soloTimeFrameDeviation;
 
     public Note(int i){
 
@@ -65,22 +67,6 @@ public class Note {
         this.keyChange = keyChange;
     }
 
-    private boolean keyChange = false;
-
-    private int noteIndex;
-
-    public int getRelativeIndex() {
-        return relativeIndex;
-    }
-
-    public void setRelativeIndex(int relativeIndex) {
-        this.relativeIndex = relativeIndex;
-    }
-
-    private int relativeIndex;
-
-    private boolean slide = false;
-
     public boolean isSlide() {
         return slide;
     }
@@ -89,40 +75,24 @@ public class Note {
         this.slide = slide;
     }
 
-    public int getNextNoteIndex() {
-        return nextNoteIndex;
-    }
-
     public void setNextNoteIndex(int nextNoteIndex) {
         this.nextNoteIndex = nextNoteIndex;
-    }
-
-    private int nextNoteIndex = -20;
-
-    private int volume = 100;
-
-    public boolean isRelativetoKey() {
-        return relativetoKey;
     }
 
     public void setRelativetoKey(boolean relativetoKey) {
         this.relativetoKey = relativetoKey;
     }
 
-    private boolean relativetoKey = false;
 
     public void setRelativetoPrevious(boolean RelativetoPrevious) {
         this.relativetoPrevious = relativetoPrevious;
     }
-
-    private boolean relativetoPrevious = false;
 
     private double indexToFrequency(int x) {
         if (x == 1) return 32.7;
         if (x > 12) return (2 * indexToFrequency(x-12));
         return 1.059463094359 * indexToFrequency(x-1);
     }
-
 
     public double getFrequency(){
         return indexToFrequency(noteIndex);
@@ -131,12 +101,6 @@ public class Note {
     public double getNextNoteFrequency(){
         return indexToFrequency(nextNoteIndex);
     }
-
-    public double getSlideFrequency(){
-        return indexToFrequency(getNextNoteIndex());
-    }
-
-
 
     public int  getIndex(){
         return noteIndex;
@@ -151,7 +115,6 @@ public class Note {
     public void setVolume(int volume) {
         this.volume = volume;
     }
-
 
     public void setIndexToFifth(){
         noteIndex += 7;
@@ -170,51 +133,20 @@ public class Note {
         }
     }
 
-    /*public void setLowerBoundary(int boundary){
-        while (this.noteIndex<boundary){
-            this.noteIndex += 12;
-        }
-        while (this.nextNoteIndex<boundary){
-            this.nextNoteIndex += 12;
-        }
-    }*/
-
-
+    /**
+     * Turns index relative to key to absolute value
+     * @param key
+     */
     public void applyKeyOnRelativeNote(int key){
         this.noteIndex = this.relativeIndex + key;
         this.nextNoteIndex += key;
     }
 
-    //kljuc je ova nota, i je 2- sekunda, 3 - terca itd.
-    public int getNoteIndexInMinorKey(int i){
-        if (i <= 0 ) return 0;
-        switch(i) {
-            case 1:
-                return noteIndex;
-            case 2:
-                return noteIndex + 2;
-            case 3:
-                return noteIndex + 3;
-            case 4:
-                return noteIndex + 5;
-            case 5:
-                return noteIndex + 7;
-            case 6:
-                return noteIndex + 8;
-            case 7:
-                return noteIndex + 10;
-            default:
-                return getNoteIndexInMinorKey(noteIndex - 7);
-        }
-    }
-
-    //kljuc je ova nota, i je 2- sekunda, 3 - terca itd.
-    public Note getNoteInMinorKey(int i){
-        return new Note(this.getNoteIndexInMinorKey(i));
-    }
-
-
-
+    /**
+     * Sets index of this note to the previous in the given key
+     * @param key
+     * @return
+     */
     public int downOneInMinorKey(int key){
         switch((noteIndex - key) % 12) { //provjeri kak se ovo s negativnim brojevima ponasa
             case 0:
@@ -258,6 +190,11 @@ public class Note {
         }
     }
 
+    /**
+     * Sets index of this note to the next in the given key
+     * @param key
+     * @return
+     */
 
     public int upOneInMinorKey(int key){
         switch((noteIndex - key) % 12) { //provjeri kak se ovo s negativnim brojevima ponasa
@@ -302,14 +239,11 @@ public class Note {
         }
     }
 
-
-
-
-
-
-
-
-
+    /**
+     * Retrieves the index of the previous note in the given key
+     * @param key
+     * @return
+     */
     public int getPreviousIndexInMinorKey(int key){
         switch((noteIndex - key) % 12) { //provjeri kak se ovo s negativnim brojevima ponasa
             case 0:
@@ -341,7 +275,11 @@ public class Note {
         }
     }
 
-
+    /**
+     * Retrieves the index of the next note in the given key
+     * @param key
+     * @return
+     */
     public int getNextIndexInMinorKey(int key){
         switch((noteIndex - key) % 12) { //provjeri kak se ovo s negativnim brojevima ponasa
             case 0:
@@ -372,6 +310,4 @@ public class Note {
                 return noteIndex;
         }
     }
-
-
 }

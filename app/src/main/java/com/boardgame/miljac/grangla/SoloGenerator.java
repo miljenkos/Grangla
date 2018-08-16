@@ -2,13 +2,7 @@ package com.boardgame.miljac.grangla;
 
 import java.util.Random;
 
-/**
- * Created by miljac on 30.7.2017..
- */
-
 public class SoloGenerator {
-
-
     Random rand = new Random();
     Note[] solo1;
     Note[] solo2;
@@ -42,7 +36,6 @@ public class SoloGenerator {
 
 
     public SoloGenerator() {
-        //System.out.println("usel sam u konstruktor!");
         solo1 = generateSolo2();
         solo2 = generateSolo();
         solo3 = generateSolo();
@@ -53,6 +46,12 @@ public class SoloGenerator {
 
     public void setKey(int key){currentKey = key;}
 
+    /**
+     * Generates a solo sequence of random length. Notes in a solo sequence firsat alternately go up and down for two predefined random values.
+     * After that some randomly picked notes get set to the next higher or lower note, or equalized with the last note in the sequence.
+     * Volume also get randomized.
+     * Pitch index is relative to the last note, it gets set to apsolute later.
+     */
     private Note[] generateSolo(){
         int length = 14 + (int)(rand.nextDouble() * 11);
         Note[] solo = new Note[length];
@@ -70,7 +69,6 @@ public class SoloGenerator {
                 down--;
             }
 
-
             if (x%2 == 0){
                 a = new Note(up);
             } else {
@@ -81,7 +79,6 @@ public class SoloGenerator {
             if (rnd < (0.1 + x*0.025)) {
                 a.setIndex(0);
             }
-
 
             rnd = rand.nextDouble();
             a.setVolume(190 + (int)(55*rnd) - x*5);
@@ -97,19 +94,20 @@ public class SoloGenerator {
             solo[x] = a;
         }
 
-
         a.setRelativetoPrevious(true);
-
         return solo;
     }
 
+
+/**
+ * Generates a solo with some different parameters. Completely new function for complete freedom over playing with all parameters.
+ **/
     private Note[] generateSolo2(){
         int length = 5 + (int)(rand.nextDouble() * 10);
         Note[] solo = new Note[length];
 
         int up = (int)(rand.nextDouble() * 6) -2;
         int down = -(int)(rand.nextDouble() * 6) +2;
-
 
         for(int x=0; x<length; x++){
             rnd = rand.nextDouble();
@@ -119,7 +117,6 @@ public class SoloGenerator {
             if (rnd > 0.9){
                 down--;
             }
-
 
             if (x%2 == 0){
                 a = new Note(up);
@@ -131,7 +128,6 @@ public class SoloGenerator {
             if (rnd < (0.3 + x*0.03)) {
                 a.setIndex(0);
             }
-
 
             rnd = rand.nextDouble();
             a.setVolume(190 + (int)(55*rnd) - x*7);
@@ -147,7 +143,6 @@ public class SoloGenerator {
             solo[x] = a;
         }
 
-
         a.setRelativetoPrevious(true);
 
         return solo;
@@ -158,7 +153,7 @@ public class SoloGenerator {
     public Note getNextSoloNote(){
         soloIndex++;
         if (soloIndex >= (currentSolo.length)){
-            if(keyChange) {
+            if(keyChange) {//every solo begins with the begining of a bar
                 soloIndex = 0;
 
                 int f = (int) (Math.ceil(3 - rand.nextDouble() * 3.7));
@@ -176,7 +171,7 @@ public class SoloGenerator {
                         currentSolo = solo4;
                         break;
                 }
-            } else {
+            } else {//if the solo is ended and the bar isn't, the last note is prolonged
                 Note a = new Note(lastNote.getIndex());
                 a.setVolume(lastNote.getVolume()/2);
                 a.setSoloFrBendFr(lastNote.getSoloFrBendFr());
@@ -188,22 +183,13 @@ public class SoloGenerator {
             }
         }
 
-
-
-        for(int x=0; x<solo1.length; x++){
-            //System.out.print(solo1[x] + " ");
-        }
-
-        for(int x=0; x<currentSolo.length; x++){
-            //System.out.print(currentSolo[x] + " ");
-        }
-
         nextNote = new Note(lastNote.getIndex());
         nextNote.setVolume(currentSolo[soloIndex].getVolume());
         nextNote.setSoloFrBendFr(currentSolo[soloIndex].getSoloFrBendFr());
         nextNote.setSoloFrBendFactor(currentSolo[soloIndex].getSoloFrBendFactor());
         nextNote.setSoloTimeFrameDeviation(currentSolo[soloIndex].getSoloTimeFrameDeviation());
 
+        //note index has to be set from relative to last note to absolute to be played
         if (currentSolo[soloIndex].getIndex() > 0){
             for (int x=0; x<currentSolo[soloIndex].getIndex(); x++){
                 nextNote.upOneInMinorKey(currentKey);
@@ -218,7 +204,7 @@ public class SoloGenerator {
             if(!major) {
                 nextNote.setIndex(currentKey);
             } else {
-                nextNote.setIndex(currentKey+3);
+                nextNote.setIndex(currentKey+3);//minor scale contains the same notes as major + 3 semitones
             }
 
             if(!beginning) {
@@ -230,7 +216,6 @@ public class SoloGenerator {
                 }
             }
         }
-
 
         if (nextNote.getIndex() > TableConfig.SOLO_NOTE_UPPER_BOUNDARY)
             nextNote.setIndex(nextNote.getIndex()-12);

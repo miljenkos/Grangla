@@ -1,16 +1,12 @@
 package com.boardgame.miljac.grangla;
 
-/**
- * Created by miljac on 24.1.2017..
- */
-
 
 /**
  * A single field (space) on a game board
  * @author miljac
  *
  */
-public class Space  //polje u tabli, moze imati tri stanja : krizic, kruzic i prazno
+public class Space
 {
     /**
      * The default constructor, sets the field (space) to be empty.

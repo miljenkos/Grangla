@@ -1,19 +1,16 @@
 package com.boardgame.miljac.grangla;
 
-/**
- * Created by miljac on 24.1.2017..
- */
 
-//import java.util.List;
+
 import java.util.Random;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.concurrent.locks.Lock;
+
 /**
  * This is where the actual game happens.
- * @author miljac
- *
  */
-public class Table // igraca tabla
+
+public class Table
 {
     private final Space[][] table = new Space[10][10];
 
@@ -61,7 +58,6 @@ public class Table // igraca tabla
 
     public Table(int l)
     {
-        //this.table = new ArrayList<ArrayList<Space>>();
         this.level = l;
         this.mistakeFactor = (1.2 * (level/10 - 10)*(level/10 - 10)*(level/10 - 10)*(level/10 - 10));
 
@@ -69,11 +65,6 @@ public class Table // igraca tabla
         {
             for (int j=0; j<TableConfig.TABLE_SIZE; j++){
                 (this.table[i][j]) = new Space();
-                /*System.out.println("TTTTT");
-                System.out.println((this.table[i][j]).getState().toString());*/
-                //System.out.println(this.get(i,j).toString());
-                //System.out.println();
-
             }
         }
 
@@ -99,14 +90,14 @@ public class Table // igraca tabla
      * @param j y-coordinate of a field (space)
      */
 
-    private void put(State givenState, int i, int j)  // stavlja stanje givenState na polje koordinata (i,j)
+    private void put(State givenState, int i, int j)
     {
         i = (i + TableConfig.TABLE_SIZE*2) % TableConfig.TABLE_SIZE;
         j = (j + TableConfig.TABLE_SIZE*2) % TableConfig.TABLE_SIZE;
         (this.table[i][j]).setState(givenState);
     }
 
-    public boolean publicPut(State givenState, int i, int j)  // stavlja stanje givenState na polje koordinata (i,j)
+    public boolean publicPut(State givenState, int i, int j)
     {
         if(this.get(i,j) == State.empty) {
             w.lock();
@@ -117,15 +108,13 @@ public class Table // igraca tabla
                 w.unlock();
             }
             lastMove = new Coordinates(i, j);
-            //System.out.println("JESAM");
             return true;
         }
-        //System.out.println("NISAM");
         return false;
     }
 
 
-    public boolean publicEmpty(int i, int j)  // stavlja stanje givenState na polje koordinata (i,j)
+    public boolean publicEmpty(int i, int j)
     {
         if(this.get(i,j) != State.empty) {
             w.lock();
@@ -136,10 +125,8 @@ public class Table // igraca tabla
                 w.unlock();
             }
             lastMove = new Coordinates(i, j);
-            //System.out.println("JESAM");
             return true;
         }
-        //System.out.println("NISAM");
         return false;
     }
 
@@ -151,19 +138,12 @@ public class Table // igraca tabla
      */
     private State get(int i,int j)
     {
-        /*System.out.println(i);
-        System.out.println(j);*/
         int i2 = (i + TableConfig.TABLE_SIZE*2) % TableConfig.TABLE_SIZE;
         int j2 = (j + TableConfig.TABLE_SIZE*2) % TableConfig.TABLE_SIZE;
         try {
             return (this.table[i2][j2]).getState();
         }
         catch (Exception e) {
-            //e.printStackTrace();
-            /*System.out.println(i);
-            System.out.println(i2);
-            System.out.println(j);
-            System.out.println(j2);*/
             return null;
         }
     }
@@ -200,7 +180,6 @@ public class Table // igraca tabla
     {
         Double weight = 0.0;
         Double r = 0.0;
-        //String s;
         State enemy;
         double biggestWeight=-1;
         int bWICoor=1,bWJCoor=1;
@@ -214,39 +193,31 @@ public class Table // igraca tabla
 
 
             for (int i = 0; i < TableConfig.TABLE_SIZE; i++) {
-                //s = "";
                 for (int j = (lastMove.y-3); j < (lastMove.y+4); j++) {//for (int j = 0; j < TableConfig.TABLE_SIZE; j++) {
                     r = rn.nextDouble();
                     r = r*r*r * mistakeFactor;
 
-                    /*System.out.println("LLLL");
-                    System.out.println(level);
-                    System.out.println(mistakeFactor);*/
-
                     weight = this.evaluateSpaceWeight(i, j, me) + r;
-                    //s += String.format("%6s", weight);
+
                     if (weight > biggestWeight) {
                         bWICoor = i;
                         bWJCoor = j;
                         biggestWeight = weight;
                     }
                 }
-                //System.out.println(i + " " + s);
             }
 
 
             for (int i = 0; i < TableConfig.TABLE_SIZE; i++) {
                 //s = "";
-                for (int j = (lastMove.y-3); j < (lastMove.y+4); j++) {//for (int j = 0; j < TableConfig.TABLE_SIZE; j++) {
+                for (int j = (lastMove.y-3); j < (lastMove.y+4); j++) {
                     weight = 0.8 * this.evaluateSpaceWeight(i, j, enemy);
-                    //s += String.format("%6s", weight);
                     if (weight > biggestWeight) {
                         bWICoor = i;
                         bWJCoor = j;
                         biggestWeight = weight;
                     }
                 }
-                //System.out.println("a" + i + " " + s);
             }
 
             this.put(me,bWICoor,bWJCoor);
@@ -279,7 +250,6 @@ public class Table // igraca tabla
         if (this.get( i, j )!=State.empty) return 0;
         int result=0;
         this.put( me, i, j );
-        //System.out.println("DIRECTION " + direction);
 
         for (int begin=0; begin<sequence.length; begin++)
         {
@@ -369,6 +339,10 @@ public class Table // igraca tabla
 
 
 
+    /**
+     * Checks if someone has collected a sequence, and removes it from the table
+     * @return A number of points
+     */
 
     public int end2(int iC, int jC, long lastEventT)
     {
@@ -380,7 +354,6 @@ public class Table // igraca tabla
 
 
             State state = this.get(iC, jC);
-            //System.out.println(state.toString());
             Boolean found = false;
 
 
@@ -415,8 +388,6 @@ public class Table // igraca tabla
                                 (this.get(i + 1 * k1, j + 1 * k2).equals(state)) &&
                                 (this.get(i + 2 * k1, j + 2 * k2).equals(state)) &&
                                 (this.get(i + 3 * k1, j + 3 * k2).equals(state))) {
-
-                            //System.out.println(this.get(i, j));
 
                             this.put(State.empty, i, j);
                             this.put(State.empty, i + 1 * k1, j + 1 * k2);
@@ -485,99 +456,6 @@ public class Table // igraca tabla
 
 
     }
-
-    /**
-     * Checks if someone has won.
-     * @return A winner or empty.
-     */
-
-    public EndStruct end()
-    {
-        r.lock();
-        try {
-            for (int i=-4; i<TableConfig.TABLE_SIZE; i++)    //koso prema dolje lijevo
-                for (int j=-4; j<TableConfig.TABLE_SIZE; j++)
-                {
-                    if ( (this.get(i,j)== State.cross) && (this.get(i+1,j+1)==State.cross) && (this.get( i+2, j+2 )==State.cross) && (this.get( i+3, j+3 )==State.cross) )
-                        return new EndStruct(State.cross,
-                                new Coordinates(i,j),
-                                new Coordinates(i+1,j+1),
-                                new Coordinates(i+2,j+2),
-                                new Coordinates(i+3,j+3));
-                    if ( (this.get(i,j)== State.circle) && (this.get(i+1,j+1)==State.circle) && (this.get( i+2, j+2 )==State.circle) && (this.get( i+3, j+3 )==State.circle) )
-                        return new EndStruct(State.circle,
-                                new Coordinates(i,j),
-                                new Coordinates(i+1,j+1),
-                                new Coordinates(i+2,j+2),
-                                new Coordinates(i+3,j+3));
-                }
-
-            for (int i=-4; i<TableConfig.TABLE_SIZE; i++)    //koso prema dolje desno
-                for (int j=-4; j<TableConfig.TABLE_SIZE; j++)
-                {
-                    if ( (this.get(i,j)== State.cross) && (this.get(i-1,j+1)==State.cross) && (this.get( i-2, j+2 )==State.cross) && (this.get( i-3, j+3 )==State.cross) )
-                        return new EndStruct(State.cross,
-                                new Coordinates(i,j),
-                                new Coordinates(i-1,j+1),
-                                new Coordinates(i-2,j+2),
-                                new Coordinates(i-3,j+3));
-                    if ( (this.get(i,j)== State.circle) && (this.get(i-1,j+1)==State.circle) && (this.get( i-2, j+2 )==State.circle) && (this.get( i-3, j+3 )==State.circle) )
-                        return new EndStruct(State.circle,
-                                new Coordinates(i,j),
-                                new Coordinates(i-1,j+1),
-                                new Coordinates(i-2,j+2),
-                                new Coordinates(i-3,j+3));
-                }
-
-            for (int i=-4; i<TableConfig.TABLE_SIZE; i++)  //vodoravno
-                for (int j=-4; j<TableConfig.TABLE_SIZE; j++)
-                {
-                    if ( (this.get(i,j)== State.cross) && (this.get(i+1,j)==State.cross) && (this.get( i+2, j )==State.cross) && (this.get( i+3, j)==State.cross) )
-                        return new EndStruct(State.cross,
-                                new Coordinates(i,j),
-                                new Coordinates(i+1,j),
-                                new Coordinates(i+2,j),
-                                new Coordinates(i+3,j));
-                    if ( (this.get(i,j)== State.circle) && (this.get(i+1,j)==State.circle) && (this.get( i+2, j )==State.circle) && (this.get( i+3, j )==State.circle) )
-                        return new EndStruct(State.circle,
-                                new Coordinates(i,j),
-                                new Coordinates(i+1,j),
-                                new Coordinates(i+2,j),
-                                new Coordinates(i+3,j));
-                }
-
-            for (int i=-4; i<TableConfig.TABLE_SIZE; i++)  //okomito
-                for (int j=-4; j<TableConfig.TABLE_SIZE; j++)
-                {
-                    if ( (this.get(i,j)== State.cross) && (this.get(i,j+1)==State.cross) && (this.get( i, j+2 )==State.cross) && (this.get( i, j+3)==State.cross) )
-                        return new EndStruct(State.cross,
-                                new Coordinates(i,j),
-                                new Coordinates(i,j+1),
-                                new Coordinates(i,j+2),
-                                new Coordinates(i,j+3));
-                    if ( (this.get(i,j)== State.circle) && (this.get(i,j+1)==State.circle) && (this.get( i, j+2 )==State.circle) && (this.get( i, j+3 )==State.circle) )
-                        return new EndStruct(State.circle,
-                                new Coordinates(i,j),
-                                new Coordinates(i,j+1),
-                                new Coordinates(i,j+2),
-                                new Coordinates(i,j+3));
-                }
-        }
-
-        finally { r.unlock(); }
-
-        return new EndStruct(State.empty,
-                new Coordinates(0,0),
-                new Coordinates(0,0),
-                new Coordinates(0,0),
-                new Coordinates(0,0));
-    }
-
-    public void setLevel(int l){
-        this.level = l;
-        //System.out.println("Stavio sam nivo: " + l + "     " + this.level);
-    }
-
 }
 
 

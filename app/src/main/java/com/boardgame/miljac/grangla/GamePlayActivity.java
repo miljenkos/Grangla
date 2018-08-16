@@ -14,7 +14,6 @@ import android.widget.CompoundButton;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.ToggleButton;
-
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.LockSupport;
@@ -62,8 +61,6 @@ public class GamePlayActivity extends AppCompatActivity implements TableFragment
 
     ToggleButton soundToggle;
     ImageButton imageButton;
-    ImageButton endImageButton;
-
     DoubleProgressBarAnimation animResult;
 
 
@@ -75,66 +72,57 @@ public class GamePlayActivity extends AppCompatActivity implements TableFragment
     Thread refreshThread;
     Thread uIPutThread;
 
-    CopyOnWriteArrayList movesO = new CopyOnWriteArrayList();//LinkedList();
-    CopyOnWriteArrayList movesX = new CopyOnWriteArrayList();//LinkedList();
-
+    CopyOnWriteArrayList movesO = new CopyOnWriteArrayList();
+    CopyOnWriteArrayList movesX = new CopyOnWriteArrayList();
 
     Thread musicPlayerThread;
     MusicPlayer musicPlayer;
 
-
-
     class UIPut implements Runnable {
 
         public void run() {
-            //synchronized (table) {
-            //System.out.println("ISCRTAVAMMM::: " + System.currentTimeMillis());
-
-
             for (int i = 0; i < TableConfig.TABLE_SIZE; i++) {
                 for (int j = 0; j < TableConfig.TABLE_SIZE; j++) {
                     if (table.publicGet(i, j) == State.circle) {
                         if ((movesO.size() >= (TableConfig.MAX_PIECES-1)) &&
                                 (new Coordinates(i,j).equals(movesO.get(TableConfig.MAX_PIECES - 2)))) {
-                            tableView.changePinColor(i/* * tableFragment.pinSize + 1*/, j/* * tableFragment.pinSize + 1*/, player1Image, 0.32f);
+                            tableView.changePinColor(i, j, player1Image, 0.32f);
                         }
                         else if ((movesO.size() >= (TableConfig.MAX_PIECES-2)) &&
                                    (new Coordinates(i,j).equals(movesO.get(TableConfig.MAX_PIECES - 3)))) {
-                            tableView.changePinColor(i/* * tableFragment.pinSize + 1*/, j/* * tableFragment.pinSize + 1*/, player1Image, 0.6f);
+                            tableView.changePinColor(i, j, player1Image, 0.6f);
                         }
                         else {
-                            tableView.changePinColor(i/* * tableFragment.pinSize + 1*/, j/* * tableFragment.pinSize + 1*/, player1Image, 1f);
+                            tableView.changePinColor(i, j, player1Image, 1f);
                         }
                     }
                     if (table.publicGet(i, j) == State.cross){
                         if ((movesX.size() >= (TableConfig.MAX_PIECES-1)) &&
                                 (new Coordinates(i,j).equals(movesX.get(TableConfig.MAX_PIECES - 2)))) {
-                            tableView.changePinColor(i/* * tableFragment.pinSize + 1*/, j/* * tableFragment.pinSize + 1*/, player2Image, 0.32f);
+                            tableView.changePinColor(i, j, player2Image, 0.32f);
                         }
                         else if ((movesX.size() >= (TableConfig.MAX_PIECES-2)) &&
                                 (new Coordinates(i,j)).equals(movesX.get(TableConfig.MAX_PIECES - 3))) {
-                            tableView.changePinColor(i/* * tableFragment.pinSize + 1*/, j/* * tableFragment.pinSize + 1*/, player2Image, 0.6f);
+                            tableView.changePinColor(i, j, player2Image, 0.6f);
                         }
                         else {
-                            tableView.changePinColor(i/* * tableFragment.pinSize + 1*/, j/* * tableFragment.pinSize + 1*/, player2Image, 1f);
+                            tableView.changePinColor(i, j, player2Image, 1f);
                         }
 
                     }
                     if (table.publicGet(i, j) == State.empty) {
 
-                        tableView.changePinColor(i/* * tableFragment.pinSize + 1*/, j/* * tableFragment.pinSize + 1*/, R.drawable.pin41, 1f);
+                        tableView.changePinColor(i, j, R.drawable.pin41, 1f);
 
                         movesO.remove(new Coordinates(i, j));
                         movesX.remove(new Coordinates(i, j));
                     }
 
                     if (table.publicGet(i, j) == State.rock) {
-                        tableView.changePinColor(i/* * tableFragment.pinSize + 1*/, j/* * tableFragment.pinSize + 1*/, R.drawable.pin20, 1f);
+                        tableView.changePinColor(i, j, R.drawable.pin20, 1f);
                     }
                 }
             }
-            //tableView.invalidate();
-
 
             if ((lastMoveO != null) && (table != null) && (movesO != null)) {
                 double r = 0;
@@ -176,12 +164,8 @@ public class GamePlayActivity extends AppCompatActivity implements TableFragment
             currentTime = System.currentTimeMillis();
 
             if ((result<=0) ||
-                    (result >=100) /*||
-                    ((currentTime - gameStartTime) >= TableConfig.GAME_DURATION)*/){
-
-
+                    (result >=100)){
                 gameDone = true;
-
 
                 musicPlayer.setMeasure(2);
                 musicPlayer.setEndSong();
@@ -193,7 +177,7 @@ public class GamePlayActivity extends AppCompatActivity implements TableFragment
 
                 endDialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
-                if(android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT)// && hasFocus)
+                if(android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT)
                 {
                     endDialog.getWindow().getDecorView().setSystemUiVisibility(
                             View.SYSTEM_UI_FLAG_LAYOUT_STABLE
@@ -203,9 +187,6 @@ public class GamePlayActivity extends AppCompatActivity implements TableFragment
                                     | View.SYSTEM_UI_FLAG_FULLSCREEN
                                     | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
                 }
-
-
-
 
                 if(result<=0){
                     if(player2Image == R.drawable.pin39) {
@@ -253,44 +234,13 @@ public class GamePlayActivity extends AppCompatActivity implements TableFragment
                         } else {
                             lose = true;
                         }
-                        //saveSharedPreferences();
 
                         finish();
                     }
                 }, 9000);
 
-                /*Handler handler3 = new Handler();
-                handler3.postDelayed(new Runnable() {
-                    public void run() {
-                        finish();
-                    }
-                }, 7500);*/
-
-
-                //endDialog.show();
-
-                /*endImageButton = (ImageButton) findViewById(R.id.endButton);
-                endImageButton.setOnClickListener(new View.OnClickListener() {
-
-                    @Override
-                    public void onClick(View arg0) {
-                        //dialog.dismiss();
-                        saveSharedPreferences();
-                        finish();
-
-                    }
-                });*/
-
-
-
 
             }
-
-
-            /*resultBar.setProgress(100-(int)result);
-            resultBar2.setProgress(0);//((int)result);*/
-
-
 
 
             if(!firstTimeAnimatedProgress)
@@ -310,21 +260,12 @@ public class GamePlayActivity extends AppCompatActivity implements TableFragment
 
 
 
-            if(currentTime < waitingMomentCircle){
-                //circleBar.setProgress((int)((waitingMomentCircle - currentTime) * 100 / waitingTimeCircle ));
-
-            } else {
+            if(!(currentTime < waitingMomentCircle)){
                 allowCircle = true;
-                //
-                // circleBar.setProgress(0);
             }
 
-            if(currentTime < waitingMomentCross){
-                //crossBar.setProgress((int)((waitingMomentCross - currentTime ) * 100 / waitingTimeCross ));
-
-            } else {
+            if(!(currentTime < waitingMomentCross)){
                 allowCross = true;
-                //crossBar.setProgress(0);
             }
 
             if(startCircleTime) {
@@ -345,50 +286,29 @@ public class GamePlayActivity extends AppCompatActivity implements TableFragment
                 startCrossTime = false;
             }
 
-
-
-            //currentTime = System.currentTimeMillis();
             waitingTimeCircle = TableConfig.MAX_WAITING_TIME - (TableConfig.MAX_WAITING_TIME - TableConfig.MIN_WAITING_TIME)/50 * Math.abs(50 - (int)result);
             waitingTimeCircle -= TableConfig.MIN_WAITING_TIME;
             waitingTimeCircle = (long)((double)waitingTimeCircle/ (1 + (double)(currentTime-gameStartTime)/(double)TableConfig.HALF_LIFE));
             waitingTimeCircle += TableConfig.MIN_WAITING_TIME;
-            //waitingMomentCircle = System.currentTimeMillis() + waitingTimeCircle;
-            //musicPlayer.setNoteDuration((long)(TableConfig.NOTE_DURATION_FACTOR * waitingTimeCircle));
 
-            //currentTime = System.currentTimeMillis();
             waitingTimeCross = TableConfig.MAX_WAITING_TIME - (TableConfig.MAX_WAITING_TIME - TableConfig.MIN_WAITING_TIME)/50 * Math.abs(50 - (int)result);
             waitingTimeCross -= TableConfig.MIN_WAITING_TIME;
             waitingTimeCross = (long)((double)waitingTimeCross/ (1 + (double)(currentTime-gameStartTime)/(double)TableConfig.HALF_LIFE));
             waitingTimeCross += TableConfig.MIN_WAITING_TIME;
-            //waitingMomentCross = System.currentTimeMillis() + waitingTimeCross;
-
-            /*System.out.println((TableConfig.MAX_WAITING_TIME - TableConfig.MIN_WAITING_TIME + TableConfig.MIN_WAITING_TIME*3/4));
-            System.out.println((TableConfig.MAX_WAITING_TIME - TableConfig.MIN_WAITING_TIME + TableConfig.MIN_WAITING_TIME*6/16));
-            System.out.println((TableConfig.MAX_WAITING_TIME - TableConfig.MIN_WAITING_TIME + TableConfig.MIN_WAITING_TIME/4));
-            System.out.println(waitingTimeCross);*/
-
-
 
             if(!musicPlayer.isEndSong()) {
                 musicPlayer.setNoteDuration((long)(TableConfig.NOTE_DURATION_FACTOR * waitingTimeCross));
 
-                if (waitingTimeCross > ((TableConfig.MAX_WAITING_TIME - TableConfig.MIN_WAITING_TIME) * 10 / 16 + TableConfig.MIN_WAITING_TIME)) {// *12/16
+                if (waitingTimeCross > ((TableConfig.MAX_WAITING_TIME - TableConfig.MIN_WAITING_TIME) * 10 / 16 + TableConfig.MIN_WAITING_TIME)) {
                     musicPlayer.setMeasure(3);
-                    //System.out.println("TRI");
-                } else if (waitingTimeCross > ((TableConfig.MAX_WAITING_TIME - TableConfig.MIN_WAITING_TIME) * 4 / 16 + TableConfig.MIN_WAITING_TIME)) {// 8/16
+                } else if (waitingTimeCross > ((TableConfig.MAX_WAITING_TIME - TableConfig.MIN_WAITING_TIME) * 4 / 16 + TableConfig.MIN_WAITING_TIME)) {
                     musicPlayer.setMeasure(4);
-                    //System.out.println("CETIRI");
-                } else if (waitingTimeCross > ((TableConfig.MAX_WAITING_TIME - TableConfig.MIN_WAITING_TIME) * 1.6 / 16 + TableConfig.MIN_WAITING_TIME)) {// 4/16
+                } else if (waitingTimeCross > ((TableConfig.MAX_WAITING_TIME - TableConfig.MIN_WAITING_TIME) * 1.6 / 16 + TableConfig.MIN_WAITING_TIME)) {
                     musicPlayer.setMeasure(2);
-                    //System.out.println("DVA");
                 } else {
                     musicPlayer.setMeasure(5);
-                    //System.out.println("PET");
                 }
             }
-
-
-
         }
 
     }
@@ -399,17 +319,8 @@ public class GamePlayActivity extends AppCompatActivity implements TableFragment
 
             while (!gameDone) {
                 LockSupport.parkNanos(70_000_000);
-                /*try {
-                    Thread.sleep(50);
-                    //Thread.yield();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }*/
-
                 uIPutThread = new Thread(uIPut);
-                //System.out.println(System.currentTimeMillis());
                 runOnUiThread(uIPutThread);
-
             }
         }
     }
@@ -459,18 +370,13 @@ public class GamePlayActivity extends AppCompatActivity implements TableFragment
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-
         saveSharedPreferences();
-
         super.onSaveInstanceState(outState);
-        //finish();
     }
 
     @Override
     public void onRestoreInstanceState(Bundle inState){
         super.onRestoreInstanceState(inState);
-        //System.out.println("  JAHA JAHAJA!");
-
     }
 
 
@@ -478,7 +384,6 @@ public class GamePlayActivity extends AppCompatActivity implements TableFragment
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
 
         currentApiVersion = android.os.Build.VERSION.SDK_INT;
         setContentView(R.layout.activity_game_play);
@@ -490,7 +395,6 @@ public class GamePlayActivity extends AppCompatActivity implements TableFragment
 
 
         this.table = new Table(level);
-
 
         if(player1Image == R.drawable.pin39) {
             player1Color = TableConfig.OKO_COLOR;
@@ -563,19 +467,6 @@ public class GamePlayActivity extends AppCompatActivity implements TableFragment
 
         soundToggle = (ToggleButton) findViewById(R.id.toggle_sound_button);
 
-        /*ViewGroup.LayoutParams params = soundToggle.getLayoutParams();
-        params.width = 200;
-        soundToggle.setLayoutParams(params);*/
-
-        /*ImageSpan imageSpan = new ImageSpan(this, R.drawable.sound_on);
-        SpannableString content = new SpannableString("X");
-        content.setSpan(imageSpan, 0, 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        soundToggle.setText(content);
-        soundToggle.setTextOn(content);
-        soundToggle.setTextOff(content);*/
-
-
-
 
         if((mPrefs.getBoolean("mrm_SOUND", true))) {
             soundToggle.setChecked(true);
@@ -633,12 +524,11 @@ public class GamePlayActivity extends AppCompatActivity implements TableFragment
     }
 
 
-
     @Override
     public void onWindowFocusChanged(boolean hasFocus)
     {
         super.onWindowFocusChanged(hasFocus);
-        if(currentApiVersion >= Build.VERSION_CODES.KITKAT)// && hasFocus)
+        if(currentApiVersion >= Build.VERSION_CODES.KITKAT)
         {
             getWindow().getDecorView().setSystemUiVisibility(
                     View.SYSTEM_UI_FLAG_LAYOUT_STABLE
@@ -689,8 +579,6 @@ public class GamePlayActivity extends AppCompatActivity implements TableFragment
 
     private class OtherPlayer implements Runnable {
         public void run() {
-
-
             while(!gameDone){
                 try {
                     double a = Math.random();
@@ -711,60 +599,25 @@ public class GamePlayActivity extends AppCompatActivity implements TableFragment
 
                 if(gamePaused) continue;
 
-
-                //ww.lock();
                 synchronized (table) {
-
                     c = table.putAutomatic(State.cross);
                     lastMoveX = new Coordinates(c.x, c.y);
-
-//                    currentTime = System.currentTimeMillis();
-//                    waitingTimeCross = TableConfig.MAX_WAITING_TIME - (TableConfig.MAX_WAITING_TIME - TableConfig.MIN_WAITING_TIME)/50 * Math.abs(50 - (int)result);
-//                    waitingTimeCross -= TableConfig.MIN_WAITING_TIME;
-//                    waitingTimeCross = (long)((double)waitingTimeCross/ (1 + (double)(currentTime-gameStartTime)/(double)TableConfig.HALF_LIFE));
-//                    waitingTimeCross += TableConfig.MIN_WAITING_TIME;
                     waitingMomentCross = System.currentTimeMillis() + waitingTimeCross;
-
                     startCrossTime = true;
-
-                    /*ProgressBarAnimation anim = new ProgressBarAnimation(crossBar, 100, 0);
-                    anim.setDuration(1000);
-                    crossBar.startAnimation(anim);*/
-
-//
-//                    musicPlayer.setNoteDuration((long)(TableConfig.NOTE_DURATION_FACTOR * waitingTimeCross));
-//                    if (waitingTimeCross > (TableConfig.MAX_WAITING_TIME + TableConfig.MIN_WAITING_TIME)/2) {
-//                        musicPlayer.setMeasure(3);
-//                        System.out.println("TRI");
-//                    } else {
-//                        musicPlayer.setMeasure(4);
-//                        System.out.println("CETIRI");
-//                    }
-
                     allowCross = false;
-
                     movesX.add(0, lastMoveX);
                 }
-
             }
-
         }
     }
 
     public void onFieldSelected(int x,int y) {
-
-
         synchronized (table) {
             if(allowCircle) {
                 if(this.table.publicPut(State.circle, x, y)) {
                     lastMoveO = new Coordinates(x, y);
                     waitingMomentCircle = System.currentTimeMillis() + waitingTimeCircle;
-
                     startCircleTime = true;
-                    /*ProgressBarAnimation anim = new ProgressBarAnimation(circleBar, 100, 0);
-                    anim.setDuration(1000);
-                    circleBar.startAnimation(anim);*/
-
                     allowCircle = false;
                     movesO.add(0, lastMoveO);
                 }
@@ -772,7 +625,4 @@ public class GamePlayActivity extends AppCompatActivity implements TableFragment
 
         }
     }
-
-
-
 }

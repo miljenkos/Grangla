@@ -1,8 +1,6 @@
 package com.boardgame.miljac.grangla;
 
-import android.graphics.Color;
 import android.view.animation.Animation;
-import android.view.animation.Interpolator;
 import android.view.animation.LinearInterpolator;
 import android.view.animation.Transformation;
 import android.widget.ProgressBar;
@@ -53,8 +51,6 @@ public class ProgressBarAnimation extends Animation {
         progressBar.setProgress((int) value);
 
         if(value < 65) {
-            //progressBar.getProgressDrawable().setAlpha(30 + 225 * (int) value / 65);
-
             int value1 = from1 + (to1 - from1) * (int)(65-value)/65;
             int value2 = from2 + (to2 - from2) * (int)(65-value)/65;
             int value3 = from3 + (to3 - from3) * (int)(65-value)/65;
