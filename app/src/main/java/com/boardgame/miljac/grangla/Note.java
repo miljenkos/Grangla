@@ -148,7 +148,7 @@ public class Note {
      * @return
      */
     public int downOneInMinorKey(int key){
-        switch((noteIndex - key) % 12) { //provjeri kak se ovo s negativnim brojevima ponasa
+        switch((noteIndex - key) % 12) { //provjeri kak se ovo soloNote negativnim brojevima ponasa
             case 0:
                 noteIndex = noteIndex - 2;
                 return noteIndex - 2;
@@ -197,7 +197,7 @@ public class Note {
      */
 
     public int upOneInMinorKey(int key){
-        switch((noteIndex - key) % 12) { //provjeri kak se ovo s negativnim brojevima ponasa
+        switch((noteIndex - key) % 12) { //provjeri kak se ovo soloNote negativnim brojevima ponasa
             case 0:
                 noteIndex = noteIndex + 2;
                 return noteIndex + 2;
@@ -245,7 +245,7 @@ public class Note {
      * @return
      */
     public int getPreviousIndexInMinorKey(int key){
-        switch((noteIndex - key) % 12) { //provjeri kak se ovo s negativnim brojevima ponasa
+        switch((noteIndex - key) % 12) { //provjeri kak se ovo soloNote negativnim brojevima ponasa
             case 0:
                 return noteIndex - 2;
             case 1:
@@ -281,7 +281,7 @@ public class Note {
      * @return
      */
     public int getNextIndexInMinorKey(int key){
-        switch((noteIndex - key) % 12) { //provjeri kak se ovo s negativnim brojevima ponasa
+        switch((noteIndex - key) % 12) { //provjeri kak se ovo soloNote negativnim brojevima ponasa
             case 0:
                 return noteIndex + 2;
             case 1:

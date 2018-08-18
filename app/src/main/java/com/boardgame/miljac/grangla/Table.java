@@ -209,7 +209,7 @@ public class Table
 
 
             for (int i = 0; i < TableConfig.TABLE_SIZE; i++) {
-                //s = "";
+                //soloNote = "";
                 for (int j = (lastMove.y-3); j < (lastMove.y+4); j++) {
                     weight = 0.8 * this.evaluateSpaceWeight(i, j, enemy);
                     if (weight > biggestWeight) {
@@ -295,7 +295,7 @@ public class Table
      * Evaluates a weight of a single field.
      * @param i x-coordinate of a field (space)
      * @param j y-coordinate of a field (space)
-     * @param me a player about who's move it is been thought.
+     * @param me a player about who'soloNote move it is been thought.
      * @return Weight
      */
 

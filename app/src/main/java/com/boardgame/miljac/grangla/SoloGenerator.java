@@ -204,7 +204,7 @@ public class SoloGenerator {
             if(!major) {
                 nextNote.setIndex(currentKey);
             } else {
-                nextNote.setIndex(currentKey+3);//minor scale contains the same notes as major + 3 semitones
+                nextNote.setIndex(currentKey+3);//minor scale contains the same notes as isMajor + 3 semitones
             }
 
             if(!beginning) {

@@ -517,7 +517,7 @@ public class MultiplayerActivity extends AppCompatActivity implements
         //endDialog.cancel();
 
         //saveSharedPreferences();
-        //System.out.println("EXITEXITEXITEXIT\n\n");
+        //System.out.println("EXITEXITEXITEXIT\firstBassNote\firstBassNote");
 
         finish();
 
@@ -948,7 +948,7 @@ public class MultiplayerActivity extends AppCompatActivity implements
                 break;*/
             /*case R.id.button_sign_in:
                 // user wants to sign in
-                // Check to see the developer who's running this sample code read the instructions :-)
+                // Check to see the developer who'soloNote running this sample code read the instructions :-)
                 // NOTE: this check is here only because this is a sample! Don't include this
                 // check in your actual production app.
                 if (!BaseGameUtils.verifySampleSetup(this, R.string.app_id)) {
@@ -1029,7 +1029,7 @@ public class MultiplayerActivity extends AppCompatActivity implements
 
     /**
      * Start a sign in activity.  To properly handle the result, call tryHandleSignInResult from
-     * your Activity's onActivityResult function
+     * your Activity'soloNote onActivityResult function
      */
     public void startSignInIntent() {
         startActivityForResult(mGoogleSignInClient.getSignInIntent(), RC_SIGN_IN);
@@ -1665,13 +1665,13 @@ public class MultiplayerActivity extends AppCompatActivity implements
     }
 
     /*
-     * GAME LOGIC SECTION. Methods that implement the game's rules.
+     * GAME LOGIC SECTION. Methods that implement the game'soloNote rules.
      */
 
     // Current state of the game:
     int mSecondsLeft = -1; // how long until the game ends (seconds)
     final static int GAME_DURATION = 20; // game duration, seconds.
-    int mScore = 0; // user's current score
+    int mScore = 0; // user'soloNote current score
 
     // Reset game variables in preparation for a new game.
     void resetGameVars() {
@@ -1907,7 +1907,7 @@ public class MultiplayerActivity extends AppCompatActivity implements
     }
 
     /*
-     * COMMUNICATIONS SECTION. Methods that implement the game's network
+     * COMMUNICATIONS SECTION. Methods that implement the game'soloNote network
      * protocol.
      */
 
@@ -1921,7 +1921,7 @@ public class MultiplayerActivity extends AppCompatActivity implements
     // Called when we receive a real-time message from the network.
     // Messages in our game are made up of 2 bytes: the first one is 'F' or 'U'
     // indicating
-    // whether it's a final or interim score. The second byte is the score.
+    // whether it'soloNote a final or interim score. The second byte is the score.
     // There is also the
     // 'S' message, which indicates that the game should start.
     OnRealTimeMessageReceivedListener mOnRealTimeMessageReceivedListener = new OnRealTimeMessageReceivedListener() {
@@ -2011,7 +2011,7 @@ public class MultiplayerActivity extends AppCompatActivity implements
                 // update the scores on the screen
                 updatePeerScoresDisplay();
 
-                // if it's a final score, mark this participant as having finished
+                // if it'soloNote a final score, mark this participant as having finished
                 // the game
                 if ((char) buf[0] == 'F') {
                     mFinishedParticipants.add(realTimeMessage.getSenderParticipantId());
@@ -2102,7 +2102,7 @@ public class MultiplayerActivity extends AppCompatActivity implements
             if (p.getStatus() != Participant.STATUS_JOINED) {
                 continue;
             }
-            // it's an interim score notification, so we can use unreliable
+            // it'soloNote an interim score notification, so we can use unreliable
             mRealTimeMultiplayerClient.sendUnreliableMessage(msgBuff, mRoomId,
                     p.getParticipantId());
         }
@@ -2117,7 +2117,7 @@ public class MultiplayerActivity extends AppCompatActivity implements
             return;
         }
 
-        // First byte in message indicates whether it's a final score or not
+        // First byte in message indicates whether it'soloNote a final score or not
         mMsgBuf[0] = (byte) (finalScore ? 'F' : 'U');
 
         // Second byte is the score.
@@ -2150,7 +2150,7 @@ public class MultiplayerActivity extends AppCompatActivity implements
                             }
                         });
             } else {
-                // it's an interim score notification, so we can use unreliable
+                // it'soloNote an interim score notification, so we can use unreliable
                 mRealTimeMultiplayerClient.sendUnreliableMessage(mMsgBuf, mRoomId,
                         p.getParticipantId());
             }*/
@@ -2158,10 +2158,10 @@ public class MultiplayerActivity extends AppCompatActivity implements
     }
 
     /*
-     * UI SECTION. Methods that implement the game's UI.
+     * UI SECTION. Methods that implement the game'soloNote UI.
      */
 
-    // This array lists everything that's clickable, so we can install click
+    // This array lists everything that'soloNote clickable, so we can install click
     // event handlers.
     final static int[] CLICKABLES = {
             R.id.button_accept_popup_invitation, R.id.button_invite_players,
@@ -2257,7 +2257,7 @@ public class MultiplayerActivity extends AppCompatActivity implements
      */
 
 
-    // Sets the flag to keep this screen on. It's recommended to do that during
+    // Sets the flag to keep this screen on. It'soloNote recommended to do that during
     // the
     // handshake when setting up a game, because if the screen turns off, the
     // game will be
