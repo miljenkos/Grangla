@@ -7,9 +7,7 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 /**
- * This is where the actual game happens.
- *
- * @author miljac
+ * This is where the actual game state is stored
  */
 public class MultiplayerTable // igraca tabla
 {
@@ -203,8 +201,11 @@ public class MultiplayerTable // igraca tabla
     }
 
 
-
-    public int end2(int iC, int jC, long lastEventT) {
+    /**
+     * Checks if someone has collected a sequence, and removes it from the table
+     * @return A number of points
+     */
+    public int getScore(int iC, int jC, long lastEventT) {
         w.lock();
 
         int result = 0;
@@ -317,6 +318,10 @@ public class MultiplayerTable // igraca tabla
     }
 
 
+    /**
+     * Generates message data with the table state
+     *
+     */
     public byte[] getMsgBuff() {
         byte[] msgBuff = new byte[TableConfig.TABLE_SIZE * TableConfig.TABLE_SIZE + 6];
         int c = 0;
@@ -340,10 +345,9 @@ public class MultiplayerTable // igraca tabla
     }
 
     /**
-     * returns coordinates if the enemy has made a move
+     * Recieves the data from the message
+     * Returns coordinates if the enemy has made a move.
      *
-     * @param msgBuff
-     * @return
      */
 
     public Coordinates applyMsgBuff(byte[] msgBuff) {

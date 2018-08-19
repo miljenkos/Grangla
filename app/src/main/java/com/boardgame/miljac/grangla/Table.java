@@ -7,7 +7,7 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.concurrent.locks.Lock;
 
 /**
- * This is where the actual game happens.
+ * This is where the actual game state is stored
  */
 
 public class Table
@@ -289,7 +289,8 @@ public class Table
 
 
     /**
-     * Evaluates a weight of a single field.
+     * Evaluates a weight of a single field. Bigger weight means it's probably better to make a move on that field.
+     *
      * @param i x-coordinate of a field (space)
      * @param j y-coordinate of a field (space)
      * @param me a player about who'soloNote move it is been thought.

@@ -263,7 +263,7 @@ public class MultiplayerActivity extends AppCompatActivity implements
 
             if ((lastMoveO != null) && (table != null) && (movesO != null)) {
                 double r = 0;
-                r = table.end2(lastMoveO.x, lastMoveO.y, lastEventTime);
+                r = table.getScore(lastMoveO.x, lastMoveO.y, lastEventTime);
                 myResult += r * TableConfig.RESULT_FACTOR;
                 if (r == 0){
                     if(movesO.size() >= TableConfig.MAX_PIECES) {
@@ -282,7 +282,7 @@ public class MultiplayerActivity extends AppCompatActivity implements
 
             if ((lastMoveX != null) && (table != null) && (movesX != null)) {
                 double r = 0;
-                r = table.end2(lastMoveX.x, lastMoveX.y, lastEventTime);
+                r = table.getScore(lastMoveX.x, lastMoveX.y, lastEventTime);
                 //result -= r * TableConfig.RESULT_FACTOR;
                 if (r == 0){
                     if(movesX.size() >= TableConfig.MAX_PIECES) {
