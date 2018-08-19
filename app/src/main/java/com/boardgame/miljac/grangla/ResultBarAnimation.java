@@ -5,13 +5,13 @@ import android.view.animation.Animation;
 import android.view.animation.Transformation;
 import android.widget.ProgressBar;
 
-public class DoubleProgressBarAnimation extends Animation {
+public class ResultBarAnimation extends Animation {
     private ProgressBar progressBar1;
     private ProgressBar progressBar2;
     private float from;
     private float  to;
 
-    public DoubleProgressBarAnimation(ProgressBar progressBar1, ProgressBar progressBar2, float to) {
+    public ResultBarAnimation(ProgressBar progressBar1, ProgressBar progressBar2, float to) {
         super();
         this.progressBar1 = progressBar1;
         this.progressBar2 = progressBar2;

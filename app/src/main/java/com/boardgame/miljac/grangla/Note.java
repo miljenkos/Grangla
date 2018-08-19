@@ -31,7 +31,7 @@ public class Note {
         this.soloFrBendFr = soloFrBendFr;
     }
 
-    public double getSoloFrBendFr() {
+    public double getBendFactorFrequency() {
         return soloFrBendFr;
     }
 
@@ -83,9 +83,18 @@ public class Note {
         this.relativetoKey = relativetoKey;
     }
 
+    public Note getCopy(){
+        Note a = new Note(this.getIndex());
+        a.setVolume(this.getVolume());
+        a.setSoloFrBendFr(this.getBendFactorFrequency());
+        a.setSoloFrBendFactor(this.getSoloFrBendFactor());
+        a.setSoloTimeFrameDeviation(this.getSoloTimeFrameDeviation());
+        return a;
+    }
 
-    public void setRelativetoPrevious(boolean RelativetoPrevious) {
-        this.relativetoPrevious = relativetoPrevious;
+
+    public void setRelativetoPrevious(boolean relativeToPrevious) {
+        this.relativetoPrevious = relativeToPrevious;
     }
 
     private double indexToFrequency(int x) {

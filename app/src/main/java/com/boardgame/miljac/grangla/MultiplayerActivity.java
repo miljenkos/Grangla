@@ -1,5 +1,7 @@
 package com.boardgame.miljac.grangla;
-
+/***
+ * this still needs a lot of refactoring
+ */
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -154,7 +156,7 @@ public class MultiplayerActivity extends AppCompatActivity implements
     private Boolean gamePaused = false;
     private Boolean muted = false;
     private boolean firstTimeAnimatedProgress = true;
-    private FullscreenDialog endDialog;
+    private EndDialog endDialog;
 
     private Coordinates c;
     private Coordinates lastMoveO;
@@ -184,7 +186,7 @@ public class MultiplayerActivity extends AppCompatActivity implements
     ImageButton imageButton;
     ImageButton endImageButton;
 
-    DoubleProgressBarAnimation animResult;
+    ResultBarAnimation animResult;
 
 
     private final ReentrantReadWriteLock rwl = new ReentrantReadWriteLock();
@@ -311,7 +313,7 @@ public class MultiplayerActivity extends AppCompatActivity implements
                 musicPlayer.setMeasure(2);
                 musicPlayer.setEndSong();
 
-                endDialog = new FullscreenDialog(MultiplayerActivity.this, R.style.EndDialog);
+                endDialog = new EndDialog(MultiplayerActivity.this, R.style.EndDialog);
                 endDialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
                 endDialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
                 endDialog.setCanceledOnTouchOutside(false);
@@ -415,13 +417,13 @@ public class MultiplayerActivity extends AppCompatActivity implements
 
             if(!firstTimeAnimatedProgress)
                 if ((animResult.hasEnded()) && (resultBar2.getProgress() != (int)result)) {
-                    animResult = new DoubleProgressBarAnimation(resultBar2, resultBar, (float) result);
+                    animResult = new ResultBarAnimation(resultBar2, resultBar, (float) result);
                     animResult.setDuration(800);
                     resultBar.startAnimation(animResult);
                 }
 
             if(firstTimeAnimatedProgress) {
-                animResult = new DoubleProgressBarAnimation(resultBar, resultBar2, (float) result);
+                animResult = new ResultBarAnimation(resultBar, resultBar2, (float) result);
                 animResult.setDuration(100);
                 resultBar.startAnimation(animResult);
 
@@ -448,7 +450,7 @@ public class MultiplayerActivity extends AppCompatActivity implements
             }
 
             if(startCircleTime) {
-                ProgressBarAnimation anim = new ProgressBarAnimation(circleBar,
+                TimerAnimation anim = new TimerAnimation(circleBar,
                         player1Color & 0xC5FFFFFF,
                         player1ColorDesaturated & 0x80FFFFFF);
                 anim.setDuration(waitingMomentCircle - currentTime);
@@ -457,7 +459,7 @@ public class MultiplayerActivity extends AppCompatActivity implements
             }
 
             if(startCrossTime) {
-                ProgressBarAnimation anim2 = new ProgressBarAnimation(crossBar,
+                TimerAnimation anim2 = new TimerAnimation(crossBar,
                         player2Color & 0xC5FFFFFF,
                         player2ColorDesaturated & 0x80FFFFFF);
                 anim2.setDuration(waitingMomentCross - currentTime);
@@ -653,7 +655,7 @@ public class MultiplayerActivity extends AppCompatActivity implements
                     waitingMomentCircle = System.currentTimeMillis() + waitingTimeCircle;
 
                     startCircleTime = true;
-                    /*ProgressBarAnimation anim = new ProgressBarAnimation(circleBar, 100, 0);
+                    /*TimerAnimation anim = new TimerAnimation(circleBar, 100, 0);
                     anim.setDuration(1000);
                     circleBar.startAnimation(anim);*/
 
@@ -1688,7 +1690,7 @@ public class MultiplayerActivity extends AppCompatActivity implements
 
         multiplayerGameStarted = true;
 
-        /*Intent intent = new Intent(this, GamePlayActivity.class);
+        /*Intent intent = new Intent(this, SinglePlayerGamePlayActivity.class);
         startActivity(intent);*/
 
 
@@ -1846,8 +1848,8 @@ public class MultiplayerActivity extends AppCompatActivity implements
         });
 
 
-        /*opThread = new Thread(otherPlayer);
-        opThread.start();*/
+        /*otherPlayerThread = new Thread(otherPlayer);
+        otherPlayerThread.start();*/
 
         refreshThread = new Thread(tableViewRefreshing);
         refreshThread.start();

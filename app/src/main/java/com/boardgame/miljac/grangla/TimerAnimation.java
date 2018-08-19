@@ -5,7 +5,7 @@ import android.view.animation.LinearInterpolator;
 import android.view.animation.Transformation;
 import android.widget.ProgressBar;
 
-public class ProgressBarAnimation extends Animation {
+public class TimerAnimation extends Animation {
     private ProgressBar progressBar;
     private float from;
     private float  to;
@@ -18,8 +18,8 @@ public class ProgressBarAnimation extends Animation {
     private int from4;
     private int  to4;
 
-    public ProgressBarAnimation(ProgressBar progressBar,
-                                int fromColor, int toColor) {
+    public TimerAnimation(ProgressBar progressBar,
+                          int fromColor, int toColor) {
         super();
         this.progressBar = progressBar;
         this.from = 100;

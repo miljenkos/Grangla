@@ -19,7 +19,7 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
-public class MainActivity extends AppCompatActivity {
+public class SinglePlayerMenuActivity extends AppCompatActivity {
 
     private SeekBar levelSeekBar;
     private TextView levelTextView;
@@ -31,38 +31,12 @@ public class MainActivity extends AppCompatActivity {
     ListItem itemZvijezda = new ListItem();
     private SharedPreferences mPrefs;
 
-    @Override
-    protected void onCreate(final Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-
+    private void setPlayerImagesOnSpinners(){
         itemOko.setData("OKO", R.drawable.pin39);
         itemGumb.setData("GUMB", R.drawable.pin40);
         itemDjetelina.setData("DJETELINA", R.drawable.pin42);
         itemZvijezda.setData("ZVIJEZDA", R.drawable.pin43);
 
-        levelSeekBar = (SeekBar)findViewById(R.id.levelSeekBar);
-        levelSeekBar.setThumbOffset(convertDipToPixels(8f));
-
-
-        levelSeekBar.setProgress(20);
-        levelTextView = (TextView) findViewById(R.id.level_text);
-        levelSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                levelTextView.setText(String.valueOf(levelSeekBar.getProgress()));
-            }
-
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-
-            }
-
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-
-            }
-        });
 
         spinnerPlayer1 = (Spinner) findViewById(R.id.spinner_player1);
         spinnerPlayer1.setAdapter(new MySpinnerAdapter(this, R.layout.row, getAllList()));
@@ -76,21 +50,21 @@ public class MainActivity extends AppCompatActivity {
 
                 (new View.OnTouchListener() {
 
-            @Override
-            public boolean onTouch(View v, MotionEvent m) {
-                if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT)
-                {
-                    getWindow().getDecorView().setSystemUiVisibility(
-                            View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                                    | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                                    | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                                    | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-                                    | View.SYSTEM_UI_FLAG_FULLSCREEN
-                                    | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
-                }
-                return false;
-            }
-        }));
+                    @Override
+                    public boolean onTouch(View v, MotionEvent m) {
+                        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT)
+                        {
+                            getWindow().getDecorView().setSystemUiVisibility(
+                                    View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                                            | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                                            | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                                            | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                                            | View.SYSTEM_UI_FLAG_FULLSCREEN
+                                            | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
+                        }
+                        return false;
+                    }
+                }));
 
         spinnerPlayer1.setOnFocusChangeListener(new View.OnFocusChangeListener() {
 
@@ -173,6 +147,39 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    @Override
+    protected void onCreate(final Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+
+        levelSeekBar = (SeekBar)findViewById(R.id.levelSeekBar);
+        levelSeekBar.setThumbOffset(convertDipToPixels(8f));
+
+
+        levelSeekBar.setProgress(20);
+        levelTextView = (TextView) findViewById(R.id.level_text);
+        levelSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                levelTextView.setText(String.valueOf(levelSeekBar.getProgress()));
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
+
+        setPlayerImagesOnSpinners();
+
         if(savedInstanceState != null){
             levelSeekBar.setProgress(savedInstanceState.getInt("mrm_LEVEL"));
             spinnerPlayer1.setSelection(savedInstanceState.getInt("PLAYER_1_IMG"));
@@ -224,7 +231,7 @@ public class MainActivity extends AppCompatActivity {
 
     /** Called when the user clicks the Send button */
     public void sendMessage(View view) {
-        Intent intent = new Intent(this, GamePlayActivity.class);
+        Intent intent = new Intent(this, SinglePlayerGamePlayActivity.class);
         intent.putExtra("mrm_LEVEL", levelSeekBar.getProgress());
         intent.putExtra("PLAYER1_IMG", ((ListItem) spinnerPlayer1.getSelectedItem()).logo);
         intent.putExtra("PLAYER2_IMG", ((ListItem) spinnerPlayer2.getSelectedItem()).logo);

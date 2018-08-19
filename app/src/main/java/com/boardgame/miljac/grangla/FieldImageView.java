@@ -7,8 +7,7 @@ import android.view.animation.Animation;
 import android.widget.ImageView;
 
 
-
-public class FieldImageView extends ImageView  {
+public class FieldImageView extends ImageView {
 
     private int row;
     private int col;
@@ -26,7 +25,7 @@ public class FieldImageView extends ImageView  {
         this.ctx = context;
         this.row = row;
         this.col = col;
-        Drawable d  = getResources().getDrawable(TableConfig.pinBackground);
+        Drawable d = getResources().getDrawable(TableConfig.pinBackground);
         setImageDrawable(d);
         xSize = this.getWidth();
         ySize = this.getHeight();
@@ -52,12 +51,10 @@ public class FieldImageView extends ImageView  {
         final Drawable d = getResources().getDrawable(resId);
 
         if ((resId == TableConfig.pinBackground) && (this.lastPinId != TableConfig.pinRock)) {
-            if (!removing){
+            if (!removing) {
                 removing = true;
                 Drawable lastD = getResources().getDrawable(this.lastPinId);
                 setImageDrawable(lastD);
-
-
             } else {
                 removing = false;
                 this.lastPinId = resId;
@@ -66,8 +63,7 @@ public class FieldImageView extends ImageView  {
                 AnimView av = new AnimView(fadeInAnim, d);
                 this.post(av);
             }
-        }
-        else {
+        } else {
             this.lastPinId = resId;
             setImageDrawable(d);
         }
@@ -77,8 +73,7 @@ public class FieldImageView extends ImageView  {
     }
 
 
-    public synchronized void
-    remove() {
+    public synchronized void remove() {
 
         int resId = TableConfig.pinBackground;
 
@@ -105,6 +100,7 @@ public class FieldImageView extends ImageView  {
             this.anim = anim;
             this.d = d;
         }
+
         @Override
         public void run() {
             anim.setAnimationListener(new Animation.AnimationListener() {
@@ -114,7 +110,8 @@ public class FieldImageView extends ImageView  {
                 }
 
                 @Override
-                public void onAnimationRepeat(Animation animation) {}
+                public void onAnimationRepeat(Animation animation) {
+                }
 
                 @Override
                 public void onAnimationEnd(Animation animation) {

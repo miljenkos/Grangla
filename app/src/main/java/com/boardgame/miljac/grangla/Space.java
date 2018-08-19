@@ -3,7 +3,6 @@ package com.boardgame.miljac.grangla;
 
 /**
  * A single field (space) on a game board
- * @author miljac
  *
  */
 public class Space

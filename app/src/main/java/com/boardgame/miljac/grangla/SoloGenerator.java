@@ -99,9 +99,9 @@ public class SoloGenerator {
     }
 
 
-/**
- * Generates a solo with some different parameters. Completely new function for complete freedom over playing with all parameters.
- **/
+    /**
+     * Generates a solo with some different parameters. Completely new function for complete freedom over playing with all parameters.
+     **/
     private Note[] generateSolo2(){
         int length = 5 + (int)(rand.nextDouble() * 10);
         Note[] solo = new Note[length];
@@ -172,22 +172,15 @@ public class SoloGenerator {
                         break;
                 }
             } else {//if the solo is ended and the bar isn't, the last note is prolonged
-                Note a = new Note(lastNote.getIndex());
-                a.setVolume(lastNote.getVolume()/2);
-                a.setSoloFrBendFr(lastNote.getSoloFrBendFr());
-                a.setSoloFrBendFactor(lastNote.getSoloFrBendFactor());
-                a.setSoloTimeFrameDeviation(lastNote.getSoloTimeFrameDeviation());
+                Note a = lastNote.getCopy();
+                a.setVolume(a.getVolume()/2);
 
                 lastNote.setVolume(lastNote.getVolume());
                 return a;
             }
         }
 
-        nextNote = new Note(lastNote.getIndex());
-        nextNote.setVolume(currentSolo[soloIndex].getVolume());
-        nextNote.setSoloFrBendFr(currentSolo[soloIndex].getSoloFrBendFr());
-        nextNote.setSoloFrBendFactor(currentSolo[soloIndex].getSoloFrBendFactor());
-        nextNote.setSoloTimeFrameDeviation(currentSolo[soloIndex].getSoloTimeFrameDeviation());
+        nextNote = lastNote.getCopy();
 
         //note index has to be set from relative to last note to absolute to be played
         if (currentSolo[soloIndex].getIndex() > 0){
@@ -222,11 +215,7 @@ public class SoloGenerator {
         if (nextNote.getIndex() < TableConfig.SOLO_NOTE_LOWER_BOUNDARY)
             nextNote.setIndex(nextNote.getIndex()+12);
 
-        lastNote = new Note(nextNote.getIndex());
-        lastNote.setVolume(nextNote.getVolume());
-        lastNote.setSoloFrBendFr(nextNote.getSoloFrBendFr());
-        lastNote.setSoloFrBendFactor(nextNote.getSoloFrBendFactor());
-        lastNote.setSoloTimeFrameDeviation(nextNote.getSoloTimeFrameDeviation());
+        lastNote = nextNote.getCopy();
 
         keyChange = false;
 

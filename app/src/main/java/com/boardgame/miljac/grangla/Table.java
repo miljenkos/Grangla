@@ -176,7 +176,7 @@ public class Table
      * Used when a computer is playing to make it make a move.
      * @param me
      */
-    public Coordinates putAutomatic(State me)
+    public Coordinates makeAMove(State me)
     {
         Double weight = 0.0;
         Double r = 0.0;
@@ -225,9 +225,6 @@ public class Table
 
         }
         finally { w.unlock(); }
-
-
-
 
         return (new Coordinates(bWICoor, bWJCoor));
 
@@ -344,7 +341,7 @@ public class Table
      * @return A number of points
      */
 
-    public int end2(int iC, int jC, long lastEventT)
+    public int getScore(int iC, int jC, long lastEventT)
     {
         w.lock();
 

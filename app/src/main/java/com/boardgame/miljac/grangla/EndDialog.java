@@ -5,8 +5,8 @@ import android.content.Context;
 import android.os.Bundle;
 
 
-public class FullscreenDialog extends Dialog {
-    public FullscreenDialog(Context context, int i)
+public class EndDialog extends Dialog {
+    public EndDialog(Context context, int i)
     {
         super(context, i);
 
